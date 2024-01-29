@@ -101,7 +101,7 @@ function View({ children, code, title, height, ...rest }) {
                       className="fas fa-code"
                     />
                   }
-                  label="Code"
+                  label="List"
                 />
               </Tabs>
             </AppBar>
