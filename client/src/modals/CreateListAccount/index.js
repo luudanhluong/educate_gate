@@ -40,29 +40,23 @@ function CreateListAccount() {
   const [fileName, setFileName] = useState();
   const formValues = {
     file: "",
-    sheetNo: 0,
-    role: "",
   };
   const initialValues = Yup.object().shape({
     file: Yup.mixed().required("Vui lòng chọn một file"),
-    sheetNo: Yup.number(),
-    role: Yup.string().required("Vui lòng chọn vai trò của người dùng"),
   });
-  const handleSubmit = async (values) => {
-    const { sheetNo, role } = values;
+  const handleSubmit = async () => {
+    console.log("values.file");
     try {
-      const selectedFile = fileName;
       const formData = new FormData();
-      formData.append("file", selectedFile);
-      formData.append("sheetNo", sheetNo);
-      formData.append("role", role);
+      formData.append("file", fileName);
       const response = await axios.post(`${BASE_URL}/insert-list-users`, formData);
-      const result = await response.data();
+      const result = await response.data;
       console.log(result);
     } catch (error) {
       console.log(error.message);
     }
   };
+  console.log(fileName);
   return (
     <>
       <DefaultNavbar
@@ -149,55 +143,8 @@ function CreateListAccount() {
                           />
                           <ErrorMessage name="file" component="div" className="lg_error_message" />
                         </div>
-                        <div className="lg_form-group">
-                          <label
-                            style={{ marginBottom: "4px" }}
-                            className="lg_label block"
-                            htmlFor="email"
-                          >
-                            Trang số
-                          </label>
-                          <Field
-                            type="text"
-                            name="sheetNo"
-                            className={`${
-                              touched.sheetNo && errors.sheetNo ? "error" : ""
-                            } lg_form-control`}
-                            style={{ background: "#F4F4F4" }}
-                            id="sheetNo"
-                          />
-                          <ErrorMessage
-                            name="sheetNo"
-                            component="div"
-                            className="lg_error_message"
-                          />
-                        </div>
-                        <div className="flx flx-column">
-                          <div className="rg_seting-role">Vài trò của người dùng trong file?</div>
-                          <div className="rg_form-group flx flx-row flx-ct-a">
-                            <div>
-                              <Field name="role" type="radio" id="role_1" value="teacher" />
-                              <label className="rg_label" htmlFor="role_1">
-                                Giảng viên
-                              </label>
-                            </div>
-                            <div>
-                              <Field name="role" type="radio" id="role_2" value="mentor" />
-                              <label className="rg_label" htmlFor="role_2">
-                                Người hướng dẫn
-                              </label>
-                            </div>
-                            <div>
-                              <Field name="role" type="radio" id="role_3" value="student" />
-                              <label className="rg_label" htmlFor="role_3">
-                                Sinh viên
-                              </label>
-                            </div>
-                          </div>
-                          <ErrorMessage name="role" component="div" className="rg_error_message" />
-                        </div>
                         <button
-                          style={{ background: "#1A73E8" }}
+                          style={{ background: "#1A73E8", marginTop: 16 }}
                           type="submit"
                           className="btn-sbm pointer"
                         >

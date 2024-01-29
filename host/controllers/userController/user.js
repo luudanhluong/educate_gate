@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import userRepository from "../../repositories/user/index.js";
 import bcrypt from "bcrypt";
 import xlsx from "xlsx";
@@ -8,7 +7,6 @@ const addNewUser = async (req, res, next) => {
     const { username, password, email, role } = req.body;
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
-
     const result = await userRepository.createNewUser({
       username,
       email,
@@ -32,12 +30,12 @@ const getUserLogin = async (req, res, next) => {
 const insertListUsers = async (req, res, next) => {
   try {
     const saltRounds = 12;
-    console.log(req.file.path);
     const { sheetNo } = req.body;
     const excelFilePath = req.file.path;
     const workbook = xlsx.readFile(excelFilePath);
-    const sheetName = workbook.SheetNames[sheetNo];
+    const sheetName = workbook.SheetNames[0];
     const userData = xlsx.utils.sheet_to_json(workbook.Sheets[sheetName]);
+    console.log(userData);
     const newData = [];
     for (const user of userData) {
       try {
