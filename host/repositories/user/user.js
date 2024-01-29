@@ -1,48 +1,17 @@
-import Mentor from "../../models/mentorModel.js";
-import Student from "../../models/studentModel.js";
-import Teacher from "../../models/teacherModel.js";
-import Admin from "../../models/adminModel.js";
-import UserToken from "../../models/userToken.js";
 import jwt from "jsonwebtoken";
 import dotnv from "dotenv";
 import bcrypt from "bcrypt";
+import User from "../../models/userModel.js";
 
 const createNewUser = async ({ username, email, password, role }) => {
-  const formData = { username, email, password };
-  const teacherObj = await Teacher.findOne({ email: email }).exec();
-  const studentObj = await Student.findOne({ email: email }).exec();
-  const mentorObj = await Mentor.findOne({ email: email }).exec();
-  const adminObj = await Admin.findOne({ email: email }).exec();
-  const check = !teacherObj && !studentObj && !mentorObj && !adminObj;
+  const formData = { username, email, password, role };
+  const userObj = await User.find({ email: email }).exec();
   try {
-    if (role === "teacher") {
-      if (check) {
-        const teacher = await Teacher.create(formData);
-        return teacher._doc;
-      } else {
-        throw new Error("Email đã tồn tại trong hệ thống");
-      }
-    } else if (role === "student") {
-      if (check) {
-        const student = await Student.create(formData);
-        return student._doc;
-      } else {
-        throw new Error("Email đã tồn tại trong hệ thống");
-      }
-    } else if (role === "mentor") {
-      if (check) {
-        const mentor = await Mentor.create(formData);
-        return mentor._doc;
-      } else {
-        throw new Error("Email đã tồn tại trong hệ thống");
-      }
-    } else if (role === "admin") {
-      if (check) {
-        const admin = await Admin.create(formData);
-        return admin._doc;
-      } else {
-        throw new Error("Email đã tồn tại trong hệ thống");
-      }
+    if (!userObj) {
+      const teacher = await User.create(formData);
+      return teacher._doc;
+    } else {
+      throw new Error("Email đã tồn tại trong hệ thống");
     }
   } catch (error) {
     throw new Error(error.message);
@@ -50,35 +19,15 @@ const createNewUser = async ({ username, email, password, role }) => {
 };
 
 const createListUsers = async (listData) => {
-  //   const formData = { username, email, password };
-  //   const teacherObj = await Teacher.findOne({ email: email }).exec();
-  //   const studentObj = await Student.findOne({ email: email }).exec();
-  //   const mentorObj = await Mentor.findOne({ email: email }).exec();
-  //   const adminObj = await Admin.findOne({ email: email }).exec();
-  //   const check = !teacherObj && !studentObj && !mentorObj && !adminObj;
+  const emailList = listData.map((user) => user.email);
+  const teacherObj = await User.findOne({
+    email: { $in: emailList },
+  }).exec();
   try {
-    // if (role === "teacher") {
-    const teacher = await Teacher.insertMany(listData);
-    return teacher._doc;
-    //   if (check) {
-    //   } else {
-    //     throw new Error(`Email: ${email} đã tồn tại trong hệ thống`);
-    //   }
-    // } else if (role === "student") {
-    //   if (check) {
-    //     const student = await Student.insertMany(formData);
-    //     return student._doc;
-    //   } else {
-    //     throw new Error(`Email: ${email} đã tồn tại trong hệ thống`);
-    //   }
-    // } else if (role === "mentor") {
-    //   if (check) {
-    //     const mentor = await Mentor.insertMany(formData);
-    //     return mentor._doc;
-    //   } else {
-    //     throw new Error(`Email: ${email} đã tồn tại trong hệ thống`);
-    //   }
-    // }
+    if (!teacherObj) {
+      const user = await User.insertMany(listData);
+      return user._doc;
+    }
   } catch (e) {
     throw new Error(e.message.toString());
   }
@@ -90,59 +39,16 @@ const loginUser = async ({ email, password }) => {
     const token = jwt.sign({ email, password }, process.env.SECRETKEY, {
       expiresIn: "2h",
     });
-    const teacher = await Teacher.findOne({ email: email });
-    const student = await Student.findOne({ email: email });
-    const mentor = await Mentor.findOne({ email: email });
-    const admin = await Admin.findOne({ email: email });
-    if (teacher) {
-      const isPasswordTeacher = await bcrypt.compare(
-        password,
-        teacher.password
-      );
+    const user = await User.findOne({ email: email });
+    if (user) {
+      const isPasswordTeacher = await bcrypt.compare(password, user.password);
       if (isPasswordTeacher) {
         saveTokenToDatabase(
-          teacher._id,
-          "teacher",
+          user._id,
           token,
           new Date(Date.now() + 60 * 60 * 1000 * 2)
         );
-        return { ...teacher._doc, role: "teacher", token };
-      } else return res.status(401).json({ error: "Mật khẩu không đúng." });
-    } else if (mentor) {
-      const isPasswordMentor = await bcrypt.compare(password, mentor.password);
-      if (isPasswordMentor) {
-        saveTokenToDatabase(
-          mentor._id,
-          "mentor",
-          token,
-          new Date(Date.now() + 60 * 60 * 1000 * 2)
-        );
-        return { ...mentor._doc, role: "mentor", token };
-      } else return res.status(401).json({ error: "Mật khẩu không đúng." });
-    } else if (student) {
-      const isPasswordStudent = await bcrypt.compare(
-        password,
-        student.password
-      );
-      if (isPasswordStudent) {
-        saveTokenToDatabase(
-          student._id,
-          "student",
-          token,
-          new Date(Date.now() + 60 * 60 * 1000 * 2)
-        );
-        return { ...student._doc, role: "student", token };
-      } else return res.status(401).json({ error: "Mật khẩu không đúng." });
-    } else if (admin) {
-      const isPasswordAdmin = await bcrypt.compare(password, admin.password);
-      if (isPasswordAdmin) {
-        saveTokenToDatabase(
-          admin._id,
-          "admin",
-          token,
-          new Date(Date.now() + 60 * 60 * 1000 * 2)
-        );
-        return { ...admin._doc, role: "admin", token };
+        return { ...user._doc, token };
       } else return res.status(401).json({ error: "Mật khẩu không đúng." });
     }
     return res.status(404).json({ error: "Người dùng không tồn tại." });
@@ -151,19 +57,13 @@ const loginUser = async ({ email, password }) => {
   }
 };
 const saveTokenToDatabase = async (userId, role, token, expiresIn) => {
-  console.log({
-    userId: userId,
-    userType: role,
-    token: token,
-    expiresIn: expiresIn,
-  });
   try {
-    await UserToken.create({
-      userId: userId,
-      userType: role,
-      token: token,
-      expiresIn: expiresIn,
-    });
+    // await UserToken.create({
+    //   userId: userId,
+    //   userType: role,
+    //   token: token,
+    //   expiresIn: expiresIn,
+    // });
   } catch (e) {
     throw new Error(e.message.toString());
   }
