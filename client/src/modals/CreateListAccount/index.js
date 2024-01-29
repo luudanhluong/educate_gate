@@ -33,40 +33,36 @@ import bgImage from "assets/images/bg-sign-in-basic.jpeg";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup";
 import { BASE_URL } from "utilities/initialValue";
-// import { POST } from "utilities/initialValue";
-// import { headers } from "utilities/initialValue";
-// import { methodSendRequestWithFormdate } from "utilities/FetchData";
 import axios from "axios";
 import { useState } from "react";
-// import { readExcelFile } from "utilities/excels";
-// import * as XLSX from "xlsx";
 
 function CreateListAccount() {
   const [fileName, setFileName] = useState();
   const formValues = {
-    file: null,
+    file: "",
     sheetNo: 0,
+    role: "",
   };
   const initialValues = Yup.object().shape({
-    file: Yup.string().required("Vui lòng chọn một file"),
-    sheetNo: Yup.number("Vui lòng nhập số sheet trong trang tính của bạn"),
+    file: Yup.mixed().required("Vui lòng chọn một file"),
+    sheetNo: Yup.number(),
+    role: Yup.string().required("Vui lòng chọn vai trò của người dùng"),
   });
   const handleSubmit = async (values) => {
+    const { sheetNo, role } = values;
     try {
       const selectedFile = fileName;
       const formData = new FormData();
       formData.append("file", selectedFile);
-      formData.append("sheetNo", values.sheetNo);
-      const a = await axios.post(`${BASE_URL}/insert-list-users`, formData);
-      console.log(a.data);
+      formData.append("sheetNo", sheetNo);
+      formData.append("role", role);
+      const response = await axios.post(`${BASE_URL}/insert-list-users`, formData);
+      const result = await response.data();
+      console.log(result);
     } catch (error) {
       console.log(error.message);
     }
   };
-  const handleOnChange = (e) => {
-    setFileName(e.target.files[0]);
-  };
-  console.log(handleOnChange);
   return (
     <>
       <DefaultNavbar
@@ -175,6 +171,30 @@ function CreateListAccount() {
                             component="div"
                             className="lg_error_message"
                           />
+                        </div>
+                        <div className="flx flx-column">
+                          <div className="rg_seting-role">Vài trò của người dùng trong file?</div>
+                          <div className="rg_form-group flx flx-row flx-ct-a">
+                            <div>
+                              <Field name="role" type="radio" id="role_1" value="teacher" />
+                              <label className="rg_label" htmlFor="role_1">
+                                Giảng viên
+                              </label>
+                            </div>
+                            <div>
+                              <Field name="role" type="radio" id="role_2" value="mentor" />
+                              <label className="rg_label" htmlFor="role_2">
+                                Người hướng dẫn
+                              </label>
+                            </div>
+                            <div>
+                              <Field name="role" type="radio" id="role_3" value="student" />
+                              <label className="rg_label" htmlFor="role_3">
+                                Sinh viên
+                              </label>
+                            </div>
+                          </div>
+                          <ErrorMessage name="role" component="div" className="rg_error_message" />
                         </div>
                         <button
                           style={{ background: "#1A73E8" }}

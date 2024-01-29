@@ -48,15 +48,14 @@ import { setFetchError } from "app/slices/errorSlice";
 import { setUserLogin } from "app/slices/userSlice";
 import { methodSendRequest } from "utilities/FetchData";
 import { BASE_URL } from "utilities/initialValue";
-import { POST } from "utilities/initialValue";
-import { headers } from "utilities/initialValue";
+import { POST, headers } from "utilities/initialValue";
 
 function SignInBasic() {
   const dispatch = useDispatch();
   const userRegister = useSelector((state) => state.user.userRegister);
   const formValues = {
-    email: userRegister.email ? userRegister.email : "",
-    password: userRegister.password ? userRegister.password : "",
+    email: userRegister.email ? userRegister.email : "admin_1@fpt.edu.vn",
+    password: userRegister.password ? userRegister.password : "123456",
   };
   const fetchError = useSelector((state) => state.error.fetchError);
   const navigation = useNavigate();
