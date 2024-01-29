@@ -30,12 +30,10 @@ const getUserLogin = async (req, res, next) => {
 const insertListUsers = async (req, res, next) => {
   try {
     const saltRounds = 12;
-    const { sheetNo } = req.body;
     const excelFilePath = req.file.path;
     const workbook = xlsx.readFile(excelFilePath);
     const sheetName = workbook.SheetNames[0];
     const userData = xlsx.utils.sheet_to_json(workbook.Sheets[sheetName]);
-    console.log(userData);
     const newData = [];
     for (const user of userData) {
       try {

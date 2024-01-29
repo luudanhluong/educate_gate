@@ -45,7 +45,6 @@ function CreateListAccount() {
     file: Yup.mixed().required("Vui lòng chọn một file"),
   });
   const handleSubmit = async () => {
-    console.log("values.file");
     try {
       const formData = new FormData();
       formData.append("file", fileName);
@@ -56,7 +55,6 @@ function CreateListAccount() {
       console.log(error.message);
     }
   };
-  console.log(fileName);
   return (
     <>
       <DefaultNavbar
