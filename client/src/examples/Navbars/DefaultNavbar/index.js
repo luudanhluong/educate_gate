@@ -42,6 +42,7 @@ import DefaultNavbarMobile from "examples/Navbars/DefaultNavbar/DefaultNavbarMob
 
 // Material Kit 2 React base styles
 import breakpoints from "assets/theme/base/breakpoints";
+import { useSelector } from "react-redux";
 
 function DefaultNavbar({ brand, routes, transparent, light, action, sticky, relative, center }) {
   const [dropdown, setDropdown] = useState("");
@@ -53,6 +54,8 @@ function DefaultNavbar({ brand, routes, transparent, light, action, sticky, rela
   const [arrowRef, setArrowRef] = useState(null);
   const [mobileNavbar, setMobileNavbar] = useState(false);
   const [mobileView, setMobileView] = useState(false);
+
+  const userLogin = useSelector((state) => state.user.userLogin);
 
   const openMobileNavbar = () => setMobileNavbar(!mobileNavbar);
 
@@ -80,8 +83,7 @@ function DefaultNavbar({ brand, routes, transparent, light, action, sticky, rela
     // Remove event listener on cleanup
     return () => window.removeEventListener("resize", displayMobileNavbar);
   }, []);
-
-  const renderNavbarItems = routes.map(({ name, icon, href, route, collapse }) => (
+  const defautNav = ({ name, icon, href, route, collapse }) => (
     <DefaultNavbarDropdown
       key={name}
       name={name}
@@ -99,12 +101,18 @@ function DefaultNavbar({ brand, routes, transparent, light, action, sticky, rela
       onMouseLeave={() => collapse && setDropdown(null)}
       light={light}
     />
-  ));
+  );
+  const renderNavbarItems = routes.map(({ name, icon, href, route, collapse }) => {
+    if (userLogin.role === "admin") {
+      return defautNav({ name, icon, href, route, collapse });
+    } else if (userLogin.role !== "admin" && name !== "admins") {
+      return defautNav({ name, icon, href, route, collapse });
+    }
+  });
 
   // Render the routes on the dropdown menu
   const renderRoutes = routes.map(({ name, collapse, columns, rowsPerColumn }) => {
     let template;
-
     // Render the dropdown menu that should be display as columns
     if (collapse && columns && name === dropdownName) {
       const calculateColumns = collapse.reduce((resultArray, item, index) => {

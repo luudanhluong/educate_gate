@@ -1,4 +1,5 @@
-const simpleModalCode = `import { useState } from "react";
+// const simpleModalCode =
+import { useState } from "react";
 
 // @mui material components
 import Container from "@mui/material/Container";
@@ -71,6 +72,6 @@ function SimpleModal() {
   );
 }
 
-export default SimpleModal;`;
+export default SimpleModal;
 
-export default simpleModalCode;
+// export default simpleModalCode;

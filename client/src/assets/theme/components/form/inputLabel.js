@@ -25,7 +25,7 @@ export default {
     root: {
       fontSize: size.sm,
       color: text.main,
-      lineHeight: 0.9,
+      lineHeight: 1.125,
 
       "&.Mui-focused": {
         color: info.main,

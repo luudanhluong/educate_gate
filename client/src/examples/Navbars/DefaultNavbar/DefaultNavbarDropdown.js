@@ -49,7 +49,6 @@ function DefaultNavbarDropdown({
     component: Link,
     to: route,
   };
-
   return (
     <>
       <MKBox
