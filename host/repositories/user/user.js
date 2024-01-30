@@ -22,14 +22,14 @@ const createListUsers = async (listData) => {
   const emailList = listData.map((user) => user.email);
   const userList = await User.find({
     email: { $in: emailList },
-  }).exec();
+  }).select('email username').exec(); 
   try {
     if (userList.length === 0) {
       const user = await User.insertMany(listData);
       return user._doc;
     }
     return {
-      data: userList._doc,
+      data: userList,
       message: "Email đã tồn tại trong hệ thống",
     };
   } catch (e) {

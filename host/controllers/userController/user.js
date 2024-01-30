@@ -29,6 +29,7 @@ const getUserLogin = async (req, res, next) => {
 };
 const insertListUsers = async (req, res, next) => {
   try {
+    const password = "Aa@123";
     const saltRounds = 12;
     const excelFilePath = req.file.path;
     const workbook = xlsx.readFile(excelFilePath);
@@ -38,10 +39,7 @@ const insertListUsers = async (req, res, next) => {
     for (const user of userData) {
       try {
         const salt = await bcrypt.genSalt(saltRounds);
-        const hashedPassword = await bcrypt.hash(
-          user.password.toString(),
-          salt
-        );
+        const hashedPassword = await bcrypt.hash(password, salt);
         newData.push({ ...user, password: hashedPassword });
       } catch (error) {
         console.error("Error hashing password:", error);

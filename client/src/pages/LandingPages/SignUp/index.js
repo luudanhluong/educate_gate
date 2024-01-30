@@ -68,7 +68,7 @@ function SignUpBasic() {
   const handleSubmit = async (values) => {
     const { username, password, role, email } = values;
     const data = { username, password, role, email };
-    const response = await methodSendRequest(BASE_URL + "/register", POST, headers, data);
+    const response = await methodSendRequest(BASE_URL + "/user/register", POST, headers, data);
     const result = await response;
     if (result.error) {
       dispatch(setFetchError(true));

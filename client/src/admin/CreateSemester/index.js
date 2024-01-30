@@ -36,7 +36,7 @@ import { BASE_URL } from "utilities/initialValue";
 import axios from "axios";
 import { useState } from "react";
 
-function CreateListAccount() {
+function CreateSemester() {
   const [fileName, setFileName] = useState();
   const formValues = {
     file: "",
@@ -48,9 +48,15 @@ function CreateListAccount() {
     try {
       const formData = new FormData();
       formData.append("file", fileName);
-      const response = await axios.post(`${BASE_URL}/insert-list-users`, formData);
-      const result = await response.data;
-      console.log(result);
+      await axios
+        .post(`${BASE_URL}/insert-list-users`, formData)
+        .then((response) => {
+          const responseData = response.data;
+          console.log("Response Data:", responseData);
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
     } catch (error) {
       console.log(error.message);
     }
@@ -164,4 +170,4 @@ function CreateListAccount() {
   );
 }
 
-export default CreateListAccount;
+export default CreateSemester;

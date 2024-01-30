@@ -39,9 +39,6 @@ Coded by www.creative-tim.com
 // @mui material components
 import Icon from "@mui/material/Icon";
 
-// @mui icons
-import GitHubIcon from "@mui/icons-material/GitHub";
-
 // Pages
 import AboutUs from "layouts/pages/landing-pages/about-us";
 import ContactUs from "layouts/pages/landing-pages/contact-us";
@@ -68,7 +65,8 @@ import Dropdowns from "layouts/sections/elements/dropdowns";
 import ProgressBars from "layouts/sections/elements/progress-bars";
 import Toggles from "layouts/sections/elements/toggles";
 import Typography from "layouts/sections/elements/typography";
-import CreateListAccountBase from "layouts/modals/create-list-account";
+import AddListAccountBase from "layouts/admin/add-list-account";
+import CreateClassBase from "layouts/admin/create-class";
 
 const routes = [
   {
@@ -111,17 +109,6 @@ const routes = [
             component: <SignUp />,
           },
         ],
-      },
-    ],
-  },
-  {
-    name: "admins",
-    icon: <Icon>view_day</Icon>,
-    collapse: [
-      {
-        name: "Create list account",
-        route: "/pages/authentication/create-new-list-account",
-        component: <CreateListAccountBase />,
       },
     ],
   },
@@ -283,9 +270,28 @@ const routes = [
     ],
   },
   {
-    name: "github",
-    icon: <GitHubIcon />,
-    href: "https://www.github.com/creativetimofficial/material-kit-react",
+    name: "creates",
+    dropdown: true,
+    description: "Xem tất cả",
+    collapse: [
+      {
+        name: "Thêm danh sách người dùng",
+        route: "/admin/create-new-list-account",
+        component: <AddListAccountBase />,
+      },
+    ],
+  },
+  {
+    name: "creates",
+    dropdown: true,
+    description: "Xem tất cả",
+    collapse: [
+      {
+        name: "Thêm danh sách người dùng",
+        route: "/admin/create-new-class",
+        component: <CreateClassBase />,
+      },
+    ],
   },
 ];
 

@@ -1,6 +1,16 @@
-import { Schema } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
-const classModel = Schema({
-  name: { type: String, required: [true, "Class name không được để trống"] },
-  code: { type: String, unique: [true, "Mõi class chỉ có một code"] },
-});
+const classSchema = new Schema(
+  {
+    preName: { type: String, require: true },
+    suffName: { type: String, require: true },
+    code: { type: Number, require: true },
+    enrollmentLimit: { type: Number, require: true },
+    status: { type: String },
+  },
+  {
+    timestamps: true,
+  }
+);
+const Class = mongoose.model("Class", classSchema);
+export default Class;
