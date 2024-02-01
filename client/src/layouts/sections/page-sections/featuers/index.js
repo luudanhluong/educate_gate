@@ -26,7 +26,7 @@ import FeaturesOne from "layouts/sections/page-sections/featuers/components/Feat
 function Features() {
   return (
     <BaseLayout
-      title="List Group"
+      title="Features"
       breadcrumb={[
         { label: "Page Sections", route: "/sections/page-sections/features" },
         { label: "Features" },

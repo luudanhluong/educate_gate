@@ -19,30 +19,32 @@ import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 
 // react-copy-to-clipboard components
-import { CopyToClipboard } from "react-copy-to-clipboard";
+// import { CopyToClipboard } from "react-copy-to-clipboard";
 
 // react-syntax-highlighter components
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { prism } from "react-syntax-highlighter/dist/esm/styles/prism";
+// import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+// import { prism } from "react-syntax-highlighter/dist/esm/styles/prism";
 
 // @mui material components
 import Grid from "@mui/material/Grid";
 import AppBar from "@mui/material/AppBar";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-import Slide from "@mui/material/Slide";
+// import Slide from "@mui/material/Slide";
 
 // Material Kit 2 React components
 import MKBox from "components/MKBox";
-import MKAlert from "components/MKAlert";
-import MKButton from "components/MKButton";
+// import MKAlert from "components/MKAlert";
+// import MKButton from "components/MKButton";
 import MKTypography from "components/MKTypography";
 
 // Material Kit 2 React base styles
-import colors from "assets/theme/base/colors";
+// import colors from "assets/theme/base/colors";
 
-function View({ children, code, title, height, ...rest }) {
-  const { grey } = colors;
+import StudentList from "layouts/sections/page-sections/featuers/components/FeaturesOne/studentInfo";
+
+function View({ children, title, height, ...rest }) {
+  // const { grey } = colors;
 
   const [activeTab, setActiveTab] = useState(0);
   const [success, setSuccess] = useState(false);
@@ -89,7 +91,7 @@ function View({ children, code, title, height, ...rest }) {
                       className="fas fa-desktop"
                     />
                   }
-                  label="Preview"
+                  label="Group"
                 />
                 <Tab
                   icon={
@@ -101,7 +103,7 @@ function View({ children, code, title, height, ...rest }) {
                       className="fas fa-code"
                     />
                   }
-                  label="List"
+                  label="Student List"
                 />
               </Tabs>
             </AppBar>
@@ -130,47 +132,10 @@ function View({ children, code, title, height, ...rest }) {
           borderRadius="xl"
           sx={{ overflow: "hidden" }}
         >
-          <CopyToClipboard text={code}>
-            <MKButton
-              variant="gradient"
-              color="dark"
-              size="small"
-              sx={{ position: "absolute", top: "0.5rem", right: "0.5rem" }}
-              onClick={() => setSuccess(true)}
-            >
-              <MKBox color="white" mr={0.5} className="fas fa-copy" /> Copy
-            </MKButton>
-          </CopyToClipboard>
-          <Slide direction="down" in={success} unmountOnExit>
-            <MKBox position="absolute" top="0.5rem" left={0} width="100%">
-              <MKAlert
-                width="25%"
-                mx="auto"
-                color="success"
-                sx={{ minHeight: "2.5rem !important", py: 1, justifyContent: "center" }}
-              >
-                <MKTypography variant="body2" color="white" fontWeight="regular">
-                  Code successfully copied!
-                </MKTypography>
-              </MKAlert>
-            </MKBox>
-          </Slide>
-          <SyntaxHighlighter
-            language="jsx"
-            style={prism}
-            showLineNumbers
-            customStyle={{
-              height,
-              maxHeight: "40rem",
-              fontSize: "1rem",
-              backgroundColor: grey[100],
-              padding: "1rem 1rem 1rem 0.25rem",
-              overflowY: "scroll",
-              margin: 0,
-            }}
-          >
-            {code}
-          </SyntaxHighlighter>
+          <MKBox width="100%" p={3}>
+            {/* Hiển thị danh sách học sinh */}
+            <StudentList />
+          </MKBox>
         </MKBox>
       </MKBox>
     </MKBox>

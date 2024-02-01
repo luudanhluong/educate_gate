@@ -17,7 +17,7 @@ Coded by www.creative-tim.com
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import Icon from "@mui/material/Icon";
-import Stack from "@mui/material/Stack";
+// import Stack from "@mui/material/Stack";
 
 // Material Kit 2 React components
 import MKBox from "components/MKBox";
@@ -63,7 +63,7 @@ function FeaturesOne() {
               <Icon sx={{ fontWeight: "bold" }}>arrow_forward</Icon>
             </MKTypography>
           </Grid>
-          <Grid item xs={12} lg={6} sx={{ ml: { xs: -2, lg: "auto" }, mt: { xs: 6, lg: 0 } }}>
+          {/* <Grid item xs={12} lg={6} sx={{ ml: { xs: -2, lg: "auto" }, mt: { xs: 6, lg: 0 } }}>
             <Stack>
               <MKBox display="flex" alignItems="center" p={2}>
                 <MKBox
@@ -129,7 +129,7 @@ function FeaturesOne() {
                 </MKTypography>
               </MKBox>
             </Stack>
-          </Grid>
+          </Grid> */}
         </Grid>
       </Container>
     </MKBox>

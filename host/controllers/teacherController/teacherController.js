@@ -11,6 +11,9 @@ const teacherShowListStudent = async(res,req) => {
         res.status(500).send('Internal Server Error');
       }
 }
+const teacherListClass = async(res,req) =>{
+  
+}
 export default{
     teacherShowListStudent
 }
