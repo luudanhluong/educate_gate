@@ -14,62 +14,69 @@ Coded by www.creative-tim.com
 */
 
 // @mui material components
-import Card from "@mui/material/Card";
 import Grid from "@mui/material/Grid";
 
 // Material Kit 2 React components
 import MKBox from "components/MKBox";
-import MKTypography from "components/MKTypography";
-
-// Material Kit 2 React example components
-
-// Material Kit 2 React page layout routes
 
 // Images
 import bgImage from "assets/images/bg-sign-in-basic.jpeg";
-import { ErrorMessage, Field, Form, Formik } from "formik";
-import * as Yup from "yup";
-import { BASE_URL } from "utilities/initialValue";
-import axios from "axios";
-import { useState } from "react";
 import DefaultNavbar from "admin/Navbar/DefaultNavbar";
+import Tables from "layouts/tables";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
+import { BASE_URL } from "utilities/initialValue";
+import { setUsers } from "app/slices/userSlice";
+import AddListAccount from "./addListAccount";
+import { setActivePopupAddListUser } from "app/slices/activeSlice";
+import { setFilterRole } from "app/slices/userSlice";
 
-function AddListAccount() {
-  const [fileName, setFileName] = useState();
-  const formValues = {
-    file: "",
-  };
-  const initialValues = Yup.object().shape({
-    file: Yup.mixed().required("Vui lòng chọn một file"),
-  });
-  const handleSubmit = async () => {
-    try {
-      const formData = new FormData();
-      formData.append("file", fileName);
-      await axios
-        .post(`${BASE_URL}/user/insert-list-users`, formData)
-        .then((response) => {
-          const responseData = response.data;
-          console.log("Response Data:", responseData);
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-        });
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
+function ListAccount() {
+  const dispatch = useDispatch();
+  const activePopup = useSelector((state) => state.active.active_popup_add_list_user);
+  const filterRole = useSelector((state) => state.user.filterRole);
+  console.log(filterRole);
+  useEffect(() => {
+    axios
+      .get(`${BASE_URL}/admins/users?item=createAt&order=desc&skip=0&limit=10&role=${filterRole}`)
+      .then((res) => {
+        dispatch(setUsers(res.data));
+        return res;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [dispatch, filterRole]);
+
+  useEffect(() => {
+    const handleDocumentClick = (e) => {
+      if (
+        e.target.closest("#add_list_user") === null &&
+        e.target.closest("#btn_add_new_list_user") === null
+      ) {
+        dispatch(setActivePopupAddListUser(false));
+      }
+    };
+    window.addEventListener("click", handleDocumentClick);
+    dispatch(setFilterRole(0));
+    return () => {
+      window.removeEventListener("click", handleDocumentClick);
+    };
+  }, [dispatch]);
+
   return (
     <>
       <DefaultNavbar light={true} />
+      {activePopup ? <AddListAccount /> : ""}
       <MKBox
         position="absolute"
         top={0}
         right={0}
         zIndex={1}
         width="calc(100% - 288px)"
-        minHeight="100vh"
-        overflow="hidden"
+        height="100%"
+        overflow="auto"
         sx={{
           backgroundImage: ({ functions: { linearGradient, rgba }, palette: { gradients } }) =>
             `${linearGradient(
@@ -81,78 +88,19 @@ function AddListAccount() {
           backgroundRepeat: "no-repeat",
         }}
       >
-        <MKBox px={1} width="100%" height="100vh" mx="auto" position="relative" zIndex={2}>
-          <Grid container spacing={1} justifyContent="center" alignItems="center" height="100%">
-            <Grid item xs={11} sm={9} md={5} lg={4} xl={3}>
-              <Card>
-                <MKBox
-                  variant="gradient"
-                  bgColor="info"
-                  borderRadius="lg"
-                  coloredShadow="info"
-                  mx={2}
-                  mt={-3}
-                  p={2}
-                  mb={1}
-                  textAlign="center"
-                >
-                  <MKTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-                    Tạo danh sách người dùng
-                  </MKTypography>
-                </MKBox>
-                <MKBox pt={4} pb={3} px={3}>
-                  <MKBox mb={2}>
-                    <Formik
-                      initialValues={formValues}
-                      onSubmit={(values) => {
-                        handleSubmit(values);
-                      }}
-                      validationSchema={initialValues}
-                    >
-                      {({ errors, touched, handleChange, setFieldValue }) => (
-                        <Form>
-                          <div className="lg_form-group">
-                            <label
-                              style={{ marginBottom: "4px" }}
-                              className="lg_label block"
-                              htmlFor="file"
-                            >
-                              Tải tệp của bạn
-                            </label>
-                            <Field
-                              type="file"
-                              name="file"
-                              className={`${
-                                touched.file && errors.file ? "error" : ""
-                              } lg_form-control`}
-                              style={{ background: "#F4F4F4" }}
-                              accept=".xls, .xlsx"
-                              id="file"
-                              onChange={(event) => {
-                                setFieldValue("file", event.currentTarget.files[0]);
-                                handleChange(event);
-                                setFileName(event.currentTarget.files[0]);
-                              }}
-                            />
-                            <ErrorMessage
-                              name="file"
-                              component="div"
-                              className="lg_error_message"
-                            />
-                          </div>
-                          <button
-                            style={{ background: "#1A73E8", marginTop: 16 }}
-                            type="submit"
-                            className="btn-sbm pointer"
-                          >
-                            Tạo
-                          </button>
-                        </Form>
-                      )}
-                    </Formik>
-                  </MKBox>
-                </MKBox>
-              </Card>
+        <MKBox px={1} width="100%" height="100%" mx="auto" position="relative" zIndex={2}>
+          <Grid
+            container
+            spacing={1}
+            justifyContent="center"
+            alignItems="center"
+            width={"100%"}
+            m={0}
+            height="100%"
+            // overflow={"hidden"}
+          >
+            <Grid item xs={12} height="100%" p={0}>
+              <Tables />
             </Grid>
           </Grid>
         </MKBox>
@@ -161,4 +109,4 @@ function AddListAccount() {
   );
 }
 
-export default AddListAccount;
+export default ListAccount;

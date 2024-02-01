@@ -8,7 +8,7 @@ const MatchedSchema = new Schema(
     },
     mentorId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "mentors",
+      ref: "users",
     },
     status: { type: String },
   },

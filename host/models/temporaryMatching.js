@@ -1,12 +1,12 @@
 import mongoose, { Schema } from "mongoose";
 
-const mentorCatergorySchema = new Schema(
+const temporaryMatchingSchema = new Schema(
   {
-    categoryId: {
+    groupId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "categories",
+      ref: "groups",
     },
-    userId: {
+    mentorId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "users",
     },
@@ -16,5 +16,5 @@ const mentorCatergorySchema = new Schema(
     timestamps: true,
   }
 );
-const MentorCategory = mongoose.model("MentorCategory", mentorCatergorySchema);
-export default MentorCategory;
+const TemporaryMatching = mongoose.model("TemporaryMatching", temporaryMatchingSchema);
+export default TemporaryMatching;

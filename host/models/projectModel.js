@@ -4,14 +4,6 @@ const projectSchema = new Schema(
   {
     name: { type: String, require: true },
     description: { type: String, require: true },
-    categoryId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "categories",
-    },
-    managerId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "groups",
-    },
     status: { type: String },
   },
   {

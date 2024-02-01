@@ -1,10 +1,10 @@
 import mongoose, { Schema } from "mongoose";
 
-const mentorCatergorySchema = new Schema(
-  {
-    categoryId: {
+const semesterDetailSchema = new Schema(
+  { 
+    semesterId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "categories",
+      ref: "semesters",
     },
     userId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -16,5 +16,5 @@ const mentorCatergorySchema = new Schema(
     timestamps: true,
   }
 );
-const MentorCategory = mongoose.model("MentorCategory", mentorCatergorySchema);
-export default MentorCategory;
+const SemesterDetail = mongoose.model("SemesterDetail", semesterDetailSchema);
+export default SemesterDetail;

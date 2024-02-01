@@ -91,6 +91,14 @@ function DefaultNavbar({ transparent, light = true }) {
           <MKBox className={"ithv_elm_bl"} style={{ padding: "2px 4px" }}>
             <DefaultNavbarLink
               icon="key"
+              name="danh sách lớp học sinh"
+              route="/admin/list-class-students"
+              light={light}
+            />
+          </MKBox>
+          <MKBox className={"ithv_elm_bl"} style={{ padding: "2px 4px" }}>
+            <DefaultNavbarLink
+              icon="key"
               name="sign in"
               route="/authentication/sign-in"
               light={light}

@@ -13,8 +13,8 @@ Coded by www.creative-tim.com
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 
-import ListAccount from "admin/AddListAccount";
+import CreateNewClassStudent from "admin/CreateNewClassStudent";
 
-export default function ListAccountBase() {
-  return <ListAccount />;
+export default function CreateClassStudentBase() {
+  return <CreateNewClassStudent />;
 }

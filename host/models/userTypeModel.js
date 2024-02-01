@@ -1,9 +1,9 @@
 import mongoose, { Schema } from "mongoose";
 
-const userType = Schema(
+const userType = new Schema(
   {
     name: { type: String, required: [true, "Class name không được để trống"] },
-    userTypeCode: { type: Number, required: true },
+    role: { type: Number, required: true },
     status: {type: String},
   },
   {

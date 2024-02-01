@@ -1,14 +1,14 @@
 import mongoose, { Schema } from "mongoose";
 
-const mentorCatergorySchema = new Schema(
-  {
+const projectCategorySchema = new Schema(
+  { 
     categoryId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "categories",
     },
-    userId: {
+    projectId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "users",
+      ref: "projects",
     },
     status: { type: String },
   },
@@ -16,5 +16,5 @@ const mentorCatergorySchema = new Schema(
     timestamps: true,
   }
 );
-const MentorCategory = mongoose.model("MentorCategory", mentorCatergorySchema);
-export default MentorCategory;
+const ProjectCategory = mongoose.model("ProjectCategory", projectCategorySchema);
+export default ProjectCategory;

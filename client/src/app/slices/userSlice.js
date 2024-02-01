@@ -1,8 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 const initialValue = {
-  users: [],
+  users: {},
   userRegister: {},
   userLogin: {},
+  filterRole: 0,
 };
 const storiesSlice = createSlice({
   name: "user",
@@ -14,9 +15,15 @@ const storiesSlice = createSlice({
     setUserLogin: (state, action) => {
       state.userLogin = action.payload;
     },
+    setUsers: (state, action) => {
+      state.users = action.payload;
+    },
+    setFilterRole: (state, action) => {
+      state.filterRole = action.payload;
+    },
   },
 });
 
 const { reducer, actions } = storiesSlice;
-export const { setUserLogin, setUserRegister } = actions;
+export const { setUserLogin, setUserRegister, setUsers, setFilterRole } = actions;
 export default reducer;

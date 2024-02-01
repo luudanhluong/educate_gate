@@ -65,8 +65,9 @@ import Dropdowns from "layouts/sections/elements/dropdowns";
 import ProgressBars from "layouts/sections/elements/progress-bars";
 import Toggles from "layouts/sections/elements/toggles";
 import Typography from "layouts/sections/elements/typography";
-import AddListAccountBase from "layouts/admin/add-list-account";
+import ListAccountBase from "layouts/admin/add-list-account";
 import CreateClassBase from "layouts/admin/create-class";
+import CreateClassStudentBase from "layouts/admin/create-list-class-student";
 
 const routes = [
   {
@@ -277,7 +278,7 @@ const routes = [
       {
         name: "Thêm danh sách người dùng",
         route: "/admin/create-new-list-account",
-        component: <AddListAccountBase />,
+        component: <ListAccountBase />,
       },
     ],
   },
@@ -290,6 +291,18 @@ const routes = [
         name: "Thêm danh sách người dùng",
         route: "/admin/create-new-class",
         component: <CreateClassBase />,
+      },
+    ],
+  },
+  {
+    name: "creates",
+    dropdown: true,
+    description: "Xem tất cả",
+    collapse: [
+      {
+        name: "Thêm danh sách người dùng",
+        route: "/admin/list-class-students",
+        component: <CreateClassStudentBase />,
       },
     ],
   },
