@@ -1,0 +1,122 @@
+.ClassListWrapper {
+  background-color: black;
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+  
+}
+
+.ClassItem {
+  cursor: pointer;
+  margin-bottom: 5px;
+}
+
+
+.StudentDetailsWrapper {
+  display: flex;
+  flex-wrap: wrap; 
+  /* Cho phép các div con tự xuống dòng khi không đủ không gian */
+}
+.StudentDetailsHeader {
+  width: 100%;
+  margin-bottom: 16px;
+  margin-top: 30px;
+  margin-left: 20px;}
+
+/* GroupDetails.css */
+
+/* Tạo màu ngẫu nhiên cho các ô chứa thông tin nhóm */
+.GroupItem:nth-child(odd) {
+  background: linear-gradient(110deg, #0d7b85 60%, #0e8ca2 60%);
+  width: 100%;
+  color: white;
+}
+
+.GroupItem:nth-child(even) {
+  background: linear-gradient(110deg, #e76c2f 60%, #f3823c 60%);
+  color: white;
+  width: 100%;
+}
+
+
+/* Thêm các style khác nếu cần thiết */
+/* GroupDetails.css */
+
+/* ... (các styles khác) */
+.GroupDetailsItem {
+  flex: 0 1 calc(50% - 16px); /* Chiếm 50% không gian, trừ đi khoảng cách giữa các nhóm */
+  margin: 0 8px 16px; /* Khoảng cách giữa các GroupDetailsItem */
+  box-sizing: border-box;
+  background-color: azure;
+  border-radius: 10px;
+  overflow: hidden; /* Ẩn phần nội dung ra khỏi phần được giới hạn bởi border-radius */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Đổ bóng cho phần tử */
+}
+
+.GroupDetailsItem h3 {
+  margin-bottom: 8px;
+  margin-top: 6px;
+  background-color: #3498db; /* Màu nền cho tiêu đề */
+  color: white; /* Màu chữ cho tiêu đề */
+  padding: 10px; /* Khoảng cách giữa nền và nội dung tiêu đề */
+  border-top-left-radius: 10px; /* Bo góc trên bên trái */
+  border-top-right-radius: 10px; /* Bo góc trên bên phải */
+}
+
+.GroupDetailsItem table {
+  width: 100%;
+  border-collapse: separate; /* Tách biệt các đường viền */
+  border-spacing: 0; /* Khoảng cách giữa các ô */
+  margin-top: 16px;
+}
+
+.GroupDetailsItem th,
+.GroupDetailsItem td {
+  padding: 12px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+.GroupDetailsItem th {
+  background-color: #f2f2f2;
+  border-bottom: 1px solid #ddd; /* Đường viền dưới cho phần tiêu đề */
+}
+
+.GroupDetailsItem tbody tr {
+  background-color: #f9f9f9;
+}
+
+.GroupDetailsItem tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.GroupDetailsItem tbody tr:hover {
+  background-color: #f1f1f1;
+}
+
+
+/* Các style khác nếu cần thiết */
+
+  .GroupListWrapper {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px; /* Thêm gap giữa các GroupItem */
+  }
+  
+  .GroupItem {
+    padding: 15px;
+    margin: 10px;
+    transition: all 0.3s ease;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(162, 63, 63, 0.5); 
+  }
+  
+  .GroupItem p {
+    margin: 0;
+  }
+  .GroupItem:hover {
+   
+    transform: scale(1.05);
+    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.2); /* Thêm đổ bóng */ /* Phóng to 1.05 lần khi di chuột qua */
+  }
+  

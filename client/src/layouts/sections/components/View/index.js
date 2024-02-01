@@ -1,18 +1,3 @@
-/*
-=========================================================
-* Material Kit 2 React - v2.1.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-kit-react
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
 import { useState, useEffect } from "react";
 
 // prop-types is a library for type checking of props
@@ -40,8 +25,6 @@ import MKTypography from "components/MKTypography";
 
 // Material Kit 2 React base styles
 // import colors from "assets/theme/base/colors";
-
-import StudentList from "layouts/sections/page-sections/featuers/components/FeaturesOne/studentInfo";
 
 function View({ children, title, height, ...rest }) {
   // const { grey } = colors;
@@ -131,12 +114,7 @@ function View({ children, title, height, ...rest }) {
           width="100%"
           borderRadius="xl"
           sx={{ overflow: "hidden" }}
-        >
-          <MKBox width="100%" p={3}>
-            {/* Hiển thị danh sách học sinh */}
-            <StudentList />
-          </MKBox>
-        </MKBox>
+        ></MKBox>
       </MKBox>
     </MKBox>
   );
@@ -150,7 +128,6 @@ View.defaultProps = {
 // Typechecking props for the View
 View.propTypes = {
   children: PropTypes.node.isRequired,
-  code: PropTypes.node.isRequired,
   title: PropTypes.string.isRequired,
   height: PropTypes.string,
 };

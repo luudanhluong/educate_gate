@@ -1,0 +1,261 @@
+{
+    "classes": [
+      {
+        "id": 1,
+        "name": "Class A",
+        "currentStudent": 30
+      },
+      {
+        "id": 2,
+        "name": "Class B",
+        "currentStudent": 25
+      }
+     
+    ],
+    "groups": [
+      {
+        "id": 1,
+        "classId": 1,
+        "projectId": 101,
+        "groupName": "Group 1",       
+        "teacherId": 2,
+        "mentorId": 1
+      },
+      {
+        "id": 2,
+        "classId": 1,
+        "projectId": 102,
+        "groupName": "Group 2",       
+        "teacherId": 2,
+        "mentorId": 2
+      },
+      {
+        "id": 3,
+        "classId": 1,
+        "projectId": 102,
+        "groupName": "Group 3",
+        "teacherId": 2,
+        "mentorId": 2
+      },
+      {
+        "id": 4,
+        "classId": 1,
+        "projectId": 102,
+        "groupName": "Group 4",      
+        "teacherId": 2,
+        "mentorId": 2
+      },
+      {
+        "id": 5,
+        "classId": 2,
+        "projectId": 102,
+        "groupName": "Group 4",      
+        "teacherId": 2,
+        "mentorId": 2
+      },
+      {
+        "id": 6,
+        "classId": 2,
+        "projectId": 102,
+        "groupName": "Group 4",      
+        "teacherId": 2,
+        "mentorId": 2
+      },
+      {
+        "id": 7,
+        "classId": 2,
+        "projectId": 102,
+        "groupName": "Group 4",      
+        "teacherId": 2,
+        "mentorId": 2
+      }
+      ,
+      {
+        "id": 8,
+        "classId": 2,
+        "projectId": 102,
+        "groupName": "Group 4",      
+        "teacherId": 2,
+        "mentorId": 2
+      }
+     
+   
+    ],
+    "projects": [
+      { "id": 101, "name": "Project 1" },
+      { "id": 102, "name": "Project 2" }
+      
+    ],
+    "mentors": [
+      { "id": 1, "name": "Mentor A" },
+      { "id": 2, "name": "Mentor B" }
+      
+    ],
+    "students" : [
+      {
+        "id": 1,
+        "name": "John Doe",
+        "DOB": "12/02/2002",
+        "gender": "male",
+        "majorOfStudent": 1,
+        "classId": 1,
+        "teacherId": 1,
+        "semesterId": 1,
+        "groupId":1,
+        "isLeader":true,
+        "rollNo":"HE161682"
+
+      },   {
+        "id": 2,
+        "name": "John Doe2",
+        "DOB": "12/02/2002",
+        "gender": "male",
+        "majorOfStudent": 1,
+        "classId": 1,
+        "teacherId": 1,
+        "semesterId": 1,
+        "groupId":1,
+        "isLeader":false,
+        "rollNo":"HE161682"
+
+      },
+      {
+        "id": 3,
+        "name": "John Doe1",
+        "DOB": "12/02/2002",
+        "gender": "male",
+        "majorOfStudent": 1,
+        "classId": 1,
+        "teacherId": 1,
+        "semesterId": 1,
+        "groupId":2,
+        "isLeader":true,
+        "rollNo":"HE161682"
+      },   {
+        "id": 4,
+        "name": " Doe",
+        "DOB": "12/02/2002",
+        "gender": "male",
+        "majorOfStudent": 1,
+        "classId": 1,
+        "teacherId": 1,
+        "semesterId": 1,
+        "groupId":2,
+        "isLeader":false,
+        "rollNo":"HE161682"
+
+      },
+      {
+        "id": 5,
+        "name": "John Doe5",
+        "DOB": "12/02/2002",
+        "gender": "male",
+        "majorOfStudent": 1,
+        "classId": 1,
+        "teacherId": 1,
+        "semesterId": 1,
+        "groupId":2,
+        "isLeader":true,
+        "rollNo":"HE161682"
+      }, {
+        "id": 6,
+        "name": "John ",
+        "DOB": "12/02/2002",
+        "gender": "male",
+        "majorOfStudent": 1,
+        "classId": 1,
+        "teacherId": 1,
+        "semesterId": 1,
+        "groupId":3,
+        "isLeader":false,
+        "rollNo":"HE161682"
+      },
+      {
+        "id": 7,
+        "name": "John Doe7",
+        "DOB": "12/02/2002",
+        "gender": "male",
+        "majorOfStudent": 1,
+        "classId": 1,
+        "teacherId": 1,
+        "semesterId": 1,
+        "groupId":4,
+        "isLeader":true,
+        "rollNo":"HE161682"
+      },
+      {
+        "id": 8,
+        "name": "John Doe8",
+        "DOB": "12/02/2002",
+        "gender": "male",
+        "majorOfStudent": 1,
+        "classId": 2,
+        "teacherId": 1,
+        "semesterId": 1,
+        "groupId":6,
+        "isLeader":true,
+        "rollNo":"HE161682"
+      },
+      {
+        "id": 9,
+        "name": "John Doe9",
+        "DOB": "12/02/2002",
+        "gender": "male",
+        "majorOfStudent": 1,
+        "classId": 1,
+        "teacherId": 1,
+        "semesterId": 1,
+        "groupId":5,
+        "isLeader":true,
+        "rollNo":"HE161682"
+        
+      },
+      {
+        "id": 10,
+        "name": "John Doe9",
+        "DOB": "12/02/2002",
+        "gender": "male",
+        "majorOfStudent": 1,
+        "classId": 2,
+        "teacherId": 1,
+        "semesterId": 1,
+        "groupId":6,
+        "isLeader":true,
+        "rollNo":"HE161682"
+        
+      },
+      {
+        "id": 11,
+        "name": "John Doe9",
+        "DOB": "12/02/2002",
+        "gender": "male",
+        "majorOfStudent": 1,
+        "classId": 2,
+        "teacherId": 1,
+        "semesterId": 1,
+        "groupId":5,
+        "isLeader":true,
+        "rollNo":"HE161682"
+        
+      }
+    ],
+    "major":[
+      {
+        "id":1,
+        "name":"SE"
+      },
+      {
+        "id":2,
+        "name":"MKT"
+      },
+      {
+        "id":3,
+        "name":"MC"
+      },
+      {
+        "id":4,
+        "name":"HA"
+      }
+    ]
+  }
+  

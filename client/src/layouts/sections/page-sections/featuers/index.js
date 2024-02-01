@@ -1,42 +1,64 @@
-/*
-=========================================================
-* Material Kit 2 React - v2.1.0
-=========================================================
+// YourNewComponent.js
+import React, { useState } from "react";
+import MKBox from "components/MKBox";
+import Grid from "@mui/material/Grid";
+import jsonData from "./data.json";
+import ListOfClasses from "./components/FeaturesOne/listOfClass";
+import NamesOfGroups from "./components/FeaturesOne/nameOfGroup";
+import GroupDetails from "./components/FeaturesOne/groupDetail";
+import "../featuers/components/FeaturesOne/studentList.css";
 
-* Product Page: https://www.creative-tim.com/product/material-kit-react
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
+const YourNewComponent = () => {
+  const [selectedClass, setSelectedClass] = useState(null);
 
-Coded by www.creative-tim.com
+  const handleSelectClass = (classId) => {
+    console.log("Selected Class:", classId);
+    setSelectedClass(classId);
+  };
 
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
-// Sections components
-import BaseLayout from "layouts/sections/components/BaseLayout";
-import View from "layouts/sections/components/View";
-
-// Features page components
-import FeaturesOne from "layouts/sections/page-sections/featuers/components/FeaturesOne";
-
-// Features page components code
-//import featuresOneCode from "layouts/sections/page-sections/featuers/components/FeaturesOne/code";
-
-function Features() {
   return (
-    <BaseLayout
-      title="Features"
-      breadcrumb={[
-        { label: "Page Sections", route: "/sections/page-sections/features" },
-        { label: "Features" },
-      ]}
-    >
-      <View title="Features 1">
-        <FeaturesOne />
-      </View>
-    </BaseLayout>
-  );
-}
+    <MKBox height="100vh" p={3}>
+      <Grid container spacing={3}>
+        <Grid item xs={1}>
+          <div className="left-content">
+            <ListOfClasses classes={jsonData.classes} onSelectClass={handleSelectClass} />
+          </div>
+        </Grid>
 
-export default Features;
+        <Grid item xs={11}>
+          <MKBox>
+            <Grid container spacing={3}>
+              <Grid item xs={12}>
+                <MKBox p={3} className="main-content">
+                  {selectedClass && (
+                    <NamesOfGroups
+                      selectedClass={selectedClass}
+                      groups={jsonData.groups}
+                      projects={jsonData.projects}
+                      mentors={jsonData.mentors}
+                    />
+                  )}
+                </MKBox>
+              </Grid>
+
+              <Grid item xs={12}>
+                <MKBox p={3} className="main-content">
+                  {selectedClass && (
+                    <GroupDetails
+                      students={jsonData.students.filter(
+                        (student) => student.classId === selectedClass
+                      )}
+                      groups={jsonData.groups}
+                    />
+                  )}
+                </MKBox>
+              </Grid>
+            </Grid>
+          </MKBox>
+        </Grid>
+      </Grid>
+    </MKBox>
+  );
+};
+
+export default YourNewComponent;

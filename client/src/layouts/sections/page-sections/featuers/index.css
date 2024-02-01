@@ -1,0 +1,23 @@
+/* App.css */
+.your-container {
+  display: grid;
+  grid-template-columns: 1fr 11fr; /* 1 phần cho left-content, 11 phần cho main-content */
+  gap: 20px; /* Khoảng cách giữa left-content và main-content */
+}
+
+.left-content {
+  padding: 20px;
+}
+
+.main-content {
+  padding: 20px;
+  gap: 20px;
+}
+
+.group-info {
+  flex: 1;
+}
+
+.group-details {
+  flex: 1;
+}
