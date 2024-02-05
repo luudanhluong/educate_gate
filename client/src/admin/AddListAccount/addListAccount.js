@@ -12,10 +12,10 @@ import { BASE_URL } from "utilities/initialValue";
 import axios from "axios";
 import { useState } from "react";
 import { Icon } from "@mui/material";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setActivePopupAddListUser } from "app/slices/activeSlice";
 import MKButton from "components/MKButton";
-// import Icon from "assets/theme/components/icon";
+import { setUsers } from "app/slices/userSlice";
 
 function AddListAccount() {
   const [fileName, setFileName] = useState();
@@ -26,15 +26,29 @@ function AddListAccount() {
   const initialValues = Yup.object().shape({
     file: Yup.mixed().required("Vui lòng chọn một file"),
   });
+  const { filterRole, searchValue, sort, pageNo } = useSelector((state) => state.user);
+  const limitUser = 10;
   const handleSubmit = async () => {
     try {
       const formData = new FormData();
       formData.append("file", fileName);
       await axios
-        .post(`${BASE_URL}/user/insert-list-users`, formData)
+        .post(`${BASE_URL}/admins/insert-list-users`, formData)
         .then((response) => {
-          const responseData = response.data;
-          console.log("Response Data:", responseData);
+          axios
+            .get(
+              `${BASE_URL}/admins/users?item=createdAt&order=${sort}&skip=${
+                pageNo * limitUser
+              }&limit=${limitUser}&role=${filterRole}&search=${searchValue}`
+            )
+            .then((res) => {
+              dispatch(setUsers(res.data));
+              return res;
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+          return response;
         })
         .catch((error) => {
           console.error("Error:", error);

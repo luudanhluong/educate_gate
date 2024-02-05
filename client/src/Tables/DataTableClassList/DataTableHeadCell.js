@@ -1,18 +1,3 @@
-/**
-=========================================================
-* Material Dashboard 2 React - v2.2.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
 // prop-types is a library for typechecking of props
 import PropTypes from "prop-types";
 
@@ -21,13 +6,17 @@ import Icon from "@mui/material/Icon";
 
 // Material Dashboard 2 React components
 import MKBox from "components/MKBox";
+import { useDispatch, useSelector } from "react-redux";
+import { setSort } from "app/slices/userSlice";
 
 // Material Dashboard 2 React contexts
 
 function DataTableHeadCell({ width, children, sorted, align, ...rest }) {
-  const darkMode = false;
+  const dispatch = useDispatch();
+  const { sort } = useSelector((state) => state.user);
   return (
     <MKBox
+      onClick={() => dispatch(setSort(sort === 1 ? -1 : 1))}
       component="th"
       width={width}
       py={1.5}
@@ -40,18 +29,18 @@ function DataTableHeadCell({ width, children, sorted, align, ...rest }) {
         {...rest}
         position="relative"
         textAlign={align}
-        color={darkMode ? "white" : "secondary"}
+        color={"secondary"}
         opacity={0.7}
         sx={({ typography: { size, fontWeightBold } }) => ({
           fontSize: size.xxs,
           fontWeight: fontWeightBold,
           textTransform: "uppercase",
-          cursor: sorted && "pointer",
+          cursor: children === "onboard" && "pointer",
           userSelect: sorted && "none",
         })}
       >
         {children}
-        {sorted && (
+        {children === "onboard" && (
           <MKBox
             position="absolute"
             top={0}

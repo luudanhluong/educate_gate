@@ -4,6 +4,9 @@ const initialValue = {
   userRegister: {},
   userLogin: {},
   filterRole: 0,
+  searchValue: "",
+  sort: -1,
+  pageNo: 0,
 };
 const storiesSlice = createSlice({
   name: "user",
@@ -21,9 +24,26 @@ const storiesSlice = createSlice({
     setFilterRole: (state, action) => {
       state.filterRole = action.payload;
     },
+    setSearchValue: (state, action) => {
+      state.searchValue = action.payload;
+    },
+    setSort: (state, action) => {
+      state.sort = action.payload;
+    },
+    setPageNo: (state, action) => {
+      state.pageNo = action.payload;
+    },
   },
 });
 
 const { reducer, actions } = storiesSlice;
-export const { setUserLogin, setUserRegister, setUsers, setFilterRole } = actions;
+export const {
+  setUserLogin,
+  setUserRegister,
+  setUsers,
+  setFilterRole,
+  setSearchValue,
+  setSort,
+  setPageNo,
+} = actions;
 export default reducer;

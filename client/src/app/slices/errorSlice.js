@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialValue = {
   fetchError: false,
 };
-const storiesSlice = createSlice({
+const errorSlice = createSlice({
   name: "error",
   initialState: initialValue,
   reducers: {
@@ -12,6 +12,6 @@ const storiesSlice = createSlice({
   },
 });
 
-const { reducer, actions } = storiesSlice;
+const { reducer, actions } = errorSlice;
 export const { setFetchError } = actions;
 export default reducer;

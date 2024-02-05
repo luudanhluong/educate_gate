@@ -9,6 +9,7 @@ const userSchema = new Schema(
     email: {
       type: String,
       required: [true, "Email không được để trống"],
+      index: true,
       unique: [true, "Email này đã tồn tại trong hệ thống"],
     },
     password: {
@@ -28,10 +29,10 @@ const userSchema = new Schema(
     gender: { type: Boolean },
     phoneNumber: { type: String },
     image: { type: String },
-    degree: { type: String }, 
+    degree: { type: String },
     groupId: { type: Number },
     menteeCount: { type: Number },
-    isLeader: { type: Boolean},
+    isLeader: { type: Boolean },
     status: { type: String },
   },
   {

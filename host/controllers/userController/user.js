@@ -1,6 +1,5 @@
 import userRepository from "../../repositories/user/index.js";
 import bcrypt from "bcrypt";
-import xlsx from "xlsx";
 
 const addNewUser = async (req, res, next) => {
   try {

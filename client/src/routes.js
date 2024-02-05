@@ -66,8 +66,8 @@ import ProgressBars from "layouts/sections/elements/progress-bars";
 import Toggles from "layouts/sections/elements/toggles";
 import Typography from "layouts/sections/elements/typography";
 import ListAccountBase from "layouts/admin/add-list-account";
-import CreateClassBase from "layouts/admin/create-class";
 import CreateClassStudentBase from "layouts/admin/create-list-class-student";
+import AddListClassBase from "layouts/admin/add-list-class";
 
 const routes = [
   {
@@ -290,7 +290,7 @@ const routes = [
       {
         name: "Thêm danh sách người dùng",
         route: "/admin/create-new-class",
-        component: <CreateClassBase />,
+        component: <AddListClassBase />,
       },
     ],
   },

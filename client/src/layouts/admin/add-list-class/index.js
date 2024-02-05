@@ -13,8 +13,8 @@ Coded by www.creative-tim.com
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 
-import CreateClass from "admin/CreateClass";
+import ListClass from "admin/CreateClass";
 
-export default function CreateClassBase() {
-  return <CreateClass />;
+export default function AddListClassBase() {
+  return <ListClass />;
 }

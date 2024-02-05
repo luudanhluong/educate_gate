@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import PropTypes from "prop-types";
-import { useTable, usePagination, useGlobalFilter, useAsyncDebounce, useSortBy } from "react-table";
+import { useTable, usePagination, useGlobalFilter, useSortBy } from "react-table";
 
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -10,15 +10,19 @@ import TableRow from "@mui/material/TableRow";
 import MKBox from "components/MKBox";
 import MKInput from "components/MKInput";
 
-import DataTableHeadCell from "Tables/DataTable/DataTableHeadCell";
-import DataTableBodyCell from "Tables/DataTable/DataTableBodyCell";
-import { useDispatch } from "react-redux";
+import DataTableHeadCell from "Tables/DataTableUserList/DataTableHeadCell";
+import DataTableBodyCell from "Tables/DataTableUserList/DataTableBodyCell";
+import { useDispatch, useSelector } from "react-redux";
 import { setActivePopupAddListUser } from "app/slices/activeSlice";
-import { Autocomplete } from "@mui/material";
-import { setFilterRole } from "app/slices/userSlice";
+import { Autocomplete, Icon } from "@mui/material";
+import { setFilterRole, setPageNo, setSearchValue } from "app/slices/userSlice";
+import MKPagination from "components/MKPagination";
 
-function DataTable({ userTypes, table, isSorted, noEndBorder }) {
+function DataTable({ table, isSorted, noEndBorder }) {
+  const { userTypes, total, limit } = useSelector((state) => state.user.users);
+  const { pageNo } = useSelector((state) => state.user);
   const userType = userTypes ? userTypes.map((el) => ({ name: el.name, role: el.role })) : [];
+  let qttPage = total ? Math.ceil(total / limit) : 0;
   const columns = useMemo(() => table.columns, [table]);
   const data = useMemo(() => table.rows, [table]);
   const dispatch = useDispatch();
@@ -29,20 +33,14 @@ function DataTable({ userTypes, table, isSorted, noEndBorder }) {
     usePagination
   );
 
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    prepareRow,
-    rows,
-    page,
-    setGlobalFilter,
-  } = tableInstance;
-  const onSearchChange = useAsyncDebounce((value) => {
-    setGlobalFilter(value || undefined);
-  }, 100);
+  const { getTableProps, getTableBodyProps, headerGroups, prepareRow, rows, page } = tableInstance;
+  const onSearchChange = (value) => {
+    dispatch(setSearchValue(value));
+  };
   return (
-    <TableContainer sx={{ boxShadow: "none", overflowX: "unset" }}>
+    <TableContainer
+      sx={{ boxShadow: "none", overflowX: "unset", paddingBottom: "3rem", position: "relative" }}
+    >
       <MKBox
         display="flex"
         justifyContent="space-between"
@@ -84,7 +82,7 @@ function DataTable({ userTypes, table, isSorted, noEndBorder }) {
         </MKBox>
         <MKBox width="16rem" ml="auto">
           <MKInput
-            placeholder="Search..."
+            placeholder="Search email..."
             size="small"
             fullWidth
             onChange={({ currentTarget }) => {
@@ -130,13 +128,48 @@ function DataTable({ userTypes, table, isSorted, noEndBorder }) {
           })}
         </TableBody>
       </Table>
+      {qttPage > 1 ? (
+        <MKBox
+          position="absolute"
+          display="flex"
+          gap="0.5rem"
+          sx={{
+            left: "50%",
+            transform: "translateX(-50%)",
+            bottom: "6px",
+            overflow: "auto",
+          }}
+        >
+          <MKPagination item onClick={() => (pageNo > 0 ? dispatch(setPageNo(pageNo - 1)) : null)}>
+            <Icon>keyboard_arrow_left</Icon>
+          </MKPagination>
+          {Array.from({ length: qttPage }, (_, index) => (
+            <MKPagination key={index}>
+              <MKPagination
+                active={index === pageNo}
+                onClick={() => dispatch(setPageNo(index))}
+                item
+              >
+                {index + 1}
+              </MKPagination>
+            </MKPagination>
+          ))}
+          <MKPagination
+            item
+            onClick={() => (qttPage - 1 > pageNo ? dispatch(setPageNo(pageNo + 1)) : null)}
+          >
+            <Icon>keyboard_arrow_right</Icon>
+          </MKPagination>
+        </MKBox>
+      ) : (
+        ""
+      )}
     </TableContainer>
   );
 }
 
 // Setting default values for the props of DataTable
 DataTable.defaultProps = {
-  userTypes: [],
   canSearch: false,
   showTotalEntries: true,
   pagination: { variant: "gradient", color: "info" },
@@ -146,7 +179,6 @@ DataTable.defaultProps = {
 
 // Typechecking props for the DataTable
 DataTable.propTypes = {
-  userTypes: PropTypes.objectOf(PropTypes.array),
   canSearch: PropTypes.bool,
   showTotalEntries: PropTypes.bool,
   table: PropTypes.objectOf(PropTypes.array).isRequired,

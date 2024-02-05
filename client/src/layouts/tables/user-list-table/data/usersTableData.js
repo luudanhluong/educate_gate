@@ -1,23 +1,7 @@
-/* eslint-disable react/prop-types */
-/* eslint-disable react/function-component-definition */
-/**
-=========================================================
-* Material Dashboard 2 React - v2.2.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
 // Material Dashboard 2 React components
 import MKBox from "components/MKBox";
 import MKTypography from "components/MKTypography";
+import PropTypes from "prop-types";
 
 // Images
 import userImg from "assets/images/user.jpg";
@@ -48,17 +32,32 @@ export default function data() {
       <MKTypography variant="caption">{description}</MKTypography>
     </MKBox>
   );
+  User.propTypes = {
+    image: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    email: PropTypes.string.isRequired,
+  };
+
+  Role.propTypes = {
+    title: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
+  };
   const rows = users.data
     ? users.data.map((user) => ({
         user: <User image={userImg} name={user.username} email={user.email} />,
+        gender: (
+          <MKTypography component="div" variant="caption" color="text" fontWeight="medium">
+            {user.gender ? "Nam" : "Nữ"}
+          </MKTypography>
+        ),
         role: <Role title="Manager" description="Organization" />,
         status: (
           <MKBox ml={-1}>
-            <MKBadge badgeContent="online" color="success" variant="gradient" size="sm" />
+            <MKBadge badgeContent="active" color="success" variant="gradient" size="sm" />
           </MKBox>
         ),
         onboard: (
-          <MKTypography component="a" href="#" variant="caption" color="text" fontWeight="medium">
+          <MKTypography component="span" variant="caption" color="text" fontWeight="medium">
             {getDate(user.createdAt)}
           </MKTypography>
         ),
@@ -73,6 +72,7 @@ export default function data() {
   return {
     columns: [
       { Header: "người dùng", accessor: "user", width: "32%", align: "left" },
+      { Header: "giới tính", accessor: "gender", align: "center" },
       { Header: "vai trò", accessor: "role", align: "left" },
       { Header: "trạng thái", accessor: "status", align: "center" },
       { Header: "onboard", accessor: "onboard", align: "center" },

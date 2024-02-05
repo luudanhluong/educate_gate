@@ -1,8 +1,7 @@
 import jwt from "jsonwebtoken";
 import dotnv from "dotenv";
 import bcrypt from "bcrypt";
-import User from "../../models/userModel.js";
-import UserType from "../../models/userTypeModel.js";
+import User from "../../models/userModel.js"; 
 
 const createNewUser = async ({ username, email, password, role }) => {
   const formData = { username, email, password, role };
@@ -36,26 +35,7 @@ const loginUser = async ({ email, password }) => {
     throw new Error(e.message.toString());
   }
 };
-const getUsers = async ({ item, order, skip, limit }) => {
-  try {
-    const listUsers = await User.find({}, "-password")
-      .sort({ [item]: order })
-      .skip(skip)
-      .limit(limit)
-      .exec();
-    const userRole = await User.distinct("role").exec();
-    const userTypes = await UserType.find({
-      role: { $in: userRole },
-    }).exec();
-    const total = await User.countDocuments({}).exec();
-    return { data: listUsers, total, skip, limit, userTypes };
-  } catch (e) {
-    throw new Error(e.message.toString());
-  }
-};
-
 export default {
   createNewUser,
   loginUser,
-  getUsers,
 };

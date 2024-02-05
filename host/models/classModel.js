@@ -6,7 +6,7 @@ const classSchema = new Schema(
     suffName: { type: String, require: true },
     code: { type: Number, require: true },
     enrollmentLimit: { type: Number, require: true },
-    userId: {
+    teacherId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "users",
     },

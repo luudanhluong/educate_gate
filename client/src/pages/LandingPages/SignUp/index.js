@@ -41,13 +41,13 @@ import routes from "routes";
 
 // Images
 import bgImage from "assets/images/bg-sign-in-basic.jpeg";
-import { POST } from "utilities/initialValue";
-import { BASE_URL } from "utilities/initialValue";
+// import { POST } from "utilities/initialValue";
+// import { BASE_URL } from "utilities/initialValue";
 import { useDispatch, useSelector } from "react-redux";
 import { setFetchError } from "app/slices/errorSlice";
-import { setUserRegister } from "app/slices/userSlice";
-import { headers } from "utilities/initialValue";
-import { methodSendRequest } from "utilities/FetchData";
+// import { setUserRegister } from "app/slices/userSlice";
+// import { headers } from "utilities/initialValue";
+// import { methodSendRequest } from "utilities/FetchData";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup";
 import "./style.css";
@@ -66,18 +66,19 @@ function SignUpBasic() {
   const fetchError = useSelector((state) => state.error.fetchError);
   const navigation = useNavigate();
   const handleSubmit = async (values) => {
-    const { username, password, role, email } = values;
-    const data = { username, password, role, email };
-    const response = await methodSendRequest(BASE_URL + "/user/register", POST, headers, data);
-    const result = await response;
-    if (result.error) {
-      dispatch(setFetchError(true));
-      return;
-    } else {
-      dispatch(setUserRegister({ username, password, email }));
-      navigation("");
-      dispatch(setFetchError(false));
-    }
+    // const { username, password, role, email } = values;
+    // const data = { username, password, role: Number(role), email };
+    console.log(values);
+    // const response = await methodSendRequest(BASE_URL + "/user/register", POST, headers, data);
+    // const result = await response;
+    // if (result.error) {
+    //   dispatch(setFetchError(true));
+    //   return;
+    // } else {
+    //   dispatch(setUserRegister({ username, password, email }));
+    navigation("");
+    //   dispatch(setFetchError(false));
+    // }
   };
   useEffect(() => {
     dispatch(setFetchError(false));
@@ -89,7 +90,6 @@ function SignUpBasic() {
       .min(6, "Chiều dài mật khẩu lớn hơn hoặc bằng 6 ký tự"),
     email: Yup.string()
       .required("Vui lòng nhập mail.")
-      .email("Vui lòng nhập mail có đuôi @fpt.edu.vn")
       .matches(/@fpt\.edu\.vn$/, "Email phải có đuôi @fpt.edu.vn"),
     cfPassword: Yup.string()
       .required("Vui lòng nhập lại mật khẩu.")
@@ -288,19 +288,19 @@ function SignUpBasic() {
                           <div className="rg_seting-role">Bạn là ai?</div>
                           <div className="rg_form-group flx flx-row flx-ct-a">
                             <div>
-                              <Field name="role" type="radio" id="role_1" value="teacher" />
+                              <Field name="role" type="radio" id="role_1" value="2" />
                               <label className="rg_label" htmlFor="role_1">
                                 Giảng viên
                               </label>
                             </div>
                             <div>
-                              <Field name="role" type="radio" id="role_2" value="mentor" />
+                              <Field name="role" type="radio" id="role_2" value="3" />
                               <label className="rg_label" htmlFor="role_2">
                                 Người hướng dẫn
                               </label>
                             </div>
                             <div>
-                              <Field name="role" type="radio" id="role_3" value="student" />
+                              <Field name="role" type="radio" id="role_3" value="4" />
                               <label className="rg_label" htmlFor="role_3">
                                 Sinh viên
                               </label>
