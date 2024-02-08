@@ -14,15 +14,15 @@ import axios from "axios";
 import { BASE_URL } from "utilities/initialValue";
 import { setUsers } from "app/slices/userSlice";
 import AddListAccount from "./addListAccount";
-import { setActivePopupAddListUser } from "app/slices/activeSlice";
 import { setFilterRole } from "app/slices/userSlice";
 import { setSearchValue } from "app/slices/userSlice";
 import { setSort } from "app/slices/userSlice";
+import { setActivePopup } from "app/slices/activeSlice";
 
 function ListAccount() {
   const dispatch = useDispatch();
   const limitUser = 10;
-  const activePopup = useSelector((state) => state.active.active_popup_add_list_user);
+  const { active_popup } = useSelector((state) => state.active);
   const { filterRole, searchValue, sort, pageNo } = useSelector((state) => state.user);
   useEffect(() => {
     axios
@@ -46,11 +46,12 @@ function ListAccount() {
         e.target.closest("#add_list_user") === null &&
         e.target.closest("#btn_add_new_list_user") === null
       ) {
-        dispatch(setActivePopupAddListUser(false));
+        dispatch(setActivePopup(false));
       }
     };
     window.addEventListener("click", handleDocumentClick);
     dispatch(setSearchValue(""));
+    dispatch(setActivePopup(false));
     dispatch(setSort(-1));
     dispatch(setFilterRole(0));
     return () => {
@@ -61,7 +62,7 @@ function ListAccount() {
   return (
     <>
       <DefaultNavbar light={true} />
-      {activePopup ? <AddListAccount /> : ""}
+      {active_popup ? <AddListAccount /> : ""}
       <MKBox
         position="absolute"
         top={0}

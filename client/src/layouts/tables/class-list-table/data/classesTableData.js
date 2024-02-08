@@ -44,7 +44,11 @@ export default function data() {
   };
   const rows = data
     ? data.map((c) => ({
-        user: <User image={userImg} name={`${c.preName}${c.code}-${c.suffName}`} email={c.email} />,
+        name: (
+          <MKTypography component="div" variant="caption" color="text" fontWeight="medium">
+            {`${c.preName}${c.code}${c.suffName ? "-" + c.suffName : ""}`}
+          </MKTypography>
+        ),
         qttStudent: (
           <MKTypography component="div" variant="caption" color="text" fontWeight="medium">
             {30}
@@ -55,12 +59,16 @@ export default function data() {
             {c.userCount}
           </MKTypography>
         ),
-        teacher: (
-          <Role
-            title={c.teacher ? c.teacher.map((t) => t.username) : ""}
-            description={c.teacher ? c.teacher.map((t) => t.email) : ""}
-          />
-        ),
+        teacher:
+          c.teacher.length > 0 ? (
+            c.teacher.map((t) => (
+              <User key={t._id} image={userImg} name={t.username} email={t.email} />
+            ))
+          ) : (
+            <MKTypography component="span" variant="caption" color="text" fontWeight="medium">
+              Đang chờ
+            </MKTypography>
+          ),
         status: (
           <MKBox ml={-1}>
             <MKBadge badgeContent="active" color="success" variant="gradient" size="sm" />
@@ -117,20 +125,20 @@ export default function data() {
 
   return {
     columns: [
-      { Header: "người dùng", accessor: "user", width: "20%", align: "left" },
+      { Header: "Tên lớp", accessor: "name", align: "center" },
       {
-        Header: "số sinh viên giới hạn trong lớp",
+        Header: "giới hạn sinh viên",
         accessor: "qttStudent",
         width: "12%",
         align: "center",
       },
       {
-        Header: "số sinh viên trong lớp đang có",
+        Header: "sinh viên trong lớp",
         accessor: "curQttStudent",
         width: "12%",
         align: "center",
       },
-      { Header: "giáo viên", accessor: "teacher", align: "left" },
+      { Header: "giáo viên", accessor: "teacher", width: "20%", align: "left" },
       { Header: "trạng thái", accessor: "status", align: "center" },
       { Header: "onboard", accessor: "onboard", align: "center" },
       { Header: "kì học", accessor: "semester", align: "center" },

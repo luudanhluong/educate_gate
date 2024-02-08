@@ -7,16 +7,28 @@ import bgImage from "assets/images/bg-sign-in-basic.jpeg";
 import DefaultNavbar from "admin/Navbar/DefaultNavbar";
 import Tables from "layouts/tables/class-list-table";
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { BASE_URL } from "utilities/initialValue";
 import { setclasses } from "app/slices/classSlice";
+import AddClassList from "./addListClass";
+import { setActivePopup } from "app/slices/activeSlice";
+import { setSearchValue } from "app/slices/classSlice";
+import { setSort } from "app/slices/classSlice";
+import { setFilterPreName } from "app/slices/classSlice";
 
 function ListClass() {
   const dispatch = useDispatch();
+  const limitClass = 10;
+  const { active_popup } = useSelector((state) => state.active);
+  const { filterPreName, searchValue, sort, pageNo } = useSelector((state) => state.class);
   useEffect(() => {
     axios
-      .get(`${BASE_URL}/admins/list-classes?item=preName&order=1&limit=10&skip=0`)
+      .get(
+        `${BASE_URL}/admins/list-classes?item=createdAt&order=${sort}&skip=${
+          pageNo * limitClass
+        }&limit=${limitClass}&preName=${filterPreName}&search=${searchValue}`
+      )
       .then((response) => {
         dispatch(setclasses(response.data));
         return response.data;
@@ -24,11 +36,29 @@ function ListClass() {
       .catch((error) => {
         console.log(error);
       });
+  }, [dispatch, filterPreName, searchValue, sort, pageNo]);
+  useEffect(() => {
+    const handleDocumentClick = (e) => {
+      if (
+        e.target.closest("#add_list_classes") === null &&
+        e.target.closest("#btn_add_new_list_classes") === null
+      ) {
+        dispatch(setActivePopup(false));
+      }
+    };
+    window.addEventListener("click", handleDocumentClick);
+    dispatch(setActivePopup(false));
+    dispatch(setSearchValue(""));
+    dispatch(setSort(-1));
+    dispatch(setFilterPreName(""));
+    return () => {
+      window.removeEventListener("click", handleDocumentClick);
+    };
   }, [dispatch]);
   return (
     <>
       <DefaultNavbar light={true} />
-      {/* <AddClassList /> */}
+      {active_popup ? <AddClassList /> : ""}
       <MKBox
         position="absolute"
         top={0}

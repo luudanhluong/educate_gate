@@ -14,16 +14,16 @@ import DataTableHeadCell from "Tables/DataTableUserList/DataTableHeadCell";
 import DataTableBodyCell from "Tables/DataTableUserList/DataTableBodyCell";
 import { useDispatch, useSelector } from "react-redux";
 import { Autocomplete, Icon } from "@mui/material";
-import { setFilterRole, setPageNo, setSearchValue } from "app/slices/userSlice";
+import { setPageNo, setSearchValue, setFilterPreName } from "app/slices/classSlice";
 import MKPagination from "components/MKPagination";
 import axios from "axios";
 import { BASE_URL } from "utilities/initialValue";
 import { setclasses } from "app/slices/classSlice";
+import { setActivePopup } from "app/slices/activeSlice";
 
 function DataTable({ table, isSorted, noEndBorder }) {
-  const { userTypes, total, limit } = useSelector((state) => state.user.users);
-  const { pageNo } = useSelector((state) => state.user);
-  const userType = userTypes ? userTypes.map((el) => ({ name: el.name, role: el.role })) : [];
+  const { listPreName, total, limit } = useSelector((state) => state.class.classes);
+  const limitClass = 10;
   let qttPage = total ? Math.ceil(total / limit) : 0;
   const columns = useMemo(() => table.columns, [table]);
   const data = useMemo(() => table.rows, [table]);
@@ -35,9 +35,14 @@ function DataTable({ table, isSorted, noEndBorder }) {
     usePagination
   );
   const { getTableProps, getTableBodyProps, headerGroups, prepareRow, rows, page } = tableInstance;
+  const { filterPreName, searchValue, sort, pageNo } = useSelector((state) => state.class);
   const getClassInfo = () =>
     axios
-      .get(`${BASE_URL}/admins/list-classes?item=preName&order=1&limit=10&skip=0`)
+      .get(
+        `${BASE_URL}/admins/list-classes?item=createdAt&order=${sort}&skip=${
+          pageNo * limitClass
+        }&limit=${limitClass}&preName=${filterPreName}&search=${searchValue}`
+      )
       .then((response) => {
         dispatch(setclasses(response.data));
         return response.data;
@@ -58,7 +63,7 @@ function DataTable({ table, isSorted, noEndBorder }) {
   };
   const handleDeleteClassEmpty = async () => {
     await axios
-      .get(`${BASE_URL}/admins/delete-class-empty`)
+      .get(`${BASE_URL}/admins/delete-classes-empty`)
       .then((response) => {
         getClassInfo();
         return response;
@@ -95,6 +100,28 @@ function DataTable({ table, isSorted, noEndBorder }) {
         <MKBox
           fontWeight="bold"
           className="pointer"
+          id={"btn_add_new_list_classes"}
+          py={1}
+          width="9rem"
+          px={2}
+          sx={{
+            "&:hover": {
+              backgroundColor: "rgba(0,0,0,0.1)",
+              borderRadius: "6px",
+            },
+            textAlign: "center",
+            "&:active": {
+              backgroundColor: "rgba(0,0,0,0.2)",
+            },
+            userSelect: "none",
+          }}
+          onClick={() => dispatch(setActivePopup(true))}
+        >
+          Tạo lớp học
+        </MKBox>
+        <MKBox
+          fontWeight="bold"
+          className="pointer"
           id={"btn_add_new_list_user"}
           py={1}
           width="9rem"
@@ -112,7 +139,7 @@ function DataTable({ table, isSorted, noEndBorder }) {
           }}
           onClick={handleAddStudentInList}
         >
-          Thêm học sinh vào lớp học
+          Thêm học sinh
         </MKBox>
         <MKBox
           fontWeight="bold"
@@ -156,18 +183,17 @@ function DataTable({ table, isSorted, noEndBorder }) {
           }}
           onClick={handleAddTeacherInClass}
         >
-          Thêm giao viên vào lớp học
+          Thêm giao viên
         </MKBox>
         <MKBox display="flex" alignItems="center">
           <Autocomplete
             disableClearable
-            options={userType}
-            getOptionLabel={(option) => option.name}
-            onChange={(e, value) => dispatch(setFilterRole(value.role))}
+            options={listPreName}
+            getOptionLabel={(option) => option}
+            onChange={(e, value) => dispatch(setFilterPreName(value))}
             size="small"
-            isOptionEqualToValue={(option, value) => option.role === value.role}
-            sx={{ width: "12rem" }}
-            renderInput={(params) => <MKInput {...params} label="Lọc theo vai trò" />}
+            sx={{ width: "8rem" }}
+            renderInput={(params) => <MKInput {...params} label="Lọc theo tên" />}
           />
         </MKBox>
         <MKBox width="16rem" ml="auto">

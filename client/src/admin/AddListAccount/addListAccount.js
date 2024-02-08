@@ -13,9 +13,9 @@ import axios from "axios";
 import { useState } from "react";
 import { Icon } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { setActivePopupAddListUser } from "app/slices/activeSlice";
 import MKButton from "components/MKButton";
 import { setUsers } from "app/slices/userSlice";
+import { setActivePopup } from "app/slices/activeSlice";
 
 function AddListAccount() {
   const [fileName, setFileName] = useState();
@@ -29,37 +29,30 @@ function AddListAccount() {
   const { filterRole, searchValue, sort, pageNo } = useSelector((state) => state.user);
   const limitUser = 10;
   const handleSubmit = async () => {
-    try {
-      const formData = new FormData();
-      formData.append("file", fileName);
-      await axios
-        .post(`${BASE_URL}/admins/insert-list-users`, formData)
-        .then((response) => {
-          axios
-            .get(
-              `${BASE_URL}/admins/users?item=createdAt&order=${sort}&skip=${
-                pageNo * limitUser
-              }&limit=${limitUser}&role=${filterRole}&search=${searchValue}`
-            )
-            .then((res) => {
-              dispatch(setUsers(res.data));
-              return res;
-            })
-            .catch((err) => {
-              console.log(err);
-            });
-          return response;
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-        });
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
-  const handleClick = () => {
-    dispatch(setActivePopupAddListUser(false));
-  };
+    const formData = new FormData();
+    formData.append("file", fileName);
+    await axios
+      .post(`${BASE_URL}/admins/insert-list-users`, formData)
+      .then((response) => {
+        axios
+          .get(
+            `${BASE_URL}/admins/users?item=createdAt&order=${sort}&skip=${
+              pageNo * limitUser
+            }&limit=${limitUser}&role=${filterRole}&search=${searchValue}`
+          )
+          .then((res) => {
+            dispatch(setUsers(res.data));
+            return res;
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+        return response;
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }; 
   return (
     <MKBox
       width="100%"
@@ -89,7 +82,7 @@ function AddListAccount() {
                   Tạo danh sách người dùng
                 </MKTypography>
                 <MKBox
-                  onClick={handleClick}
+                  onClick={() => dispatch(setActivePopup(false))}
                   position="absolute"
                   right={0}
                   fontSize={24}

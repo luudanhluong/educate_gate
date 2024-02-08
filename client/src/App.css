@@ -284,3 +284,15 @@ a {
 .pop-up {
   animation: top_to_center 1.2s ease-in-out;
 }
+@keyframes changed {
+  0% {
+    transform: translateX(-180%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}
+
+.selected-change {
+  animation: changed 1.2s ease-in-out;
+}

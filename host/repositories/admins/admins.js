@@ -57,6 +57,29 @@ const createListUsers = async (listData) => {
     throw new Error(e.message.toString());
   }
 };
+const createNewListClassesFromFile = async (listData) => {
+  try {
+    const andConditions = listData.map((item) => ({
+      $and: [
+        { preName: item.preName },
+        { code: item.code },
+        { suffName: item.suffName },
+      ],
+    }));
+
+    const classList = await Class.find({ $or: andConditions });
+    if (classList.length === 0) {
+      const result = await Class.insertMany(listData);
+      return result._doc;
+    }
+    return {
+      data: classList,
+      message: "Lớp đã tồn tại trong hệ thống",
+    };
+  } catch (e) {
+    throw new Error(e.message.toString());
+  }
+};
 const createNewListClass = async ({
   suffName,
   preName,
@@ -82,7 +105,14 @@ const createNewListClass = async ({
     throw new Error(error.message);
   }
 };
-const getClasses = async ({ item, order, limit, skip }) => {
+const getClasses = async ({ item, order, limit, skip, preName, search }) => {
+  let query = {};
+  if (search && search > 0) {
+    query.code = search;
+  }
+  if (preName && preName.length > 0) {
+    query.preName = preName;
+  }
   try {
     const result = await Class.aggregate([
       {
@@ -92,7 +122,7 @@ const getClasses = async ({ item, order, limit, skip }) => {
           foreignField: "_id",
           as: "teacher",
         },
-      }, 
+      },
       {
         $lookup: {
           from: "users",
@@ -114,25 +144,16 @@ const getClasses = async ({ item, order, limit, skip }) => {
         },
       },
       {
-        $sort: { [item]: order },
+        $match: query,
       },
-      {
-        $skip: 0,
-      },
-      {
-        $limit: 10,
-      },
-    ]).exec();
-    console.log(result);
-    let query = {};
-    // if (search && search.length > 0) {
-    //   query.email = { $regex: new RegExp(search, "i") };
-    // }
-    // if (role && role > 0) {
-    //   query.role = role;
-    // }
+    ])
+      .sort({ [item]: order })
+      .skip(skip)
+      .limit(limit)
+      .exec();
+    const listPreName = await Class.distinct("preName").exec();
     const total = await Class.countDocuments(query).exec();
-    return { data: result, total, skip, limit };
+    return { data: result, total, skip, limit, listPreName };
   } catch (error) {
     throw new Error(error.message);
   }
@@ -235,4 +256,5 @@ export default {
   addStudentInClasses,
   deleteClassEmpty,
   addTeacherInClass,
+  createNewListClassesFromFile,
 };

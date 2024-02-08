@@ -48,9 +48,18 @@ const insertListUsers = async (req, res, next) => {
 const createNewListClass = async (req, res) => {
   try {
     const { suffName, preName, quantity, limmitStudent } = req.body;
-    const result = await adminsRepository.createNewListClass({
-      suffName: suffName.toUpperCase(),
-      preName: preName.toUpperCase(),
+    console.log(req.body);
+    let result;
+    if (!suffName) {
+      const excelFilePath = req.file.path;
+      const workbook = xlsx.readFile(excelFilePath);
+      const sheetName = workbook.SheetNames[0];
+      const userData = xlsx.utils.sheet_to_json(workbook.Sheets[sheetName]);
+      result = await adminsRepository.createNewListClassesFromFile(userData);
+    }
+    result = await adminsRepository.createNewListClass({
+      suffName,
+      preName,
       quantity,
       limmitStudent,
     });
@@ -61,12 +70,14 @@ const createNewListClass = async (req, res) => {
 };
 const getClasses = async (req, res, next) => {
   try {
-    const { item, order, limit, skip } = req.query;
+    const { item, order, limit, skip, preName, search } = req.query;
     const result = await adminsRepository.getClasses({
       item,
       order: Number(order),
-      limit,
-      skip,
+      limit: Number(limit),
+      skip: Number(skip),
+      preName,
+      search: Number(search),
     });
     res.status(201).json(result);
   } catch (error) {

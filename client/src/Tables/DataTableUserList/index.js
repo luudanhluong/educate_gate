@@ -13,10 +13,10 @@ import MKInput from "components/MKInput";
 import DataTableHeadCell from "Tables/DataTableUserList/DataTableHeadCell";
 import DataTableBodyCell from "Tables/DataTableUserList/DataTableBodyCell";
 import { useDispatch, useSelector } from "react-redux";
-import { setActivePopupAddListUser } from "app/slices/activeSlice";
 import { Autocomplete, Icon } from "@mui/material";
 import { setFilterRole, setPageNo, setSearchValue } from "app/slices/userSlice";
 import MKPagination from "components/MKPagination";
+import { setActivePopup } from "app/slices/activeSlice";
 
 function DataTable({ table, isSorted, noEndBorder }) {
   const { userTypes, total, limit } = useSelector((state) => state.user.users);
@@ -64,7 +64,7 @@ function DataTable({ table, isSorted, noEndBorder }) {
             },
             userSelect: "none",
           }}
-          onClick={() => dispatch(setActivePopupAddListUser(true))}
+          onClick={() => dispatch(setActivePopup(true))}
         >
           Add new list
         </MKBox>
