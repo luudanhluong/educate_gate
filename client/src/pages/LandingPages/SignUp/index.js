@@ -41,16 +41,15 @@ import routes from "routes";
 
 // Images
 import bgImage from "assets/images/bg-sign-in-basic.jpeg";
-// import { POST } from "utilities/initialValue";
-// import { BASE_URL } from "utilities/initialValue";
+import { BASE_URL } from "utilities/initialValue";
 import { useDispatch, useSelector } from "react-redux";
 import { setFetchError } from "app/slices/errorSlice";
-// import { setUserRegister } from "app/slices/userSlice";
-// import { headers } from "utilities/initialValue";
-// import { methodSendRequest } from "utilities/FetchData";
+import { setUserRegister } from "app/slices/userSlice";
+import { headers } from "utilities/initialValue";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup";
 import "./style.css";
+import axios from "axios";
 
 const initFormValues = {
   username: "",
@@ -66,19 +65,19 @@ function SignUpBasic() {
   const fetchError = useSelector((state) => state.error.fetchError);
   const navigation = useNavigate();
   const handleSubmit = async (values) => {
-    // const { username, password, role, email } = values;
-    // const data = { username, password, role: Number(role), email };
-    console.log(values);
-    // const response = await methodSendRequest(BASE_URL + "/user/register", POST, headers, data);
-    // const result = await response;
-    // if (result.error) {
-    //   dispatch(setFetchError(true));
-    //   return;
-    // } else {
-    //   dispatch(setUserRegister({ username, password, email }));
-    navigation("");
-    //   dispatch(setFetchError(false));
-    // }
+    const { username, password, role, email } = values;
+    const data = { username, password, role: Number(role), email };
+    await axios
+      .post(BASE_URL + "/user/register", data, headers)
+      .then((res) => {
+        dispatch(setUserRegister({ username, password, email }));
+        navigation("/");
+        dispatch(setFetchError(false));
+        return res;
+      })
+      .catch(() => {
+        dispatch(setFetchError(true));
+      });
   };
   useEffect(() => {
     dispatch(setFetchError(false));
@@ -102,17 +101,7 @@ function SignUpBasic() {
   });
   return (
     <>
-      <DefaultNavbar
-        routes={routes}
-        action={{
-          type: "external",
-          route: "https://www.creative-tim.com/product/material-kit-react",
-          label: "free download",
-          color: "info",
-        }}
-        transparent
-        light
-      />
+      <DefaultNavbar routes={routes} transparent light />
       <MKBox
         width="100%"
         minHeight="100%"

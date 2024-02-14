@@ -40,7 +40,6 @@ const insertListUsers = async (req, res, next) => {
     const result = await adminsRepository.createListUsers(newData);
     res.status(201).json(result);
   } catch (error) {
-    console.log("sss");
     res.status(500).json({ error: error.message });
   }
 };
@@ -48,7 +47,6 @@ const insertListUsers = async (req, res, next) => {
 const createNewListClass = async (req, res) => {
   try {
     const { suffName, preName, quantity, limmitStudent } = req.body;
-    console.log(req.body);
     let result;
     if (!suffName) {
       const excelFilePath = req.file.path;

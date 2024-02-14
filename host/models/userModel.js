@@ -1,4 +1,6 @@
 import mongoose, { Schema } from "mongoose";
+import Classes from "./classModel.js";
+import MentorCategory from "./mentorCategory.js";
 
 const userSchema = new Schema(
   {
@@ -23,9 +25,13 @@ const userSchema = new Schema(
     },
     classId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "classes",
+      ref: Classes,
     },
-    DOB: { type: Date },
+    mentorCategoryId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: MentorCategory,
+    },
+    Dob: { type: Date },
     gender: { type: Boolean },
     phoneNumber: { type: String },
     image: { type: String },

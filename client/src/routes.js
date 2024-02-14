@@ -232,7 +232,7 @@ const routes = [
     ],
   },
   {
-    name: "creates",
+    name: "admins",
     dropdown: true,
     description: "Xem tất cả",
     collapse: [
@@ -241,13 +241,6 @@ const routes = [
         route: "/admin/create-new-list-account",
         component: <ListAccountBase />,
       },
-    ],
-  },
-  {
-    name: "creates",
-    dropdown: true,
-    description: "Xem tất cả",
-    collapse: [
       {
         name: "Thêm danh sách người dùng",
         route: "/admin/create-new-class",
