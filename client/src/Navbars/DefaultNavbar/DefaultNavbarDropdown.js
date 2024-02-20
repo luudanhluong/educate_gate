@@ -42,17 +42,19 @@ function DefaultNavbarDropdown({
         p={1}
         display="flex"
         alignItems="baseline"
-        color={light ? "white" : "dark"}
         opacity={light ? 1 : 0.6}
-        sx={{ cursor: "pointer", userSelect: "none" }}
+        sx={{ cursor: "pointer", userSelect: "none", color: `${light ? "#f5f5f5" : "dark"}` }}
         {...(route && routeComponent)}
         {...(href && linkComponent)}
       >
         <MKTypography
           variant="body2"
           lineHeight={1}
-          color="inherit"
-          sx={{ alignSelf: "center", "& *": { verticalAlign: "middle" } }}
+          sx={{
+            alignSelf: "center",
+            "& *": { verticalAlign: "middle" },
+            color: `${light ? "#d7d8df" : "dark"}`,
+          }}
         >
           {icon}
         </MKTypography>
@@ -60,12 +62,11 @@ function DefaultNavbarDropdown({
           variant="button"
           fontWeight="regular"
           textTransform="capitalize"
-          color={light ? "white" : "dark"}
-          sx={{ fontWeight: "100%", ml: 1, mr: 0.25 }}
+          sx={{ fontWeight: "100%", ml: 1, mr: 0.25, color: `${light ? "#f5f5f5" : "dark"}` }}
         >
           {name}
         </MKTypography>
-        <MKTypography variant="body2" color={light ? "white" : "dark"} ml="auto">
+        <MKTypography variant="body2" ml="auto" sx={{ color: `${light ? "#f5f5f5" : "dark"}` }}>
           <Icon sx={{ fontWeight: "normal", verticalAlign: "middle" }}>
             {collapse && "keyboard_arrow_down"}
           </Icon>

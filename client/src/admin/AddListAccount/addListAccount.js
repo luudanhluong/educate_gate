@@ -52,7 +52,7 @@ function AddListAccount() {
       .catch((error) => {
         console.error("Error:", error);
       });
-  }; 
+  };
   return (
     <MKBox
       width="100%"

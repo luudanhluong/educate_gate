@@ -10,10 +10,12 @@ import MKTypography from "components/MKTypography";
 
 // Images
 import profilePicture from "assets/images/bruce-mars.jpg";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import MKButton from "components/MKButton";
+import { setActivePopup } from "app/slices/activeSlice";
 
 function Profile() {
+  const dispatch = useDispatch();
   const userLogin = useSelector((state) => state.user.userLogin);
   return (
     <MKBox component="section" py={{ xs: 6, sm: 12 }}>
@@ -167,6 +169,7 @@ function Profile() {
               </Grid>
             </Grid>
             <MKButton
+              onClick={() => dispatch(setActivePopup(true))}
               sx={{
                 position: "absolute",
                 bottom: 0,

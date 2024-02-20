@@ -7,6 +7,7 @@ import connectDB from "./database.js";
 import userRouter from "./routes/user/userRouter.js";
 import classRouter from "./routes/classRouter/classRouter.js";
 import adminsRouter from "./routes/adminsRouter/adminsRouter.js";
+import categoryRouter from "./routes/categoryRouter/categoryRouter.js";
 
 const app = express();
 dotnv.config();
@@ -29,6 +30,7 @@ app.get("/", (req, res) => {
 });
 app.use("/user", userRouter);
 app.use("/class", classRouter);
+app.use("/category", categoryRouter);
 app.use("/admins", upload.single("file"), adminsRouter);
 app.listen(port, (req, res) => {
   connectDB();

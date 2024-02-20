@@ -9,12 +9,19 @@ import bgImage from "assets/images/city-profile.jpg";
 import { useEffect } from "react";
 import axios from "axios";
 import { BASE_URL } from "utilities/initialValue";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setUserLogin } from "app/slices/userSlice";
+import EditProfile from "./sections/EditProfile";
+import { setActivePopup } from "app/slices/activeSlice";
+import { setCategories } from "app/slices/categorySlice";
 
 function Author() {
   const dispatch = useDispatch();
   const jwt = localStorage.getItem("jwt");
+  const { active_popup } = useSelector((state) => state.active);
+  useEffect(() => {
+    dispatch(setActivePopup(false));
+  }, []);
   useEffect(() => {
     axios
       .get(BASE_URL + "/user/profile", {
@@ -30,10 +37,21 @@ function Author() {
       .catch((err) => {
         console.log(err);
       });
+    axios
+      .get(BASE_URL + "/category")
+      .then((res) => {
+        dispatch(setCategories(res.data));
+        console.log(res.data);
+        return res;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }, [dispatch, jwt]);
   return (
     <>
       <DefaultNavbar routes={routes} brand="Education Gate" transparent light sticky />
+      {active_popup ? <EditProfile /> : ""}
       <MKBox bgColor="white">
         <MKBox
           minHeight="25rem"

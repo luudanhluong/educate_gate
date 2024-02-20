@@ -95,7 +95,6 @@ function AddClassList() {
     <MKBox
       width="100%"
       height="100%"
-      overFlow="hidden"
       position="fixed"
       mx="auto"
       zIndex={4}

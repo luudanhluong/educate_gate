@@ -4,6 +4,7 @@ import userSlice from "./slices/userSlice";
 import ErrorSlice from "./slices/errorSlice";
 import mockupSlice from "./slices/mockupSlice";
 import classSlice from "./slices/classSlice";
+import categorySlice from "./slices/categorySlice";
 import { applyMiddleware } from "redux";
 import * as thunk from "redux-thunk";
 
@@ -11,6 +12,7 @@ const rootReducer = {
   active: activeInfoSlice,
   user: userSlice,
   class: classSlice,
+  category: categorySlice,
   error: ErrorSlice,
   mockup: mockupSlice,
 };

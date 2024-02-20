@@ -6,10 +6,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon --inspect server.js",
-    "start-pm2": "pm2 start server.js --name host",
-    "stop-pm2": "pm2 stop host",
-    "restart-pm2": "pm2 restart host"
+    "start": "nodemon --inspect server.js"
   },
   "keywords": [],
   "author": "",

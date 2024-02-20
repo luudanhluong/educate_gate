@@ -170,7 +170,7 @@ a {
 .fifa_body-group::-webkit-scrollbar-track {
   background: #ccc;
 }
-
+.edit-profile::-webkit-scrollbar,
 .register_area::-webkit-scrollbar {
   width: 0;
 }

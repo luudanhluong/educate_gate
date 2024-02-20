@@ -21,8 +21,8 @@ import MKTypography from "components/MKTypography";
 import MKButton from "components/MKButton";
 
 // Material Kit 2 React example components
-import DefaultNavbarDropdown from "examples/Navbars/DefaultNavbar/DefaultNavbarDropdown";
-import DefaultNavbarMobile from "examples/Navbars/DefaultNavbar/DefaultNavbarMobile";
+import DefaultNavbarDropdown from "Navbars/DefaultNavbar/DefaultNavbarDropdown";
+import DefaultNavbarMobile from "Navbars/DefaultNavbar/DefaultNavbarMobile";
 
 // Material Kit 2 React base styles
 import breakpoints from "assets/theme/base/breakpoints";
@@ -465,8 +465,11 @@ function DefaultNavbar({ brand, routes, transparent, light, action, sticky, rela
               variant="button"
               fontWeight="bold"
               p={2}
-              color={light ? "white" : "dark"}
-              sx={{ outline: `2px solid ${light ? "#344767" : "#7b809a"}`, borderRadius: "6px" }}
+              sx={{
+                outline: `2px solid ${light ? "#CCCCCC" : "#7b809a"}`,
+                borderRadius: "6px",
+                color: `${light ? "#CCCCCC" : "dark"}`,
+              }}
             >
               {brand}
             </MKTypography>
@@ -573,6 +576,7 @@ DefaultNavbar.propTypes = {
         "light",
         "default",
         "white",
+        "#f5f5f5",
       ]),
       label: PropTypes.string.isRequired,
     }),
