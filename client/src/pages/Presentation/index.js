@@ -9,9 +9,9 @@ import MKTypography from "components/MKTypography";
 import MKSocialButton from "components/MKSocialButton";
 
 // Material Kit 2 React examples
-import DefaultNavbar from "examples/Navbars/DefaultNavbar";
 import DefaultFooter from "examples/Footers/DefaultFooter";
 import FilledInfoCard from "examples/Cards/InfoCards/FilledInfoCard";
+import DefaultNavbar from "Navbars/DefaultNavbar";
 
 // Presentation page sections
 import Counters from "pages/Presentation/sections/Counters";
@@ -34,7 +34,7 @@ import bgImage from "assets/images/bg-presentation.jpg";
 function Presentation() {
   return (
     <>
-      <DefaultNavbar routes={routes} sticky />
+      <DefaultNavbar routes={routes} brand="Education Gate" transparent light sticky />
       <MKBox
         minHeight="75vh"
         width="100%"

@@ -1,8 +1,8 @@
 import jwt from "jsonwebtoken";
-import dotnv from "dotenv";
 import bcrypt from "bcrypt";
+import dotnv from "dotenv";
 import User from "../../models/userModel.js";
-import UserType from "../../models/userTypeModel.js";
+dotnv.config();
 
 const createNewUser = async ({ username, email, password, role }) => {
   const formData = { username, email, password, role };
@@ -20,15 +20,14 @@ const createNewUser = async ({ username, email, password, role }) => {
 };
 const loginUser = async ({ email, password }) => {
   try {
-    dotnv.config();
-    const token = jwt.sign({ email, password }, process.env.SECRETKEY, {
-      expiresIn: "2h",
-    });
     const user = await User.findOne({ email: email });
     if (user) {
       const isPasswordTeacher = await bcrypt.compare(password, user.password);
       if (isPasswordTeacher) {
-        return { ...user._doc, token };
+        const token = jwt.sign({ _id: user._id }, process.env.SECRETKEY, {
+          expiresIn: "12h",
+        });
+        return token;
       } else return res.status(401).json({ error: "Mật khẩu không đúng." });
     }
     return res.status(404).json({ error: "Người dùng không tồn tại." });
@@ -36,26 +35,43 @@ const loginUser = async ({ email, password }) => {
     throw new Error(e.message.toString());
   }
 };
-const getUsers = async ({ item, order, skip, limit }) => {
+const userProfile = async (id) => {
   try {
-    const listUsers = await User.find({}, "-password")
-      .sort({ [item]: order })
-      .skip(skip)
-      .limit(limit)
-      .exec();
-    const userRole = await User.distinct("role").exec();
-    const userTypes = await UserType.find({
-      role: { $in: userRole },
-    }).exec();
-    const total = await User.countDocuments({}).exec();
-    return { data: listUsers, total, skip, limit, userTypes };
-  } catch (e) {
-    throw new Error(e.message.toString());
+    const user = await User.findOne({ _id: id }).populate("classId").exec();
+    return user;
+  } catch (error) {
+    throw new Error(error.message);
   }
 };
-
+const userUpdateProfile = async (
+  id,
+  { username, gender, Dob, phoneNumber, menteeCount, degree }
+) => {
+  try {
+    await User.updateOne(
+      { _id: id },
+      {
+        $set: {
+          username,
+          gender,
+          Dob,
+          phoneNumber,
+          menteeCount,
+          degree,
+        },
+      }
+    );
+    const token = jwt.sign({ _id: id }, process.env.SECRETKEY, {
+      expiresIn: "12h",
+    });
+    return token;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
 export default {
   createNewUser,
   loginUser,
-  getUsers,
+  userProfile,
+  userUpdateProfile,
 };

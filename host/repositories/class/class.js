@@ -20,11 +20,30 @@ const createNewListClass = async ({
       });
     }
     const result = await Class.create(data);
-    console.log(data);
     return result;
   } catch (error) {
     throw new Error(error.message);
   }
 };
+const getClasses = async ({ item, order, limit, skip }) => {
+  try {
+    let query = {};
+    // if (search && search.length > 0) {
+    //   query.email = { $regex: new RegExp(search, "i") };
+    // }
+    // if (role && role > 0) {
+    //   query.role = role;
+    // }
+    const listClass = await Class.find(query)
+      .sort({ [item]: order })
+      .skip(skip)
+      .limit(limit)
+      .exec();
+    const total = await Class.countDocuments(query).exec();
+    return { data: listClass, total, skip, limit };
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
 
-export default { createNewListClass };
+export default { createNewListClass, getClasses };

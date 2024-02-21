@@ -170,7 +170,7 @@ a {
 .fifa_body-group::-webkit-scrollbar-track {
   background: #ccc;
 }
-
+.edit-profile::-webkit-scrollbar,
 .register_area::-webkit-scrollbar {
   width: 0;
 }
@@ -283,4 +283,7 @@ a {
 
 .pop-up {
   animation: top_to_center 1.2s ease-in-out;
+}
+#demo-select-small {
+  padding: 0.85rem 0.75rem !important;
 }

@@ -1,18 +1,3 @@
-/**
-=========================================================
-* Material Kit 2 React - v2.1.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-kit-react
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
 // @mui material components
 import Grid from "@mui/material/Grid";
 
@@ -22,24 +7,30 @@ import MKBox from "components/MKBox";
 // Images
 import bgImage from "assets/images/bg-sign-in-basic.jpeg";
 import DefaultNavbar from "admin/Navbar/DefaultNavbar";
-import Tables from "layouts/tables";
+import Tables from "layouts/tables/user-list-table";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { BASE_URL } from "utilities/initialValue";
 import { setUsers } from "app/slices/userSlice";
 import AddListAccount from "./addListAccount";
-import { setActivePopupAddListUser } from "app/slices/activeSlice";
 import { setFilterRole } from "app/slices/userSlice";
+import { setSearchValue } from "app/slices/userSlice";
+import { setSort } from "app/slices/userSlice";
+import { setActivePopup } from "app/slices/activeSlice";
 
 function ListAccount() {
   const dispatch = useDispatch();
-  const activePopup = useSelector((state) => state.active.active_popup_add_list_user);
-  const filterRole = useSelector((state) => state.user.filterRole);
-  console.log(filterRole);
+  const limitUser = 10;
+  const { active_popup } = useSelector((state) => state.active);
+  const { filterRole, searchValue, sort, pageNo } = useSelector((state) => state.user);
   useEffect(() => {
     axios
-      .get(`${BASE_URL}/admins/users?item=createAt&order=desc&skip=0&limit=10&role=${filterRole}`)
+      .get(
+        `${BASE_URL}/admins/users?item=createdAt&order=${sort}&skip=${
+          pageNo * limitUser
+        }&limit=${limitUser}&role=${filterRole}&search=${searchValue}`
+      )
       .then((res) => {
         dispatch(setUsers(res.data));
         return res;
@@ -47,7 +38,7 @@ function ListAccount() {
       .catch((err) => {
         console.log(err);
       });
-  }, [dispatch, filterRole]);
+  }, [dispatch, filterRole, searchValue, sort, pageNo]);
 
   useEffect(() => {
     const handleDocumentClick = (e) => {
@@ -55,10 +46,13 @@ function ListAccount() {
         e.target.closest("#add_list_user") === null &&
         e.target.closest("#btn_add_new_list_user") === null
       ) {
-        dispatch(setActivePopupAddListUser(false));
+        dispatch(setActivePopup(false));
       }
     };
     window.addEventListener("click", handleDocumentClick);
+    dispatch(setSearchValue(""));
+    dispatch(setActivePopup(false));
+    dispatch(setSort(-1));
     dispatch(setFilterRole(0));
     return () => {
       window.removeEventListener("click", handleDocumentClick);
@@ -68,7 +62,7 @@ function ListAccount() {
   return (
     <>
       <DefaultNavbar light={true} />
-      {activePopup ? <AddListAccount /> : ""}
+      {active_popup ? <AddListAccount /> : ""}
       <MKBox
         position="absolute"
         top={0}
@@ -97,7 +91,6 @@ function ListAccount() {
             width={"100%"}
             m={0}
             height="100%"
-            // overflow={"hidden"}
           >
             <Grid item xs={12} height="100%" p={0}>
               <Tables />

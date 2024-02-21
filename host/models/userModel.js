@@ -1,4 +1,6 @@
 import mongoose, { Schema } from "mongoose";
+import Classes from "./classModel.js";
+import MentorCategory from "./mentorCategory.js";
 
 const userSchema = new Schema(
   {
@@ -9,6 +11,7 @@ const userSchema = new Schema(
     email: {
       type: String,
       required: [true, "Email không được để trống"],
+      index: true,
       unique: [true, "Email này đã tồn tại trong hệ thống"],
     },
     password: {
@@ -22,16 +25,20 @@ const userSchema = new Schema(
     },
     classId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "classes",
+      ref: Classes,
     },
-    DOB: { type: Date },
+    mentorCategoryId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: MentorCategory,
+    },
+    Dob: { type: Date },
     gender: { type: Boolean },
     phoneNumber: { type: String },
     image: { type: String },
-    degree: { type: String }, 
+    degree: { type: String },
     groupId: { type: Number },
     menteeCount: { type: Number },
-    isLeader: { type: Boolean},
+    isLeader: { type: Boolean },
     status: { type: String },
   },
   {

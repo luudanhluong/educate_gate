@@ -1,53 +1,85 @@
-/*
-=========================================================
-* Material Kit 2 React - v2.1.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-kit-react
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
-// @mui material components
 import Card from "@mui/material/Card";
-
-// Material Kit 2 React components
 import MKBox from "components/MKBox";
-
-// Material Kit 2 React examples
-import DefaultNavbar from "examples/Navbars/DefaultNavbar";
-
-// Author page sections
+import DefaultNavbar from "Navbars/DefaultNavbar";
 import Profile from "pages/LandingPages/Author/sections/Profile";
 import Posts from "pages/LandingPages/Author/sections/Posts";
-import Contact from "pages/LandingPages/Author/sections/Contact";
 import Footer from "pages/LandingPages/Author/sections/Footer";
-
-// Routes
 import routes from "routes";
-
-// Images
 import bgImage from "assets/images/city-profile.jpg";
+import { useEffect } from "react";
+import axios from "axios";
+import { BASE_URL } from "utilities/initialValue";
+import { useDispatch, useSelector } from "react-redux";
+import { setUserLogin } from "app/slices/userSlice";
+import EditProfile from "./sections/EditProfile";
+import { setActivePopup } from "app/slices/activeSlice";
+import { setCategories, setMentorCategories } from "app/slices/categorySlice";
 
 function Author() {
+  const dispatch = useDispatch();
+  const jwt = localStorage.getItem("jwt");
+  const { active_popup } = useSelector((state) => state.active);
+  const { userLogin } = useSelector((state) => state.user);
+  const { _id: id } = userLogin || {};
+  useEffect(() => {
+    if (id)
+      axios
+        .get(BASE_URL + "/mentorCategory/" + id, {
+          headers: {
+            "Content-Type": "application/json",
+            authorization: `Bearer ${jwt}`,
+          },
+        })
+        .then((res) => {
+          dispatch(setMentorCategories(res.data));
+          return res;
+        })
+        .catch((err) => {
+          console.log(err.message);
+        });
+  }, [userLogin, dispatch]);
+  useEffect(() => {
+    axios
+      .get(BASE_URL + "/user/profile", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${jwt}`,
+        },
+      })
+      .then((res) => {
+        dispatch(setUserLogin(res.data));
+        return res;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    axios
+      .get(BASE_URL + "/category")
+      .then((res) => {
+        dispatch(setCategories(res.data));
+        return res;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    const handleDocumentClick = (e) => {
+      if (
+        e.target.closest("#edit-profile") === null &&
+        e.target.closest("#btn-edit-profile") === null
+      ) {
+        dispatch(setActivePopup(false));
+      }
+    };
+    window.addEventListener("click", handleDocumentClick);
+    dispatch(setActivePopup(false));
+    return () => {
+      window.removeEventListener("click", handleDocumentClick);
+    };
+  }, [dispatch, jwt]);
   return (
     <>
-      <DefaultNavbar
-        routes={routes}
-        action={{
-          type: "external",
-          route: "https://www.creative-tim.com/product/material-kit-react",
-          label: "free download",
-          color: "info",
-        }}
-        transparent
-        light
-      />
+      <DefaultNavbar routes={routes} brand="Education Gate" transparent light sticky />
+      {active_popup ? <EditProfile /> : ""}
       <MKBox bgColor="white">
         <MKBox
           minHeight="25rem"
@@ -78,7 +110,7 @@ function Author() {
           <Profile />
           <Posts />
         </Card>
-        <Contact />
+        {/* <Contact /> */}
         <Footer />
       </MKBox>
     </>
