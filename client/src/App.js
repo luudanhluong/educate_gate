@@ -28,7 +28,10 @@ import Presentation from "layouts/pages/presentation";
 // Material Kit 2 React routes
 import routes from "routes";
 import "./App.css";
+import React, { useState } from "react";
 import AdminPage from "pages/Admin";
+import Navbar from "teacher/Navbar";
+import ClassList from "teacher/ClassList";
 
 export default function App() {
   const { pathname } = useLocation();
@@ -48,10 +51,12 @@ export default function App() {
       }
       return null;
     });
-
+  const [selectedPage, setSelectedPage] = useState("");
   return (
     <ThemeProvider theme={theme}>
       {/* <CssBaseline /> */}
+      <Navbar onSelect={setSelectedPage} />
+      {selectedPage === "classes" && <ClassList />}
       <Routes>
         {getRoutes(routes)}
         <Route path="/admin" element={<AdminPage />} />

@@ -1,8 +1,15 @@
 import React from "react";
+import { useDispatch } from "react-redux";
+import { setClassId } from "../../../../../../app/slices/classOnerTecaherSlice"; // Adjust the import path as necessary
 import PropTypes from "prop-types";
-import "./studentList.css";
 
-const ListOfClasses = ({ classes, onSelectClass }) => {
+const ListOfClasses = ({ classes = [] }) => {
+  const dispatch = useDispatch();
+
+  const onSelectClass = (classId) => {
+    dispatch(setClassId(classId));
+  };
+
   return (
     <div className="ClassListWrapper">
       {classes.map((classItem) => (
@@ -13,10 +20,12 @@ const ListOfClasses = ({ classes, onSelectClass }) => {
     </div>
   );
 };
-
 ListOfClasses.propTypes = {
-  classes: PropTypes.array.isRequired,
-  onSelectClass: PropTypes.func.isRequired,
+  classes: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
+    })
+  ).isRequired,
 };
-
 export default ListOfClasses;

@@ -3,15 +3,14 @@ import React from "react";
 import PropTypes from "prop-types";
 import "./studentList.css";
 
-const NamesOfGroups = ({ selectedClass, groups, projects, mentors }) => {
+const NamesOfGroups = ({ selectedClass, groups, projects, mentors, onSelectGroup }) => {
   const filteredGroups = groups.filter((group) => group.classId === selectedClass);
 
   return (
     <div className="GroupListWrapper">
       {filteredGroups.map((group) => (
-        <div key={group.id} className="GroupItem">
+        <div key={group.id} className="GroupItem" onClick={() => onSelectGroup(group.id)}>
           <p>Group Name: {group.groupName}</p>
-          {/* <p>Member Count: {group.studentId.length}</p> */}
           <p>
             Project: {projects.find((project) => project.id === group.projectId)?.name || "N/A"}
           </p>
@@ -27,6 +26,7 @@ NamesOfGroups.propTypes = {
   groups: PropTypes.array.isRequired,
   projects: PropTypes.array.isRequired,
   mentors: PropTypes.array.isRequired,
+  onSelectGroup: PropTypes.func.isRequired, // Thêm prop type cho onSelectGroup
 };
 
 export default NamesOfGroups;

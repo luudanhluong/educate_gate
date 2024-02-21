@@ -1,43 +1,36 @@
-.ClassListWrapper {
+/* .ClassListWrapper {
   background-color: black;
   color: white;
   padding: 10px;
   border-radius: 5px;
-  
 }
 
 .ClassItem {
   cursor: pointer;
   margin-bottom: 5px;
-}
+} */
 
-
-.StudentDetailsWrapper {
-  display: flex;
-  flex-wrap: wrap; 
-  /* Cho phép các div con tự xuống dòng khi không đủ không gian */
-}
 .StudentDetailsHeader {
   width: 100%;
   margin-bottom: 16px;
   margin-top: 30px;
-  margin-left: 20px;}
+  margin-left: 20px;
+}
 
 /* GroupDetails.css */
 
 /* Tạo màu ngẫu nhiên cho các ô chứa thông tin nhóm */
 .GroupItem:nth-child(odd) {
   background: linear-gradient(110deg, #0d7b85 60%, #0e8ca2 60%);
-  width: 100%;
+  /* width: 100%; */
   color: white;
 }
 
 .GroupItem:nth-child(even) {
   background: linear-gradient(110deg, #e76c2f 60%, #f3823c 60%);
   color: white;
-  width: 100%;
+  /* width: 100%; */
 }
-
 
 /* Thêm các style khác nếu cần thiết */
 /* GroupDetails.css */
@@ -94,29 +87,26 @@
   background-color: #f1f1f1;
 }
 
-
 /* Các style khác nếu cần thiết */
 
-  .GroupListWrapper {
-    display: flex;
-    justify-content: space-between;
-    gap: 15px; /* Thêm gap giữa các GroupItem */
-  }
-  
-  .GroupItem {
-    padding: 15px;
-    margin: 10px;
-    transition: all 0.3s ease;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(162, 63, 63, 0.5); 
-  }
-  
-  .GroupItem p {
-    margin: 0;
-  }
-  .GroupItem:hover {
-   
-    transform: scale(1.05);
-    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.2); /* Thêm đổ bóng */ /* Phóng to 1.05 lần khi di chuột qua */
-  }
-  
+.GroupListWrapper {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px; /* Thêm gap giữa các GroupItem */
+}
+
+.GroupItem {
+  padding: 15px;
+  margin: 10px;
+  transition: all 0.3s ease;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(162, 63, 63, 0.5);
+}
+
+.GroupItem p {
+  margin: 0;
+}
+.GroupItem:hover {
+  transform: scale(1.05);
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2); /* Thêm đổ bóng */ /* Phóng to 1.05 lần khi di chuột qua */
+}

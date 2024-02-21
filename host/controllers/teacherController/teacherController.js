@@ -1,26 +1,19 @@
-import getStudentsByTeacherId from "../../repositories/teacher/teacher";
+import Class from "../../models/classModel.js";
 
-const teacherShowListStudent = async(req, res) => {
-    const teacherId = req.params.teacherId;
-    try {
-        // Sử dụng Mongoose để lấy thông tin học sinh của giáo viên
-        const students = await getStudentsByTeacherId.getStudentsByTeacherId(teacherId);
-        res.json(students);
-      } catch (error) {
-        console.error('Error querying database:', error);
-        res.status(500).send('Internal Server Error');
-      }
-}
-const teacherListClass = async(req, res) =>{
+const getClassListByTeacher = async (req, res) => {
   try {
-    // Giả sử giáo viên được xác định bởi ID và mỗi lớp có trường teacherId
-    const classes = await ClassModel.find({ teacherId: req.user.id });
-    res.json({ success: true, classes });
+    // Lấy teacherId từ req.query hoặc req.params, tùy thuộc vào cách bạn thiết kế API
+    // Ví dụ: sử dụng req.query.teacherId
+    const teacherId = req.query.teacherId.trim();
+
+    // Truy vấn các lớp dựa trên teacherId
+    const classes = await Class.find({ teacherId: teacherId }).populate('teacherId');
+    res.json(classes);
   } catch (error) {
-    res.status(500).json({ success: false, message: "Internal server error" });
+    res.status(500).send(error.toString());
   }
 };
-export default{
-    teacherShowListStudent,
-    teacherListClass,
-}
+
+export default {
+  getClassListByTeacher,
+};

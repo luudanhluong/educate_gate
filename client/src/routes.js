@@ -68,6 +68,7 @@ import Typography from "layouts/sections/elements/typography";
 import ListAccountBase from "layouts/admin/add-list-account";
 import CreateClassBase from "layouts/admin/create-class";
 import CreateClassStudentBase from "layouts/admin/create-list-class-student";
+import TeacherFunction from "layouts/sections/page-sections/featuers";
 
 const routes = [
   {
@@ -303,6 +304,18 @@ const routes = [
         name: "Thêm danh sách người dùng",
         route: "/admin/list-class-students",
         component: <CreateClassStudentBase />,
+      },
+    ],
+  },
+  {
+    name: "Chức năng",
+    dropdown: true,
+    description: "Xem tất cả",
+    collapse: [
+      {
+        name: "Danh sách lớp",
+        route: "/sections/page-sections/features",
+        component: <TeacherFunction />,
       },
     ],
   },

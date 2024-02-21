@@ -1,64 +1,81 @@
-// YourNewComponent.js
-import React, { useState } from "react";
+// TeachersFunction.js
+import React, { useState, useEffect } from "react";
 import MKBox from "components/MKBox";
 import Grid from "@mui/material/Grid";
-import jsonData from "./data.json";
-import ListOfClasses from "./components/FeaturesOne/listOfClass";
+import axios from "axios"; // Import axios for API calls
+import { useDispatch, useSelector } from "react-redux";
+import { setClassId, setClassOnerTeacher } from "../../../../app/slices/classOnerTecaherSlice";
 import NamesOfGroups from "./components/FeaturesOne/nameOfGroup";
 import GroupDetails from "./components/FeaturesOne/groupDetail";
 import "../featuers/components/FeaturesOne/studentList.css";
+import TeacherDefaultNavbar from "./Navbar/DefaultNavbar";
 
-const YourNewComponent = () => {
-  const [selectedClass, setSelectedClass] = useState(null);
+const TeachersFunction = () => {
+  const dispatch = useDispatch();
+  const selectedClass = useSelector((state) => state.classOnerTeacher.classId);
+  const [classes, setClasses] = useState([]);
+  const students = useSelector((state) => state.classOnerTeacher.students);
+  const [groupId, setGroupId] = useState(null);
 
-  const handleSelectClass = (classId) => {
-    console.log("Selected Class:", classId);
-    setSelectedClass(classId);
+  useEffect(() => {
+    // Call API to fetch classes data
+    const fetchClasses = async () => {
+      try {
+        const response = await axios.get("http://localhost:9999/teacher/classes"); // Replace with your API endpoint
+        setClasses(response.data);
+      } catch (error) {
+        console.error("Error fetching classes:", error);
+      }
+    };
+
+    fetchClasses();
+  }, []); // Call API only once on component mount
+
+  const handleSelectClass = async (classId) => {
+    try {
+      // Call API to fetch class details
+      const response = await axios.get(`http://localhost:9999/classes/${classId}`);
+      const classData = response.data;
+
+      // Update Redux state with selected class and class details
+      dispatch(setClassId(classId));
+      dispatch(setClassOnerTeacher(classData));
+    } catch (error) {
+      console.error("Error fetching class data:", error);
+    }
   };
 
+  // Render function
   return (
-    <MKBox height="100vh" p={3}>
-      <Grid container spacing={3}>
-        <Grid item xs={1}>
-          <div className="left-content">
-            <ListOfClasses classes={jsonData.classes} onSelectClass={handleSelectClass} />
-          </div>
-        </Grid>
+    <MKBox height="100vh" p={3} display="flex">
+      {/* Left Navbar */}
+      <TeacherDefaultNavbar
+        transparent
+        light={true}
+        classes={classes}
+        onSelectClass={handleSelectClass}
+      />
 
-        <Grid item xs={11}>
-          <MKBox>
-            <Grid container spacing={3}>
-              <Grid item xs={12}>
-                <MKBox p={3} className="main-content">
-                  {selectedClass && (
-                    <NamesOfGroups
-                      selectedClass={selectedClass}
-                      groups={jsonData.groups}
-                      projects={jsonData.projects}
-                      mentors={jsonData.mentors}
-                    />
-                  )}
-                </MKBox>
-              </Grid>
+      {/* Right Content */}
+      <MKBox flex={1} pl={3}>
+        <Grid container spacing={3}>
+          <Grid item xs={12}>
+            <MKBox p={3} className="main-content">
+              {selectedClass && (
+                <NamesOfGroups selectedClass={selectedClass} onSelectGroup={setGroupId} />
+              )}
+            </MKBox>
+          </Grid>
 
-              <Grid item xs={12}>
-                <MKBox p={3} className="main-content">
-                  {selectedClass && (
-                    <GroupDetails
-                      students={jsonData.students.filter(
-                        (student) => student.classId === selectedClass
-                      )}
-                      groups={jsonData.groups}
-                    />
-                  )}
-                </MKBox>
-              </Grid>
-            </Grid>
-          </MKBox>
+          <Grid item xs={12}>
+            <MKBox p={3} className="main-content">
+              {selectedClass && <GroupDetails studentsInGroup={students} groupId={groupId} />}
+            </MKBox>
+          </Grid>
         </Grid>
-      </Grid>
+      </MKBox>
     </MKBox>
   );
 };
 
-export default YourNewComponent;
+export default TeachersFunction;

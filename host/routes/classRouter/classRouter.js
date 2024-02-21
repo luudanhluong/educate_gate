@@ -5,4 +5,5 @@ const classRouter = express.Router();
 
 classRouter.post("/create-new-class", classController.createNewListClass); 
 
+
 export default classRouter;

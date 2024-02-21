@@ -10,7 +10,7 @@ import connectDB from "./database.js";
 import userRouter from "./routes/user/userRouter.js";
 import classRouter from "./routes/classRouter/classRouter.js";
 import adminsRouter from "./routes/adminsRouter/adminsRouter.js";
-
+import teacherRouter from './routes/teacherRouter/teacherRouter.js';
 const app = express();
 dotnv.config();
 app.use(cors());
@@ -30,6 +30,7 @@ const upload = multer({ storage: storage });
 app.get("/", (req, res) => {
   console.log("hello world");
 });
+app.use('/teacher', teacherRouter);
 app.use("/user", userRouter);
 app.use("/class", classRouter);
 app.use("/admins", upload.single("file"), adminsRouter);
