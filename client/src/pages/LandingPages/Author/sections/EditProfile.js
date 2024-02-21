@@ -8,25 +8,82 @@ import { ErrorMessage, Field, Form, Formik } from "formik";
 import { useDispatch, useSelector } from "react-redux";
 import MKInput from "components/MKInput";
 import { useEffect, useState } from "react";
+import axios from "axios";
+import { BASE_URL } from "utilities/initialValue";
+import { setMentorCategories } from "app/slices/categorySlice";
+import { setUserLogin } from "app/slices/userSlice";
+import getDate from "utilities/getDate";
+
 const EditProfile = () => {
-  const dispatch = useDispatch(null);
+  const dispatch = useDispatch();
   const { userLogin } = useSelector((state) => state.user);
-  const { data } = useSelector((state) => state.category.categories);
-  const [formvalues, setFormValues] = useState({});
+  const { data: categories } = useSelector((state) => state.category.categories);
+  const { data: mentorCategories } = useSelector((state) => state.category.mentorCategories);
+  const { _id: uId } = userLogin;
+  const [formvalues, setFormValues] = useState({ ...userLogin, menteeCount: 1, degree: "" });
   const [category, setCategory] = useState("");
-  const [categories, setCategories] = useState([]);
+  const jwt = localStorage.getItem("jwt");
   useEffect(() => {
-    setFormValues({ ...userLogin, categories: [] });
+    setFormValues({ ...userLogin });
   }, []);
   const handleSubmit = (values) => {
-    console.log(values);
-    console.log(userLogin);
+    const { username, gender, Dob, phoneNumber, menteeCount, degree } = values;
+    axios
+      .patch(
+        `${BASE_URL}/user/profile/update`,
+        { username, gender, Dob: new Date(Dob), phoneNumber, menteeCount, degree },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            authorization: `Bearer ${jwt}`,
+          },
+        }
+      )
+      .then((res) => {
+        localStorage.setItem("jwt", res.data);
+        axios
+          .get(BASE_URL + "/user/profile", {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${jwt}`,
+            },
+          })
+          .then((res) => {
+            dispatch(setActivePopup(false));
+            dispatch(setUserLogin(res.data));
+          });
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
   };
-  console.log(categories);
   const validateSchema = Yup.object().shape({
     username: Yup.string().required("Vui lòng nhập họ và tên."),
-    categories: Yup.array().required("Vui lòng nhập họ và tên."),
+    menteeCount: Yup.number("Vui lòng nhập số").min(1).max(5).required("Vui lòng nhập số lượng"),
+    degree: Yup.string(),
+    phoneNumber: Yup.string()
+      .required("Vui lòng nhập số điện thoại")
+      .length(10, "Số điện thoại phải có chiều dài bằng 10"),
+    Dob: Yup.date(),
+    gender: Yup.bool(),
   });
+  const getAllMentorCategory = (id) => {
+    axios
+      .get(BASE_URL + "/mentorCategory/" + id, {
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${jwt}`,
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        dispatch(setMentorCategories(res.data));
+        return res;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   return (
     <MKBox
       width="100%"
@@ -87,27 +144,25 @@ const EditProfile = () => {
             <MKBox pt={4} pb={3} px={3}>
               <MKBox mb={2}>
                 <Formik
+                  validationSchema={validateSchema}
                   initialValues={formvalues}
                   onSubmit={(values) => {
-                    console.log(formvalues);
                     handleSubmit(values);
                   }}
-                  validationSchema={validateSchema}
                 >
-                  {({ values, handleChange, handleBlur, handleFocus }) => (
+                  {({ values, handleChange, handleBlur }) => (
                     <Form style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
                       <MKBox>
                         <Field
                           name="username"
                           id="username"
-                          value={values ? values.username : ""}
+                          value={values.username}
                           component={MKInput}
                           label="Full Name"
                           placeholder="eg. Thomas Shelby"
                           fullWidth
                           onChange={handleChange}
                           onBlur={handleBlur}
-                          onFocus={handleFocus}
                           InputLabelProps={{ shrink: true }}
                         />
                         <ErrorMessage
@@ -120,6 +175,7 @@ const EditProfile = () => {
                         <Field
                           name="email"
                           id="email"
+                          disabled
                           value={values ? values.email : ""}
                           component={MKInput}
                           label="Email"
@@ -127,7 +183,6 @@ const EditProfile = () => {
                           placeholder="eg. Thomas Shelby"
                           onChange={handleChange}
                           onBlur={handleBlur}
-                          onFocus={handleFocus}
                           InputLabelProps={{ shrink: true }}
                         />
                         <ErrorMessage name="email" component="div" className="lg_error_message" />
@@ -143,7 +198,6 @@ const EditProfile = () => {
                           placeholder="eg. Thomas Shelby"
                           onChange={handleChange}
                           onBlur={handleBlur}
-                          onFocus={handleFocus}
                           InputLabelProps={{ shrink: true }}
                         />
                         <ErrorMessage
@@ -154,20 +208,23 @@ const EditProfile = () => {
                       </MKBox>
                       <MKBox sx={{ display: "flex", flexDirection: "row", gap: "1.5rem" }}>
                         <Grid item xs={6}>
-                          <Field
-                            name="gender"
-                            id="gender"
-                            value={values ? (values.gender ? "Nam" : "Nữ") : ""}
-                            component={MKInput}
-                            label="Giới tính"
-                            placeholder="eg. Thomas Shelby"
-                            fullWidth
-                            width={"100%"}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            onFocus={handleFocus}
-                            InputLabelProps={{ shrink: true }}
-                          />
+                          <FormControl fullWidth>
+                            <InputLabel id="demo-simple-select-label">Giới tính</InputLabel>
+                            <Select
+                              labelId="demo-simple-select-label"
+                              id="demo-select-small"
+                              value={values.gender}
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              label="Giới tính"
+                            >
+                              <MenuItem value={""}>
+                                <em>none</em>
+                              </MenuItem>
+                              <MenuItem value={true}>Nam</MenuItem>
+                              <MenuItem value={false}>Nữ</MenuItem>
+                            </Select>
+                          </FormControl>
                           <ErrorMessage
                             name="gender"
                             component="div"
@@ -178,7 +235,7 @@ const EditProfile = () => {
                           <Field
                             name="Dob"
                             id="Dob"
-                            value={values ? values.Dob : ""}
+                            value={getDate(values.Dob)}
                             component={MKInput}
                             label="Ngày sinh"
                             type="date"
@@ -186,7 +243,6 @@ const EditProfile = () => {
                             fullWidth
                             onChange={handleChange}
                             onBlur={handleBlur}
-                            onFocus={handleFocus}
                             InputLabelProps={{ shrink: true }}
                           />
                           <ErrorMessage name="Dob" component="div" className="lg_error_message" />
@@ -204,7 +260,6 @@ const EditProfile = () => {
                           onChange={handleChange}
                           fullWidth
                           onBlur={handleBlur}
-                          onFocus={handleFocus}
                           InputLabelProps={{ shrink: true }}
                         />
                         <ErrorMessage
@@ -213,35 +268,58 @@ const EditProfile = () => {
                           className="lg_error_message"
                         />
                       </MKBox>
-                      <FormControl size="small">
-                        <InputLabel id="demo-select-small-label">
-                          Chọn thể loại hướng dẫn
+                      <FormControl fullWidth>
+                        <InputLabel id="demo-simple-select-label">
+                          Chọn thể loại hướng dẫn{" "}
+                          <MKTypography as={"span"} color={"error"}>
+                            (Tối đa 3)
+                          </MKTypography>
                         </InputLabel>
                         <Select
                           onChange={(event) => {
                             const catId = event.target.value;
-                            if (categories.length <= 2 && event.target.value.length > 0) {
-                              const selectedCategory = data.find((d) => d._id === catId);
-                              if (selectedCategory) {
-                                setCategories([...categories, selectedCategory]);
+                            if (mentorCategories.length <= 2 && event.target.value.length > 0) {
+                              const selectedCategory = mentorCategories.some(
+                                (d) => d.categoryId === catId
+                              );
+                              if (!selectedCategory && uId) {
+                                axios
+                                  .post(
+                                    `${BASE_URL}/mentorCategory/addNew`,
+                                    {
+                                      categoryId: catId,
+                                      userId: uId,
+                                    },
+                                    {
+                                      headers: {
+                                        "Content-Type": "application/json",
+                                        authorization: `Bearer ${jwt}`,
+                                      },
+                                    }
+                                  )
+                                  .then(() => {
+                                    getAllMentorCategory(uId);
+                                  })
+                                  .catch((err) => {
+                                    console.log(err.message);
+                                  });
                               }
                             }
                             setCategory(catId);
                             handleChange(event);
                           }}
-                          labelId="demo-select-small-label"
+                          labelId="demo-simple-select-label"
                           id="demo-select-small"
                           name="category"
                           value={category}
-                          sx={{ padding: "12px 0" }}
                           fullWidth
-                          label="Chọn thể loại hướng dẫn"
+                          label="Chọn thể loại hướng dẫn(Tối đa 3)"
                         >
                           <MenuItem value="">
                             <em>None</em>
                           </MenuItem>
-                          {data
-                            ? data.map((d) => (
+                          {categories
+                            ? categories.map((d) => (
                                 <MenuItem key={d._id} value={d._id}>
                                   {d.name}
                                 </MenuItem>
@@ -249,45 +327,83 @@ const EditProfile = () => {
                             : ""}
                         </Select>
                         <MKBox display={"flex"} flexDirection={"row"} gap={"0.5rem"} py={1}>
-                          {categories.map((c) => (
-                            <MKBox
-                              display={"flex"}
-                              flexDirection={"row"}
-                              justifyContent={"space-around"}
-                              gap={"0.5rem"}
-                              sx={{
-                                padding: "8px 12px",
-                                border: "1px solid #ccc",
-                                borderRadius: "30px",
-                                lineHeight: 1,
-                              }}
-                              key={c._id}
-                            >
-                              <MKTypography as={"span"}>{c.name}</MKTypography>
-                              <Icon
-                                sx={{
-                                  height: "100%",
-                                  lineHeight: 1,
-                                  marginTop: "1px",
-                                  cursor: "pointer",
-                                }}
-                              >
-                                clear
-                              </Icon>
-                            </MKBox>
-                          ))}
+                          {mentorCategories
+                            ? mentorCategories.map((mc) => (
+                                <MKBox
+                                  display={"flex"}
+                                  flexDirection={"row"}
+                                  justifyContent={"space-around"}
+                                  gap={"0.5rem"}
+                                  sx={{
+                                    fontSize: "0.825rem",
+                                    padding: "8px 12px",
+                                    border: "1px solid #ccc",
+                                    borderRadius: "30px",
+                                    lineHeight: 1,
+                                  }}
+                                  key={mc._id}
+                                >
+                                  <MKTypography as={"span"}>
+                                    {categories.map((cat) =>
+                                      mc.categoryId === cat._id ? cat.name : ""
+                                    )}
+                                  </MKTypography>
+                                  <Icon
+                                    onClick={() => {
+                                      axios
+                                        .delete(`${BASE_URL}/mentorCategory/delete/${mc._id}`, {
+                                          headers: {
+                                            "Content-Type": "application/json",
+                                            authorization: `Bearer ${jwt}`,
+                                          },
+                                        })
+                                        .then(() => {
+                                          getAllMentorCategory(uId);
+                                        })
+                                        .catch((err) => {
+                                          console.log(err.message);
+                                        });
+                                    }}
+                                    sx={{
+                                      height: "100%",
+                                      lineHeight: 1,
+                                      marginTop: "1px",
+                                      cursor: "pointer",
+                                    }}
+                                  >
+                                    clear
+                                  </Icon>
+                                </MKBox>
+                              ))
+                            : ""}
                         </MKBox>
                       </FormControl>
+                      <MKBox>
+                        <Field
+                          component={MKInput}
+                          multiline
+                          name="degree"
+                          id="degree"
+                          onChange={handleChange}
+                          fullWidth
+                          onBlur={handleBlur}
+                          InputLabelProps={{ shrink: true }}
+                          label="Mô tả sự nghiệp"
+                          rows={2}
+                        />
+                        <ErrorMessage name="degree" component="div" className="lg_error_message" />
+                      </MKBox>
                       <MKButton
-                        style={{ background: "#1A73E8", marginTop: 16 }}
                         type="submit"
-                        className="btn-sbm pointer"
                         sx={{
                           fontSize: "16px",
                           color: "#FFFFFF",
+                          marginTop: "5px",
                         }}
+                        variant="gradient"
+                        color="info"
                       >
-                        Tạo
+                        Cập nhật
                       </MKButton>
                     </Form>
                   )}

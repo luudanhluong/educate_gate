@@ -20,7 +20,6 @@ const createNewListClass = async ({
       });
     }
     const result = await Class.create(data);
-    console.log(data);
     return result;
   } catch (error) {
     throw new Error(error.message);

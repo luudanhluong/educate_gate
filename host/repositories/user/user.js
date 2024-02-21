@@ -43,8 +43,35 @@ const userProfile = async (id) => {
     throw new Error(error.message);
   }
 };
+const userUpdateProfile = async (
+  id,
+  { username, gender, Dob, phoneNumber, menteeCount, degree }
+) => {
+  try {
+    await User.updateOne(
+      { _id: id },
+      {
+        $set: {
+          username,
+          gender,
+          Dob,
+          phoneNumber,
+          menteeCount,
+          degree,
+        },
+      }
+    );
+    const token = jwt.sign({ _id: id }, process.env.SECRETKEY, {
+      expiresIn: "12h",
+    });
+    return token;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
 export default {
   createNewUser,
   loginUser,
   userProfile,
+  userUpdateProfile,
 };
