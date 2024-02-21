@@ -2,10 +2,11 @@ import jwt from "jsonwebtoken";
 import dotnv from "dotenv";
 import bcrypt from "bcrypt";
 import User from "../../models/userModel.js";
+import UserType from "../../models/userTypeModel.js";
 
 const createNewUser = async ({ username, email, password, role }) => {
   const formData = { username, email, password, role };
-  const userObj = await User.find({ email: email }).exec();
+  const userObj = await User.findOne({ email: email }).exec();
   try {
     if (!userObj) {
       const teacher = await User.create(formData);
@@ -17,22 +18,6 @@ const createNewUser = async ({ username, email, password, role }) => {
     throw new Error(error.message);
   }
 };
-
-const createListUsers = async (listData) => {
-  const emailList = listData.map((user) => user.email);
-  const teacherObj = await User.findOne({
-    email: { $in: emailList },
-  }).exec();
-  try {
-    if (!teacherObj) {
-      const user = await User.insertMany(listData);
-      return user._doc;
-    }
-  } catch (e) {
-    throw new Error(e.message.toString());
-  }
-};
-
 const loginUser = async ({ email, password }) => {
   try {
     dotnv.config();
@@ -43,11 +28,6 @@ const loginUser = async ({ email, password }) => {
     if (user) {
       const isPasswordTeacher = await bcrypt.compare(password, user.password);
       if (isPasswordTeacher) {
-        saveTokenToDatabase(
-          user._id,
-          token,
-          new Date(Date.now() + 60 * 60 * 1000 * 2)
-        );
         return { ...user._doc, token };
       } else return res.status(401).json({ error: "Mật khẩu không đúng." });
     }
@@ -56,20 +36,26 @@ const loginUser = async ({ email, password }) => {
     throw new Error(e.message.toString());
   }
 };
-const saveTokenToDatabase = async (userId, role, token, expiresIn) => {
+const getUsers = async ({ item, order, skip, limit }) => {
   try {
-    // await UserToken.create({
-    //   userId: userId,
-    //   userType: role,
-    //   token: token,
-    //   expiresIn: expiresIn,
-    // });
+    const listUsers = await User.find({}, "-password")
+      .sort({ [item]: order })
+      .skip(skip)
+      .limit(limit)
+      .exec();
+    const userRole = await User.distinct("role").exec();
+    const userTypes = await UserType.find({
+      role: { $in: userRole },
+    }).exec();
+    const total = await User.countDocuments({}).exec();
+    return { data: listUsers, total, skip, limit, userTypes };
   } catch (e) {
     throw new Error(e.message.toString());
   }
 };
+
 export default {
   createNewUser,
   loginUser,
-  createListUsers,
+  getUsers,
 };

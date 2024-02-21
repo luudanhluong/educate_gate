@@ -62,7 +62,7 @@ function SignInBasic() {
   const handleSubmit = async (values) => {
     if (!values) return;
     const formData = { ...values };
-    const response = await methodSendRequest(BASE_URL + "/login", POST, headers, formData);
+    const response = await methodSendRequest(BASE_URL + "/user/login", POST, headers, formData);
     const result = await response;
     if (result.error) {
       dispatch(setFetchError(true));
