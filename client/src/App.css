@@ -284,6 +284,7 @@ a {
 .pop-up {
   animation: top_to_center 1.2s ease-in-out;
 }
-#demo-select-small {
-  padding: 0.85rem 0.75rem !important;
+#select-gender,
+#select-category {
+  padding: 0.75rem 0.75rem !important;
 }

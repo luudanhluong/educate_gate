@@ -14,17 +14,11 @@ import { Icon, Container, Grid } from "@mui/material";
 function Profile() {
   const dispatch = useDispatch();
   const { userLogin } = useSelector((state) => state.user);
-  const {
-    username,
-    phoneNumber,
-    classId,
-    gender,
-    email,
-    Dob,
-    menteeCount,
-    mentorCategoryId,
-    degree,
-  } = userLogin || {};
+  const { active_popup } = useSelector((state) => state.active);
+  const { data: categories } = useSelector((state) => state.category.categories);
+  const { data: mentorCategories } = useSelector((state) => state.category.mentorCategories);
+  const { username, phoneNumber, classId, gender, email, Dob, menteeCount, degree } =
+    userLogin || {};
   const { preName, code, suffName } = classId || {};
   return (
     <MKBox component="section" py={{ xs: 6, sm: 12 }}>
@@ -86,7 +80,7 @@ function Profile() {
                 {classId ? (
                   <MKBox>
                     <MKTypography component="span" variant="body2" fontWeight="bold">
-                      Lớp&nbsp;
+                      Lớp:&nbsp;
                     </MKTypography>
                     <MKTypography
                       component="span"
@@ -106,7 +100,7 @@ function Profile() {
                 {email ? (
                   <MKBox>
                     <MKTypography component="span" variant="body2" fontWeight="bold">
-                      Email&nbsp;
+                      Email:&nbsp;
                     </MKTypography>
                     <MKTypography
                       component="span"
@@ -124,7 +118,7 @@ function Profile() {
                 {gender ? (
                   <MKBox>
                     <MKTypography component="span" variant="body2" fontWeight="bold">
-                      Giới tính&nbsp;
+                      Giới tính:&nbsp;
                     </MKTypography>
                     <MKTypography
                       component="span"
@@ -142,7 +136,7 @@ function Profile() {
                 {Dob ? (
                   <MKBox>
                     <MKTypography component="span" variant="body2" fontWeight="bold">
-                      Ngày sinh&nbsp;
+                      Ngày sinh:&nbsp;
                     </MKTypography>
                     <MKTypography
                       component="span"
@@ -151,7 +145,7 @@ function Profile() {
                       sx={{ fontWeight: "400" }}
                       className={"truncate"}
                     >
-                      {getDate(Dob)}
+                      {getDate(Dob).split("-").reverse().join("-")}
                     </MKTypography>
                   </MKBox>
                 ) : (
@@ -160,7 +154,7 @@ function Profile() {
                 {menteeCount ? (
                   <MKBox>
                     <MKTypography component="span" variant="body2" fontWeight="bold">
-                      Số lượng nhóm hướng dẫn&nbsp;
+                      Số lượng nhóm hướng dẫn:&nbsp;
                     </MKTypography>
                     <MKTypography
                       component="span"
@@ -175,10 +169,10 @@ function Profile() {
                 ) : (
                   ""
                 )}
-                {mentorCategoryId ? (
+                {mentorCategories && mentorCategories.length > 0 ? (
                   <MKBox>
                     <MKTypography component="span" variant="body2" fontWeight="bold">
-                      Bằng cấp&nbsp;
+                      Thể loại:&nbsp;
                     </MKTypography>
                     <MKTypography
                       component="span"
@@ -187,7 +181,10 @@ function Profile() {
                       sx={{ fontWeight: "400" }}
                       className={"truncate"}
                     >
-                      {mentorCategoryId}
+                      {categories
+                        .filter((c) => mentorCategories.some((mc) => mc.categoryId === c._id))
+                        .map((c) => c.name)
+                        .join(", ")}
                     </MKTypography>
                   </MKBox>
                 ) : (
@@ -196,7 +193,7 @@ function Profile() {
                 {degree ? (
                   <MKBox>
                     <MKTypography component="span" variant="body2" fontWeight="bold">
-                      Mô tả sự nghiệp&nbsp;
+                      Mô tả sự nghiệp:&nbsp;
                     </MKTypography>
                     <MKTypography
                       component="span"
@@ -214,9 +211,7 @@ function Profile() {
               </Grid>
             </Grid>
             <MKButton
-              onClick={() => {
-                dispatch(setActivePopup(true));
-              }}
+              onClick={() => dispatch(setActivePopup(!active_popup))}
               id={"btn-edit-profile"}
               sx={{
                 position: "absolute",

@@ -35,9 +35,9 @@ function SimpleModal() {
   const toggleModal = () => setShow(!show);
 
   return (
-    <MKBox component="section" py={6}>
+    <MKBox>
       <Container>
-        <Grid container item xs={12} lg={10} justifyContent="center" mx="auto">
+        <Grid item xs={12} justifyContent="center" mx="auto">
           <MKButton variant="gradient" color="info" onClick={toggleModal}>
             Launch Demo Modal
           </MKButton>
@@ -46,8 +46,8 @@ function SimpleModal() {
           <Slide direction="down" in={show} timeout={500}>
             <MKBox
               position="relative"
-              width="500px"
               display="flex"
+              sx={{ with: "calc(100% / 3)" }}
               flexDirection="column"
               borderRadius="xl"
               bgColor="white"

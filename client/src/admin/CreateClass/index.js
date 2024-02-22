@@ -38,22 +38,10 @@ function ListClass() {
       });
   }, [dispatch, filterPreName, searchValue, sort, pageNo]);
   useEffect(() => {
-    const handleDocumentClick = (e) => {
-      if (
-        e.target.closest("#add_list_classes") === null &&
-        e.target.closest("#btn_add_new_list_classes") === null
-      ) {
-        dispatch(setActivePopup(false));
-      }
-    };
-    window.addEventListener("click", handleDocumentClick);
     dispatch(setActivePopup(false));
     dispatch(setSearchValue(""));
     dispatch(setSort(-1));
     dispatch(setFilterPreName(""));
-    return () => {
-      window.removeEventListener("click", handleDocumentClick);
-    };
   }, [dispatch]);
   return (
     <>
