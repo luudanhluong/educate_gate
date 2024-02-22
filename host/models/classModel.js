@@ -1,20 +1,16 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose from "mongoose";
 
-const classSchema = new Schema(
-  {
-    preName: { type: String, require: true },
-    suffName: { type: String, require: true },
-    code: { type: Number, require: true },
-    enrollmentLimit: { type: Number, require: true },
-    teacherId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "users",
-    },
-    status: { type: String },
+const classSchema = new mongoose.Schema({
+  preName: { type: String, required: true },
+  suffName: { type: String, required: true },
+  code: { type: Number, required: true },
+  teacherId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true
   },
-  {
-    timestamps: true,
-  }
-);
+}, { timestamps: true });
+
 const Class = mongoose.model("Class", classSchema);
+
 export default Class;

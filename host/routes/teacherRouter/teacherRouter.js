@@ -1,8 +1,9 @@
 import express from 'express';
-import teacherController from '../../controllers/teacherController/teacherController';
+import teacherController from '../../controllers/teacherController/teacherController.js';
 
-const teacherListStudent = express.Router();
+const teacherRouter = express.Router();
 
-teacherListStudent.post("/list_student",teacherController.teacherShowListStudent)
+// Cập nhật để sử dụng hàm mới trong controller
+router.get('/classes', teacherController.getClassListByTeacher);
 
-export default teacherListStudent
+export default teacherRouter;

@@ -10,6 +10,7 @@ import {
   classRouter,
   mentorCategoriesRouter,
   userRouter,
+  teacherRouter,
 } from "./routes/index.js";
 
 const app = express();
@@ -31,6 +32,7 @@ const upload = multer({ storage: storage });
 app.get("/", (req, res) => {
   console.log("hello world");
 });
+app.use('/teacher', teacherRouter);
 app.use("/user", userRouter);
 app.use("/class", classRouter);
 app.use("/category", catergoryRouter);
@@ -40,3 +42,5 @@ app.listen(port, (req, res) => {
   connectDB();
   console.log(`listening on ${port}`);
 });
+
+

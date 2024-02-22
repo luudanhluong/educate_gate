@@ -1,3 +1,4 @@
+import classOnerTeacherSlice from "./slices/classOnerTecaherSlice";
 import { configureStore } from "@reduxjs/toolkit";
 import activeInfoSlice from "./slices/activeSlice";
 import userSlice from "./slices/userSlice";
@@ -15,6 +16,7 @@ const rootReducer = {
   category: categorySlice,
   error: ErrorSlice,
   mockup: mockupSlice,
+  classOnerTeacher: classOnerTeacherSlice,
 };
 
 const store = configureStore(

@@ -1,9 +1,9 @@
-import Student from "../../models/studentModel";
+import User from "../../models/userModel.js";
 
 // Hàm này sẽ trả về danh sách học sinh của giáo viên dựa trên teacherId
 const getStudentsByTeacherId = async (teacherId) => {
     try {
-        const students = await Student.find({ teacherId: teacherId });
+        const students = await User.find({ teacherId: teacherId });
         return students;
     } catch (error) {
         console.error('Error querying database:', error);
