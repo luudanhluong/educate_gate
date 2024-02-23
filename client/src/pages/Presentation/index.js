@@ -34,7 +34,7 @@ import bgImage from "assets/images/bg-presentation.jpg";
 function Presentation() {
   return (
     <>
-      <DefaultNavbar routes={routes} brand="Education Gate" transparent light sticky />
+      <DefaultNavbar routes={routes} brand="Education Gate" transparent light />
       <MKBox
         minHeight="75vh"
         width="100%"

@@ -31,10 +31,7 @@ function ListAccount() {
           pageNo * limitUser
         }&limit=${limitUser}&role=${filterRole}&search=${searchValue}`
       )
-      .then((res) => {
-        dispatch(setUsers(res.data));
-        return res;
-      })
+      .then((res) => dispatch(setUsers(res.data)))
       .catch((err) => {
         console.log(err);
       });
