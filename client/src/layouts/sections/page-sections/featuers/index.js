@@ -1,81 +1,113 @@
-// TeachersFunction.js
 import React, { useState, useEffect } from "react";
 import MKBox from "components/MKBox";
 import Grid from "@mui/material/Grid";
-import axios from "axios"; // Import axios for API calls
-import { useDispatch, useSelector } from "react-redux";
-import { setClassId, setClassOnerTeacher } from "../../../../app/slices/classOnerTecaherSlice";
-import NamesOfGroups from "./components/FeaturesOne/nameOfGroup";
-import GroupDetails from "./components/FeaturesOne/groupDetail";
+import { useSelector } from "react-redux";
+// import GroupDetails from "./components/FeaturesOne/groupDetail";
+// import GroupsList from "./components/FeaturesOne/listOfGroup";
+import StudentOfClassesList from "./components/FeaturesOne/listOfStudent";
+import axios from "axios";
+import TeacherDefaultNavbar from "./TeacherAction";
+import DefaultNavbar from "Navbars/DefaultNavbar";
+import routes from "routes";
+import { CSSTransition } from "react-transition-group";
 import "../featuers/components/FeaturesOne/studentList.css";
-import TeacherDefaultNavbar from "./Navbar/DefaultNavbar";
-
 const TeachersFunction = () => {
-  const dispatch = useDispatch();
-  const selectedClass = useSelector((state) => state.classOnerTeacher.classId);
-  const [classes, setClasses] = useState([]);
-  const students = useSelector((state) => state.classOnerTeacher.students);
-  const [groupId, setGroupId] = useState(null);
+  const selectedClassId = useSelector((state) => state.classOnerTeacher.classId);
+  const [students, setStudents] = useState([]);
+  const [lastScrollTop, setLastScrollTop] = useState(0);
+  const [navbarVisible, setNavbarVisible] = useState(true);
 
   useEffect(() => {
-    // Call API to fetch classes data
-    const fetchClasses = async () => {
+    const handleScroll = () => {
+      const currentScrollPos = window.scrollY;
+      setNavbarVisible(lastScrollTop > currentScrollPos || currentScrollPos < 10);
+      setLastScrollTop(currentScrollPos);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [lastScrollTop]);
+
+  useEffect(() => {
+    const fetchStudents = async () => {
       try {
-        const response = await axios.get("http://localhost:9999/teacher/classes"); // Replace with your API endpoint
-        setClasses(response.data);
+        if (selectedClassId) {
+          const jwt = localStorage.getItem("jwt");
+          const response = await axios.get(
+            `http://localhost:9999/class/${selectedClassId}/students`,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${jwt}`,
+              },
+            }
+          );
+          setStudents(response.data); // Update state with fetched students
+        }
       } catch (error) {
-        console.error("Error fetching classes:", error);
+        console.error("Error fetching students:", error);
       }
     };
 
-    fetchClasses();
-  }, []); // Call API only once on component mount
+    fetchStudents();
+  }, [selectedClassId]);
+  // const [groupDetails, setGroupDetails] = useState(null);
+  // const [groups, setGroups] = useState([]);
+  // const [groupId, setGroupId] = useState(null);
 
-  const handleSelectClass = async (classId) => {
-    try {
-      // Call API to fetch class details
-      const response = await axios.get(`http://localhost:9999/classes/${classId}`);
-      const classData = response.data;
+  // useEffect(() => {
+  //   const jwt = localStorage.getItem("jwt");
+  //   const config = {
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //       Authorization: `Bearer ${jwt}`,
+  //     },
+  //   };
+  //   axios
+  //     .get(`http://localhost:9999/class/${selectedClassId}/groups`, config)
+  //     .then((res) => {
+  //       setGroups(res.data);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error.message);
+  //     });
+  // }, [selectedClassId]);
 
-      // Update Redux state with selected class and class details
-      dispatch(setClassId(classId));
-      dispatch(setClassOnerTeacher(classData));
-    } catch (error) {
-      console.error("Error fetching class data:", error);
-    }
-  };
+  // const handleSelectGroup = async (id) => {
+  //   const jwt = localStorage.getItem("jwt");
+  //   const config = {
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //       Authorization: `Bearer ${jwt}`,
+  //     },
+  //   };
+  //   setGroupId(id);
+  //   try {
+  //     const response = await axios.get(`http://localhost:9999/group/${id}/details`, config);
+  //     setGroupDetails(response.data);
+  //   } catch (error) {
+  //     console.error("Error fetching specific group details:", error);
+  //   }
+  // };
 
-  // Render function
   return (
-    <MKBox height="100vh" p={3} display="flex">
-      {/* Left Navbar */}
-      <TeacherDefaultNavbar
-        transparent
-        light={true}
-        classes={classes}
-        onSelectClass={handleSelectClass}
-      />
-
-      {/* Right Content */}
-      <MKBox flex={1} pl={3}>
-        <Grid container spacing={3}>
-          <Grid item xs={12}>
-            <MKBox p={3} className="main-content">
-              {selectedClass && (
-                <NamesOfGroups selectedClass={selectedClass} onSelectGroup={setGroupId} />
-              )}
-            </MKBox>
+    <>
+      <CSSTransition in={navbarVisible} timeout={300} s classNames="navbar" unmountOnExit>
+        <DefaultNavbar routes={routes} sticky />
+      </CSSTransition>
+      <MKBox pt={{ xs: 12, sm: 14 }} pb={3} height="100vh" display="flex" justifyContent="center">
+        <Grid container width="80%">
+          <Grid item xs={12} md={2}>
+            <TeacherDefaultNavbar />
           </Grid>
-
-          <Grid item xs={12}>
-            <MKBox p={3} className="main-content">
-              {selectedClass && <GroupDetails studentsInGroup={students} groupId={groupId} />}
+          <Grid item xs={12} md={10}>
+            <MKBox p={0}>
+              <StudentOfClassesList classId={students} />
             </MKBox>
           </Grid>
         </Grid>
       </MKBox>
-    </MKBox>
+    </>
   );
 };
-
 export default TeachersFunction;

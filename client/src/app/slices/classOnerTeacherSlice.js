@@ -12,6 +12,7 @@ const classOnerTeacher = createSlice({
     },
     setClassId: (state, action) => {
       state.classId = action.payload;
+      console.log("Updated classId in Redux state:", action.payload);
     },
   },
 });

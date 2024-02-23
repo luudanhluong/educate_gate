@@ -1,4 +1,4 @@
-import classOnerTeacherSlice from "./slices/classOnerTecaherSlice";
+import classOnerTeacherSlice from "./slices/classOnerTeacherSlice";
 import { configureStore } from "@reduxjs/toolkit";
 import activeInfoSlice from "./slices/activeSlice";
 import userSlice from "./slices/userSlice";

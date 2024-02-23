@@ -1,48 +1,42 @@
-// GroupDetails.js
-import React from "react";
-import MKTypography from "components/MKTypography";
-import PropTypes from "prop-types";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import axios from "axios";
 
-const GroupDetails = ({ studentsInGroup }) => {
+const GroupDetails = () => {
+  const selectedGroupId = useSelector((state) => state.yourReducer.selectedGroupId); // Adjust according to your Redux setup
+  const [groupDetails, setGroupDetails] = useState(null);
+
+  useEffect(() => {
+    if (selectedGroupId) {
+      axios
+        .get(`http://localhost:9999/group/${selectedGroupId}/details`)
+        .then((response) => {
+          setGroupDetails(response.data);
+        })
+        .catch((error) => console.error("Error fetching group details:", error));
+    }
+  }, [selectedGroupId]);
+
   return (
-    <div className="StudentDetailsWrapper">
-      <div className="StudentDetailsHeader">
-        <MKTypography variant="h5" mb={3}>
-          <div className="text">Group Details</div>
-        </MKTypography>
-      </div>
-
-      <div className="GroupDetailsItem">
-        <h3>Students in Selected Group</h3>
-        <table>
-          <thead>
-            <tr>
-              <th>Roll No</th>
-              <th>Name</th>
-              <th>Gender</th>
-              <th>Leader</th>
-              <th>Major</th>
-            </tr>
-          </thead>
-          <tbody>
-            {studentsInGroup.map((student) => (
-              <tr key={student.id}>
-                <td>{student.rollNo}</td>
-                <td>{student.name}</td>
-                <td>{student.gender}</td>
-                <td>{student.isLeader ? "Yes" : "No"}</td>
-                <td>{student.majorOfStudent}</td>
-              </tr>
+    <div>
+      {groupDetails ? (
+        <div>
+          <h2>Group Name: {groupDetails.groupName}</h2>
+          {/* Render more details here */}
+          <div>
+            Members:
+            {groupDetails.studentId.map((student) => (
+              <p key={student._id}>
+                {student.name} - {student.email}
+              </p> // Assuming the structure includes name and email
             ))}
-          </tbody>
-        </table>
-      </div>
+          </div>
+        </div>
+      ) : (
+        <p>Select a group to see details</p>
+      )}
     </div>
   );
-};
-
-GroupDetails.propTypes = {
-  studentsInGroup: PropTypes.array.isRequired, // Ensure studentsInGroup is required
 };
 
 export default GroupDetails;

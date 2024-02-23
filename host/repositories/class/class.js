@@ -1,4 +1,5 @@
 import Class from "../../models/classModel.js";
+import User from "../../models/userModel.js";
 
 const createNewListClass = async ({
   suffName,
@@ -45,5 +46,16 @@ const getClasses = async ({ item, order, limit, skip }) => {
     throw new Error(error.message);
   }
 };
+const getStudentsInClass = async (classId) => {
+  try {
+    const students = await User.find({ classId: classId })
+      .populate("classId")
+      .exec();
+    return students;
+  } catch (error) {
+    console.error("Error fetching students:", error);
+    throw new Error(error);
+  }
+};
 
-export default { createNewListClass, getClasses };
+export default { createNewListClass, getClasses, getStudentsInClass };
