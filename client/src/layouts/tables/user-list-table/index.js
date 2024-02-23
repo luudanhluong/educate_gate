@@ -22,6 +22,7 @@ function Tables() {
           <Card
             id={"card-table-user"}
             sx={{
+              boxShadow: "none",
               height: "100%",
               margin: "auto 0",
             }}

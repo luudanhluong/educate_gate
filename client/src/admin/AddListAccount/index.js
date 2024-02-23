@@ -5,7 +5,7 @@ import Grid from "@mui/material/Grid";
 import MKBox from "components/MKBox";
 
 // Images
-import bgImage from "assets/images/bg-sign-in-basic.jpeg";
+// import bgImage from "assets/images/bg-sign-in-basic.jpeg";
 import DefaultNavbar from "admin/Navbar/DefaultNavbar";
 import Tables from "layouts/tables/user-list-table";
 import { useEffect } from "react";
@@ -45,45 +45,26 @@ function ListAccount() {
   }, [dispatch]);
 
   return (
-    <>
+    <MKBox sx={{ display: "flex", alignItems: "center", height: "100%", gap: "1.5rem" }}>
       <DefaultNavbar light={true} />
       {active_popup ? <AddListAccount /> : ""}
-      <MKBox
-        position="absolute"
-        top={0}
-        right={0}
-        zIndex={1}
-        width="calc(100% - 288px)"
-        height="100%"
-        overflow="auto"
-        sx={{
-          backgroundImage: ({ functions: { linearGradient, rgba }, palette: { gradients } }) =>
-            `${linearGradient(
-              rgba(gradients.dark.main, 0.6),
-              rgba(gradients.dark.state, 0.6)
-            )}, url(${bgImage})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
-        }}
-      >
-        <MKBox px={1} width="100%" height="100%" mx="auto" position="relative" zIndex={2}>
+      <MKBox width="100%" height="100%" overflow="auto">
+        <MKBox px={1} width="100%" mx="auto" position="relative" zIndex={2}>
           <Grid
             container
-            spacing={1}
             justifyContent="center"
             alignItems="center"
             width={"100%"}
             m={0}
             height="100%"
           >
-            <Grid item xs={12} height="100%" p={0}>
+            <Grid item xs={12} width="100%" height="100%" p={0}>
               <Tables />
             </Grid>
           </Grid>
         </MKBox>
       </MKBox>
-    </>
+    </MKBox>
   );
 }
 

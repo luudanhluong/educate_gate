@@ -64,35 +64,24 @@ function AddClassList() {
           pageNo * limitClass
         }&limit=${limitClass}&preName=${filterPreName}&search=${searchValue}`
       )
-      .then((response) => {
-        dispatch(setclasses(response.data));
-        return response.data;
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  const handleSubmit = async (values) => {
-    try {
-      const { preName, suffName, limmitStudent, quantity } = values;
-      const formData_1 = new FormData();
-      formData_1.append("file", fileName);
-      const formData_2 = new FormData();
-      formData_2.append("preName", preName.toUpperCase());
-      formData_2.append("suffName", suffName ? suffName.toUpperCase() : suffName);
-      formData_2.append("limmitStudent", Number(limmitStudent));
-      formData_2.append("quantity", Number(quantity));
-      await axios
-        .post(BASE_URL + "/admins/create-new-classes", active === 0 ? formData_2 : formData_1)
-        .then((response) => {
-          getClassInfo();
-          return response;
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-        });
-    } catch (error) {
-      console.log(error);
-    }
+      .then((response) => dispatch(setclasses(response.data)))
+      .catch((error) => console.log(error));
+  const handleSubmit = (values) => {
+    const { preName, suffName, limmitStudent, quantity } = values;
+    const formData_1 = new FormData();
+    formData_1.append("file", fileName);
+    // const formData_2 = new FormData();
+    // formData_2.append("preName", preName.toUpperCase());
+    // formData_2.append("suffName", suffName ? suffName.toUpperCase() : suffName);
+    // formData_2.append("limmitStudent", Number(limmitStudent));
+    // formData_2.append("quantity", Number(quantity));
+    axios
+      .post(
+        BASE_URL + "/admins/create-new-classes",
+        active === 0 ? { preName, suffName, limmitStudent, quantity } : formData_1
+      )
+      .then(() => getClassInfo())
+      .catch((error) => console.error(error.message));
   };
   return (
     <Modal
@@ -194,6 +183,7 @@ function AddClassList() {
                             component={MKInput}
                             label="Số lượng lớp muốn tạo"
                             placeholder="0"
+                            onChange={handleChange}
                             className={`${touched.file && errors.file ? "error" : ""}`}
                             accept=".xls, .xlsx"
                             id="quantity"
@@ -211,6 +201,7 @@ function AddClassList() {
                             value={values.preName}
                             label="Nhập tiền tố của lớp"
                             type="text"
+                            onChange={handleChange}
                             name="preName"
                             className={`${touched.file && errors.file ? "error" : ""}`}
                             accept=".xls, .xlsx"
@@ -227,6 +218,7 @@ function AddClassList() {
                             fullWidth
                             component={MKInput}
                             value={values.suffName}
+                            onChange={handleChange}
                             label="Nhập hậu tố của lớp"
                             type="text"
                             name="suffName"
@@ -247,6 +239,7 @@ function AddClassList() {
                             label="Giới hạn của sinh viên trong 1 lớp"
                             type="text"
                             value={values.limmitStudent}
+                            onChange={handleChange}
                             name="limmitStudent"
                             className={`${touched.file && errors.file ? "error" : ""}`}
                             accept=".xls, .xlsx"

@@ -48,7 +48,7 @@ const createNewListClass = async (req, res) => {
   try {
     const { suffName, preName, quantity, limmitStudent } = req.body;
     let result;
-    if (!suffName) {
+    if (!preName) {
       const excelFilePath = req.file.path;
       const workbook = xlsx.readFile(excelFilePath);
       const sheetName = workbook.SheetNames[0];

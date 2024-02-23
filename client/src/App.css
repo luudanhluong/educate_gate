@@ -162,11 +162,7 @@ a {
 .error {
   border: 1.25px solid #d70707;
 }
-
-/* .fifa_body-group::-webkit-scrollbar {
-  width: 8px;
-} */
-
+#dfa-navbar::-webkit-scrollbar-track,
 .fifa_body-group::-webkit-scrollbar-track {
   background: #ccc;
 }
@@ -174,6 +170,7 @@ a {
 .register_area::-webkit-scrollbar {
   width: 0;
 }
+#dfa-navbar::-webkit-scrollbar,
 #card-table-user::-webkit-scrollbar,
 .rg_form-register::-webkit-scrollbar,
 .cnc_modle-form::-webkit-scrollbar,
@@ -182,6 +179,7 @@ a {
   width: 4px;
 }
 
+#dfa-navbar::-webkit-scrollbar-thumb,
 #card-table-user::-webkit-scrollbar-thumb,
 .rg_form-register::-webkit-scrollbar-thumb,
 .cnc_modle-form::-webkit-scrollbar-thumb,
@@ -194,6 +192,7 @@ a {
   background-color: transparent;
 }
 .rg_form-register::-webkit-scrollbar-track,
+#dfa-navbar::-webkit-scrollbar-track,
 .cnc_modle-form::-webkit-scrollbar-track,
 .lct_board-list::-webkit-scrollbar-track,
 .fifa_body-group::-webkit-scrollbar-track {

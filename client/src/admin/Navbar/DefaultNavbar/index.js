@@ -5,9 +5,9 @@ import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 
 // @mui material components
-import Container from "@mui/material/Container";
+// import Container from "@mui/material/Container";
 
-// Material Dashboard 2 React base styles
+// Material Dashboard 2 React base sxs
 
 // Material Dashboard 2 React context
 import DefaultNavbarLink from "./DefaultNavbarLink";
@@ -15,14 +15,14 @@ import MKBox from "components/MKBox";
 
 function DefaultNavbar({ transparent, light = true }) {
   return (
-    <Container>
+    <>
       <MKBox
-        style={{ gap: "1.5rem" }}
+        id="dfa-navbar"
+        sx={{ gap: "1.5rem", background: "rgba(0,0,0,0.88) !important" }}
         py={1}
         px={{ xs: 4, sm: transparent ? 2 : 3, lg: transparent ? 0 : 2 }}
-        my={3}
-        mx={3}
-        height="calc(100vh - 2rem)"
+        width="302px"
+        height="calc(100vh - 4rem)"
         overflow="auto"
         borderRadius="lg"
         shadow={transparent ? "none" : "md"}
@@ -30,10 +30,6 @@ function DefaultNavbar({ transparent, light = true }) {
         display="flex"
         flexDirection="column"
         alignItems="center"
-        position="absolute"
-        backgroundColor="rgba(0,0,0,0.88) !important"
-        left={0}
-        top={0}
         zIndex={3}
       >
         <MKBox
@@ -50,14 +46,14 @@ function DefaultNavbar({ transparent, light = true }) {
         </MKBox>
         <MKBox
           color="inherit"
-          style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}
+          sx={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}
           m={0}
           p={0}
         >
-          <MKBox className={"ithv_elm_bl"} style={{ padding: "2px 4px" }}>
+          <MKBox className={"ithv_elm_bl"} sx={{ padding: "2px 4px" }}>
             <DefaultNavbarLink icon="person" name="Dashboard" route="/admin" light={light} />
           </MKBox>
-          <MKBox className={"ithv_elm_bl"} style={{ padding: "2px 4px" }}>
+          <MKBox className={"ithv_elm_bl"} sx={{ padding: "2px 4px" }}>
             <DefaultNavbarLink
               icon="donut_large"
               name="Create new list account"
@@ -65,7 +61,7 @@ function DefaultNavbar({ transparent, light = true }) {
               light={light}
             />
           </MKBox>
-          <MKBox className={"ithv_elm_bl"} style={{ padding: "2px 4px" }}>
+          <MKBox className={"ithv_elm_bl"} sx={{ padding: "2px 4px" }}>
             <DefaultNavbarLink
               icon="account_circle"
               name="Create new classes"
@@ -73,7 +69,7 @@ function DefaultNavbar({ transparent, light = true }) {
               light={light}
             />
           </MKBox>
-          <MKBox className={"ithv_elm_bl"} style={{ padding: "2px 4px" }}>
+          <MKBox className={"ithv_elm_bl"} sx={{ padding: "2px 4px" }}>
             <DefaultNavbarLink
               icon="key"
               name="danh sách lớp học sinh"
@@ -81,7 +77,7 @@ function DefaultNavbar({ transparent, light = true }) {
               light={light}
             />
           </MKBox>
-          <MKBox className={"ithv_elm_bl"} style={{ padding: "2px 4px" }}>
+          <MKBox className={"ithv_elm_bl"} sx={{ padding: "2px 4px" }}>
             <DefaultNavbarLink
               icon="key"
               name="sign in"
@@ -91,7 +87,7 @@ function DefaultNavbar({ transparent, light = true }) {
           </MKBox>
         </MKBox>
       </MKBox>
-    </Container>
+    </>
   );
 }
 
