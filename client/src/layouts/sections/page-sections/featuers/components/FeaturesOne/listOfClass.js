@@ -1,23 +1,33 @@
 import React from "react";
 import { useDispatch } from "react-redux";
-import { setClassId } from "../../../../../../app/slices/classOnerTecaherSlice"; // Adjust the import path as necessary
+import { setClassId } from "../../../../../../app/slices/classOnerTeacherSlice"; // Adjust the import path as necessary
 import PropTypes from "prop-types";
+import MKBox from "components/MKBox";
+import "./studentList.css";
 
 const ListOfClasses = ({ classes = [] }) => {
   const dispatch = useDispatch();
+  console.log(classes);
 
-  const onSelectClass = (classId) => {
+  const handleSelectClass = (classId) => {
+    console.log("Selected class:", classId);
     dispatch(setClassId(classId));
   };
 
   return (
-    <div className="ClassListWrapper">
+    <MKBox className="ClassListWrapper" color="danger">
       {classes.map((classItem) => (
-        <div key={classItem.id} className="ClassItem" onClick={() => onSelectClass(classItem.id)}>
-          {classItem.name}
+        <div
+          key={classItem._id}
+          className={`ClassItem ${classItem.selected ? "selected" : ""}`}
+          onClick={() => handleSelectClass(classItem._id)}
+        >
+          {classItem.preName}
+          {classItem.code}
+          {classItem.suffName ? `-${classItem.suffName}` : ""}
         </div>
       ))}
-    </div>
+    </MKBox>
   );
 };
 ListOfClasses.propTypes = {

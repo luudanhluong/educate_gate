@@ -1,14 +1,15 @@
-import Class from "../../models/classModel.js";
-
+import jwt from "jsonwebtoken";
+import teacherDAO from "../../repositories/teacher/index.js";
 const getClassListByTeacher = async (req, res) => {
+  const token = req.headers["authorization"];
+  if (!token) return res.status(401).send("Access denied");
+  const tokenString = token.split(" ")[1];
   try {
-    // Lấy teacherId từ req.query hoặc req.params, tùy thuộc vào cách bạn thiết kế API
-    // Ví dụ: sử dụng req.query.teacherId
-    const teacherId = req.query.teacherId.trim();
-
-    // Truy vấn các lớp dựa trên teacherId
-    const classes = await Class.find({ teacherId: teacherId }).populate('teacherId');
-    res.json(classes);
+    const decoded = jwt.verify(tokenString, process.env.SECRETKEY);
+    req.user = decoded;
+    console.log(decoded._id);
+    const result = await teacherDAO.getClassByTeacherId(decoded._id);
+    res.status(200).json(result);
   } catch (error) {
     res.status(500).send(error.toString());
   }

@@ -1,3 +1,3 @@
-import teacher from "./teacher.js";
+import teacherDAO from "./teacher.js";
 
-export default teacher;
+export default teacherDAO;
