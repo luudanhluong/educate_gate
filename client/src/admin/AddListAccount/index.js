@@ -31,32 +31,17 @@ function ListAccount() {
           pageNo * limitUser
         }&limit=${limitUser}&role=${filterRole}&search=${searchValue}`
       )
-      .then((res) => {
-        dispatch(setUsers(res.data));
-        return res;
-      })
+      .then((res) => dispatch(setUsers(res.data)))
       .catch((err) => {
         console.log(err);
       });
   }, [dispatch, filterRole, searchValue, sort, pageNo]);
 
   useEffect(() => {
-    const handleDocumentClick = (e) => {
-      if (
-        e.target.closest("#add_list_user") === null &&
-        e.target.closest("#btn_add_new_list_user") === null
-      ) {
-        dispatch(setActivePopup(false));
-      }
-    };
-    window.addEventListener("click", handleDocumentClick);
     dispatch(setSearchValue(""));
     dispatch(setActivePopup(false));
     dispatch(setSort(-1));
     dispatch(setFilterRole(0));
-    return () => {
-      window.removeEventListener("click", handleDocumentClick);
-    };
   }, [dispatch]);
 
   return (

@@ -11,7 +11,8 @@ import { useSelector } from "react-redux";
 import getDate from "utilities/getDate";
 
 export default function data() {
-  const users = useSelector((state) => state.user.users);
+  const { data } = useSelector((state) => state.user.users);
+
   const User = ({ image, name, email }) => (
     <MKBox display="flex" alignItems="center" lineHeight={1}>
       <MKAvatar src={image} name={name} size="md" />
@@ -42,8 +43,8 @@ export default function data() {
     title: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
   };
-  const rows = users.data
-    ? users.data.map((user) => ({
+  const rows = data
+    ? data.map((user) => ({
         user: <User image={userImg} name={user.username} email={user.email} />,
         gender: (
           <MKTypography component="div" variant="caption" color="text" fontWeight="medium">

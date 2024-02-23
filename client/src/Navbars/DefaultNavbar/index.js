@@ -435,7 +435,7 @@ function DefaultNavbar({ brand, routes, transparent, light, action, sticky, rela
   );
 
   return (
-    <Container sx={sticky ? { position: "sticky", top: 0, zIndex: 10 } : null}>
+    <Container sx={sticky ? { position: "sticky", top: 0, zIndex: 10 } : { position: "relative" }}>
       <MKBox
         py={1}
         px={{ xs: 4, sm: transparent ? 2 : 3, lg: transparent ? 0 : 2 }}

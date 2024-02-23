@@ -15,7 +15,11 @@ const groupSchema = new Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "classes",
     },
-    studentId: {
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "users",
+    },
+    mentorId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "users",
     },
