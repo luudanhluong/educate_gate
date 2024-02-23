@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialValue = {
   classId: null,
   classOnerTeacher: {},
+  classStudent: {},
 };
 const classOnerTeacher = createSlice({
   name: "classOnerTeacher",
@@ -12,11 +13,13 @@ const classOnerTeacher = createSlice({
     },
     setClassId: (state, action) => {
       state.classId = action.payload;
-      console.log("Updated classId in Redux state:", action.payload);
+    },
+    setClassStudent: (state, action) => {
+      state.classStudent = action.payload;
     },
   },
 });
 
 const { reducer, actions } = classOnerTeacher;
-export const { setClassOnerTeacher, setClassId } = actions;
+export const { setClassOnerTeacher, setClassId, setClassStudent } = actions;
 export default reducer;

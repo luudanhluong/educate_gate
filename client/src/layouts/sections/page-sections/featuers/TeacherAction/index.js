@@ -2,26 +2,26 @@ import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setClassId } from "../../../../../app/slices/classOnerTeacherSlice";
 import PropTypes from "prop-types";
-import Container from "@mui/material/Container";
 import MKBox from "components/MKBox";
 import ListOfClasses from "../components/FeaturesOne/listOfClass.js";
 import axios from "axios";
+import { Container, Icon, Typography } from "@mui/material";
 
 const TeacherDefaultNavbar = ({ transparent, light = true }) => {
   const dispatch = useDispatch();
-  const [showClassList, setShowClassList] = useState(false);
+  // const [showClassList, setShowClassList] = useState(false);
   const [classes, setClasses] = useState([]);
-  const [isHovered, setIsHovered] = useState(false);
+  // const [isHovered, setIsHovered] = useState(false);
 
-  const defaultStyle = {
-    color: "black",
-    cursor: "pointer",
-    transition: "all 0.3s ease",
-  };
+  // const defaultStyle = {
+  //   color: "black",
+  //   cursor: "pointer",
+  //   transition: "all 0.3s ease",
+  // };
 
-  const hoverStyle = {
-    transform: "scale(1.05)",
-  };
+  // const hoverStyle = {
+  //   transform: "scale(1.05)",
+  // };
 
   useEffect(() => {
     const jwt = localStorage.getItem("jwt");
@@ -45,8 +45,8 @@ const TeacherDefaultNavbar = ({ transparent, light = true }) => {
     }
   }, []);
 
-  const handleToggleClassList = () => setShowClassList(!showClassList);
-  console.log(showClassList);
+  // const handleToggleClassList = () => setShowClassList(!showClassList);
+  // console.log(showClassList);
 
   const handleSelectClass = (classId) => {
     console.log("Selected class 1:", classId);
@@ -55,9 +55,8 @@ const TeacherDefaultNavbar = ({ transparent, light = true }) => {
 
   return (
     <Container
+      width={"282px"}
       sx={{
-        height: "100%",
-        position: "relative",
         overflowY: "auto",
       }}
     >
@@ -65,20 +64,12 @@ const TeacherDefaultNavbar = ({ transparent, light = true }) => {
         sx={{
           gap: "1.5rem",
         }}
-        py={1}
-        width="auto"
-        height="100%"
         overflow="auto"
         borderRadius="lg"
         shadow={transparent ? "none" : "md"}
         display="flex"
         flexDirection="column"
         alignItems="center"
-        color={"#344767"}
-        // left={0}
-
-        position="fixed"
-        zIndex={1201}
       >
         <MKBox
           mt={2}
@@ -87,15 +78,13 @@ const TeacherDefaultNavbar = ({ transparent, light = true }) => {
           variant="contained"
           fontWeight="bold"
           color={"dark"}
-          px={4}
-          fontFamily="Roboto, Helvetica, Arial, sans-serif"
         >
           Teacher Action
         </MKBox>
 
         <MKBox
           color="inherit"
-          style={{
+          sx={{
             display: "flex",
             flexDirection: "column",
             gap: "0.5rem",
@@ -106,18 +95,27 @@ const TeacherDefaultNavbar = ({ transparent, light = true }) => {
           p={2}
         >
           <MKBox
-            fontSize="19px"
-            fontFamily="Roboto, Helvetica, Arial, sans-serif"
-            style={isHovered ? { ...defaultStyle, ...hoverStyle } : defaultStyle}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-            icon="donut_large"
-            onClick={handleToggleClassList}
+            sx={{
+              transform: "scale(1.05)",
+              display: "flex",
+              gap: "3px",
+              alignItems: "center",
+              "&:hover": {
+                color: "#000",
+                cursor: "default",
+              },
+            }}
+            // onMouseEnter={() => setIsHovered(true)}
+            // onMouseLeave={() => setIsHovered(false)}
+            // onClick={handleToggleClassList}
             light={light}
           >
-            List of class
+            <Icon>donut_large</Icon>
+            <Typography component="span" fontSize="0.925rem">
+              List of class
+            </Typography>
           </MKBox>
-          {showClassList && <ListOfClasses classes={classes} onSelectClass={handleSelectClass} />}
+          <ListOfClasses classes={classes} onSelectClass={handleSelectClass} />
         </MKBox>
       </MKBox>
     </Container>
