@@ -93,12 +93,23 @@ const TeachersFunction = () => {
   return (
     <>
       <CSSTransition in={navbarVisible} timeout={300} s classNames="navbar" unmountOnExit>
-        <DefaultNavbar routes={routes} sticky />
+        <DefaultNavbar routes={routes} transparent sticky />
       </CSSTransition>
-      <MKBox pt={{ xs: 12, sm: 14 }} pb={3} height="100vh" display="flex" justifyContent="center">
-        <Grid container width="80%">
-          <Grid item xs={12} md={2}>
-            <TeacherDefaultNavbar />
+      <MKBox pt={{ xs: 12, sm: 14 }} height="100vh" display="flex" justifyContent="center">
+        <Grid container width="80%" display="flex" justifyContent="center">
+          <Grid
+            item
+            xs={12}
+            md={2}
+            height="80%"
+            sx={{
+              overflow: "auto",
+              borderRadius: "12px",
+              boxShadow:
+                "0rem 0.25rem 0.65rem 0.1625rem rgba(0, 0, 0, 0.1), 0rem 0.125rem 0.95rem 0.2625rem rgba(0, 0, 0, 0.06)",
+            }}
+          >
+            <TeacherDefaultNavbar transparent />
           </Grid>
           <Grid item xs={12} md={10}>
             <MKBox p={0}>
