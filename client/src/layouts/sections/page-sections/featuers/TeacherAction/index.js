@@ -107,7 +107,7 @@ const TeacherDefaultNavbar = ({ transparent, light = true }) => {
         >
           <MKBox
             fontSize="19px"
-            fontFamily="Roboto, Helvetica, Arial, sans-serif"
+            // fontFamily="Roboto, Helvetica, Arial, sans-serif"
             style={isHovered ? { ...defaultStyle, ...hoverStyle } : defaultStyle}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
