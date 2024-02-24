@@ -14,11 +14,12 @@ const ListOfClasses = ({ classes = [] }) => {
   //   dispatch(setClassId(classId));
   // };
   useEffect(() => {
-    axios
-      .get(`http://localhost:9999/class/${classId[0]._id}/students`)
-      .then((res) => dispatch(setClassStudent(res.data)))
-      .catch((error) => console.log(error.message));
-  }, []);
+    if (classes.length > 0)
+      axios
+        .get(`http://localhost:9999/class/${classes[0]._id}/students`)
+        .then((res) => dispatch(setClassStudent(res.data)))
+        .catch((error) => console.log(error.message));
+  }, [classes]);
   const getClassStudent = async (classId) => {
     await axios
       .get(`http://localhost:9999/class/${classId}/students`)
