@@ -34,13 +34,24 @@ function DefaultNavbar({ transparent, light = true }) {
       >
         <MKBox
           className={"ithv_elm_bl"}
+          width={"100%"}
           component={Link}
+          textAlign="center"
           to="/admin"
           mt={2}
           py={transparent ? 1.5 : 0.75}
           lineHeight={1}
         >
-          <MKBox variant="button" fontWeight="bold" color={light ? "white" : "dark"} px={5} py={1}>
+          <MKBox
+            variant="button"
+            sx={{
+              fontSize: "1.425rem",
+            }}
+            fontWeight="bold"
+            color={light ? "white" : "dark"}
+            px={2}
+            py={1}
+          >
             Education Gate
           </MKBox>
         </MKBox>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setClassStudent } from "../../../../../../app/slices/classOnerTeacherSlice";
 import PropTypes from "prop-types";
@@ -13,6 +13,12 @@ const ListOfClasses = ({ classes = [] }) => {
   // const handleSelectClass = (classId) => {
   //   dispatch(setClassId(classId));
   // };
+  useEffect(() => {
+    axios
+      .get(`http://localhost:9999/class/${classId[0]._id}/students`)
+      .then((res) => dispatch(setClassStudent(res.data)))
+      .catch((error) => console.log(error.message));
+  }, []);
   const getClassStudent = async (classId) => {
     await axios
       .get(`http://localhost:9999/class/${classId}/students`)
