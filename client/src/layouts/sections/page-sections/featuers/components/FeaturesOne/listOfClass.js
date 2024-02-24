@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setClassStudent } from "../../../../../../app/slices/classOnerTeacherSlice";
 import PropTypes from "prop-types";
@@ -9,33 +9,40 @@ import { Typography } from "@mui/material";
 
 const ListOfClasses = ({ classes = [] }) => {
   const dispatch = useDispatch();
+  const [selectedClassIndex, setSelectedClassIndex] = useState(0);
 
-  // const handleSelectClass = (classId) => {
-  //   dispatch(setClassId(classId));
-  // };
   useEffect(() => {
     if (classes.length > 0)
       axios
-        .get(`http://localhost:9999/class/${classes[0]._id}/students`)
+        .get(`http://localhost:9999/class/${classes[selectedClassIndex]._id}/students`)
         .then((res) => dispatch(setClassStudent(res.data)))
         .catch((error) => console.log(error.message));
-  }, [classes]);
-  const getClassStudent = async (classId) => {
+  }, [classes, selectedClassIndex]);
+
+  const getClassStudent = async (classId, index) => {
+    setSelectedClassIndex(index);
     await axios
       .get(`http://localhost:9999/class/${classId}/students`)
       .then((res) => dispatch(setClassStudent(res.data)))
       .catch((error) => console.log(error.message));
   };
+
   return (
     <MKBox className="ClassListWrapper" ml={1}>
-      {classes.map((classItem) => (
+      {classes.map((classItem, index) => (
         <Typography
           component="span"
           fontSize="0.725rem"
           px={"0.5rem"}
           key={classItem._id}
-          className={`ClassItem ${classItem.selected ? "selected" : ""}`}
-          onClick={() => getClassStudent(classItem._id)}
+          className={`ClassItem ${selectedClassIndex === index ? "selected" : ""}`}
+          onClick={() => getClassStudent(classItem._id, index)}
+          style={{
+            padding: selectedClassIndex === index ? "2px 2px 2px 26px" : "2px",
+            backgroundColor: selectedClassIndex === index ? "#009879" : "",
+            color: selectedClassIndex === index ? "#ffffff" : "black",
+            transform: selectedClassIndex === index ? "scale(1.05)" : "",
+          }}
         >
           {classItem.preName}
           {classItem.code}
@@ -45,6 +52,7 @@ const ListOfClasses = ({ classes = [] }) => {
     </MKBox>
   );
 };
+
 ListOfClasses.propTypes = {
   classes: PropTypes.arrayOf(
     PropTypes.shape({
@@ -53,4 +61,5 @@ ListOfClasses.propTypes = {
     })
   ).isRequired,
 };
+
 export default ListOfClasses;

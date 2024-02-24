@@ -67,10 +67,3 @@
   transition: all 0.3s ease;
   margin-left: 3px;
 }
-
-.ClassItem:hover {
-  background-color: #009879; /* Màu nền khi hover */
-  transform: scale(1.05); /* Phóng to khi hover */
-  color: white;
-  padding: 2px;
-}
