@@ -69,9 +69,20 @@ const userUpdateProfile = async (
     throw new Error(error.message);
   }
 };
+const findUserById = async (id) => {
+  try {
+    const user = await User.findOne({ _id: id }).populate("classId").exec();
+    return user;
+  } catch (error) {
+    console.error("Error querying database:", error);
+    throw new Error("Internal Server Error");
+  }
+};
+
 export default {
   createNewUser,
   loginUser,
   userProfile,
   userUpdateProfile,
+  findUserById,
 };

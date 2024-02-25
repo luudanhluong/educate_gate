@@ -1,3 +1,3 @@
-import group from "./group.js";
+import groupDAO from "./group.js";
 
-export default group;
+export default groupDAO;

@@ -1,6 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 import Classes from "./classModel.js";
 import MentorCategory from "./mentorCategory.js";
+import Group from "./groupModel.js";
 
 const userSchema = new Schema(
   {
@@ -36,7 +37,10 @@ const userSchema = new Schema(
     phoneNumber: { type: String },
     image: { type: String },
     degree: { type: String },
-    groupId: { type: Number },
+    groupId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: Group,
+    },
     menteeCount: { type: Number },
     isLeader: { type: Boolean },
     status: { type: String },

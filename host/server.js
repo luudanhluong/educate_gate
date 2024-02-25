@@ -12,6 +12,7 @@ import {
   userRouter,
   teacherRouter,
 } from "./routes/index.js";
+import projectRouter from "./routes/projectRouter/projectRouter.js";
 
 const app = express();
 dotnv.config();
@@ -32,15 +33,14 @@ const upload = multer({ storage: storage });
 app.get("/", (req, res) => {
   console.log("hello world");
 });
-app.use('/teacher', teacherRouter);
+app.use("/project", projectRouter);
+app.use("/teacher", teacherRouter);
 app.use("/user", userRouter);
 app.use("/class", classRouter);
 app.use("/category", catergoryRouter);
-app.use("/mentorCategory", mentorCategoriesRouter);
+app.use("/mentor_category", mentorCategoriesRouter);
 app.use("/admins", upload.single("file"), adminsRouter);
 app.listen(port, (req, res) => {
   connectDB();
   console.log(`listening on ${port}`);
 });
-
-

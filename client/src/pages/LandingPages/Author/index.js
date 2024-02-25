@@ -24,7 +24,7 @@ function Author() {
   useEffect(() => {
     if (id)
       axios
-        .get(BASE_URL + "/mentorCategory/" + id, {
+        .get(BASE_URL + "/mentor_category/" + id, {
           headers: {
             "Content-Type": "application/json",
             authorization: `Bearer ${jwt}`,

@@ -3,7 +3,6 @@ import mongoose, { Schema } from "mongoose";
 const groupSchema = new Schema(
   {
     groupName: { type: String, require: true },
-    isLeader: { type: Boolean, require: true },
     enrollmentLimit: { type: Number, require: true },
     description: { type: String },
     status: { type: String },
@@ -14,10 +13,6 @@ const groupSchema = new Schema(
     classId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "classes",
-    },
-    userId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "users",
     },
     mentorId: {
       type: mongoose.Schema.Types.ObjectId,

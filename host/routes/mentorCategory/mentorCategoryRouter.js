@@ -4,7 +4,7 @@ import mentorCategoryController from "../../controllers/mentorCategoryController
 const mentorCategoriesRouter = express.Router();
 
 mentorCategoriesRouter.post(
-  "/addNew",
+  "/add_new",
   mentorCategoryController.addNewMentorCategory
 );
 mentorCategoriesRouter.get(

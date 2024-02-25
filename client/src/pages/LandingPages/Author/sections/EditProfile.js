@@ -89,7 +89,7 @@ const EditProfile = () => {
   });
   const getAllMentorCategory = (id) => {
     axios
-      .get(BASE_URL + "/mentorCategory/" + id, {
+      .get(BASE_URL + "/mentor_category/" + id, {
         headers: {
           "Content-Type": "application/json",
           authorization: `Bearer ${jwt}`,
@@ -296,7 +296,7 @@ const EditProfile = () => {
                                   if (!selectedCategory && uId) {
                                     axios
                                       .post(
-                                        `${BASE_URL}/mentorCategory/addNew`,
+                                        `${BASE_URL}/mentor_category/add_new`,
                                         {
                                           categoryId: catId,
                                           userId: uId,
@@ -372,12 +372,15 @@ const EditProfile = () => {
                                       <Icon
                                         onClick={() => {
                                           axios
-                                            .delete(`${BASE_URL}/mentorCategory/delete/${mc._id}`, {
-                                              headers: {
-                                                "Content-Type": "application/json",
-                                                authorization: `Bearer ${jwt}`,
-                                              },
-                                            })
+                                            .delete(
+                                              `${BASE_URL}/mentor_category/delete/${mc._id}`,
+                                              {
+                                                headers: {
+                                                  "Content-Type": "application/json",
+                                                  authorization: `Bearer ${jwt}`,
+                                                },
+                                              }
+                                            )
                                             .then(() => {
                                               getAllMentorCategory(uId);
                                             })

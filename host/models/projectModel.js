@@ -2,8 +2,8 @@ import mongoose, { Schema } from "mongoose";
 
 const projectSchema = new Schema(
   {
-    name: { type: String, require: true },
-    description: { type: String, require: true },
+    name: { type: String, required: true },
+    description: { type: String, required: true },
     status: { type: String },
   },
   {

@@ -1,22 +1,13 @@
 import Group from "../../models/groupModel.js"; // Đường dẫn đến Group model của bạn
-
-const getGroupsByClassId = async (classId) => {
+const findGroupById = async (id) => {
   try {
-    return await Group.find({ classId }).populate("studentId");
+    const group = await Group.findOne({ id }).exec();
+    return group;
   } catch (error) {
-    throw new Error(error.message);
+    console.error("Error finding group by ID:", error);
+    throw new Error("Error finding group");
   }
 };
-
-const getGroupDetailsById = async (groupId) => {
-  try {
-    return await Group.findById(groupId).populate("studentId");
-  } catch (error) {
-    throw new Error(error.message);
-  }
-};
-
 export default {
-  getGroupsByClassId,
-  getGroupDetailsById,
+  findGroupById,
 };
