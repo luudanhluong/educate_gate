@@ -100,6 +100,12 @@ const EditProfile = () => {
         console.log(err);
       });
   };
+  const result = mentorCategories.reduce((accumulator, mc) => {
+    const categoryName = categories.find((cat) => cat._id === mc.categoryId)?.name;
+    if (categoryName) accumulator.push(categoryName);
+    return accumulator;
+  }, []);
+
   return (
     <Modal
       open={active_popup}
@@ -279,7 +285,7 @@ const EditProfile = () => {
                           )}
                         </MKBox>
                         {role === 3 ? (
-                          <FormControl fullWidth>
+                          <FormControl>
                             <InputLabel id="select-gender-label">
                               Chọn thể loại hướng dẫn{" "}
                               <MKTypography as={"span"} color={"error"}>
@@ -289,10 +295,11 @@ const EditProfile = () => {
                             <Select
                               onChange={(event) => {
                                 const catId = event.target.value;
-                                if (mentorCategories.length <= 2 && event.target.value.length > 0) {
+                                if (mentorCategories.length <= 2 && catId.length > 0) {
                                   const selectedCategory = mentorCategories.some(
                                     (d) => d.categoryId === catId
                                   );
+                                  console.log(selectedCategory);
                                   if (!selectedCategory && uId) {
                                     axios
                                       .post(
@@ -323,12 +330,12 @@ const EditProfile = () => {
                               id="select-category"
                               name="category"
                               disabled={mentorCategories.length >= 3}
-                              value={""}
+                              value={" "}
                               fullWidth
                               label="Chọn thể loại hướng dẫn(Tối đa 3)"
                             >
-                              <MenuItem value="">
-                                <em>None</em>
+                              <MenuItem value=" ">
+                                <em>{result.join(", ")}</em>
                               </MenuItem>
                               {categories
                                 ? categories.map(
