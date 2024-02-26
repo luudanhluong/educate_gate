@@ -30,7 +30,7 @@ import Typography from "layouts/sections/elements/typography";
 import ListAccountBase from "layouts/admin/add-list-account";
 import AddListClassBase from "layouts/admin/add-list-class";
 import TeacherFunction from "layouts/sections/page-sections/featuers";
-import UpdateProject from "layouts/user/students/leader/UpdateProject";
+import GroupDetail from "layouts/user/students";
 
 const routes = [
   {
@@ -262,8 +262,8 @@ const routes = [
       },
       {
         name: "Leader Function",
-        route: "/user/students/leader",
-        component: <UpdateProject />,
+        route: "/group/details",
+        component: <GroupDetail />,
       },
     ],
   },

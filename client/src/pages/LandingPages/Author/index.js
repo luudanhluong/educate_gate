@@ -46,7 +46,7 @@ function Author() {
         })
         .then((res) => dispatch(setMentorCategories(res.data)))
         .catch((err) => console.log(err.message));
-  }, [dispatch, jwt, userLogin]);
+  }, [dispatch, jwt]);
   return (
     <>
       <DefaultNavbar routes={routes} brand="Education Gate" transparent light sticky />

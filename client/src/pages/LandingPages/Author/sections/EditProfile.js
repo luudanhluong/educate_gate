@@ -45,7 +45,7 @@ const EditProfile = () => {
   const jwt = localStorage.getItem("jwt");
   useEffect(() => {
     setFormValues({ ...userLogin });
-  }, [userLogin, dispatch]);
+  }, [userLogin]);
   const handleSubmit = (values) => {
     const { username, gender, Dob, phoneNumber, menteeCount, degree } = values;
     axios
@@ -219,7 +219,7 @@ const EditProfile = () => {
                           />
                         </MKBox>
                         <MKBox sx={{ display: "flex", flexDirection: "row", gap: "1.5rem" }}>
-                          <MKBox fullWidth sx={{ flex: 1 }} xs={4}>
+                          <MKBox sx={{ flex: 1 }} xs={4}>
                             <FormControl fullWidth>
                               <InputLabel id="select-gender-label">Giới tính</InputLabel>
                               <Select
@@ -244,7 +244,7 @@ const EditProfile = () => {
                               className="lg_error_message"
                             />
                           </MKBox>
-                          <MKBox fullWidth sx={{ flex: 1 }}>
+                          <MKBox sx={{ flex: 1 }}>
                             <Field
                               name="Dob"
                               id="Dob"
@@ -261,7 +261,7 @@ const EditProfile = () => {
                             <ErrorMessage name="Dob" component="div" className="lg_error_message" />
                           </MKBox>
                           {role === 3 ? (
-                            <MKBox fullWidth sx={{ flex: 1 }}>
+                            <MKBox sx={{ flex: 1 }}>
                               <Field
                                 name="menteeCount"
                                 id="menteeCount"

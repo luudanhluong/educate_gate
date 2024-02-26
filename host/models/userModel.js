@@ -42,7 +42,7 @@ const userSchema = new Schema(
       ref: Group,
     },
     menteeCount: { type: Number },
-    isLeader: { type: Boolean },
+    isLeader: { type: Boolean, default: false },
     status: { type: String },
   },
   {
