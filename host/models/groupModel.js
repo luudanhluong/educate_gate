@@ -3,7 +3,6 @@ import mongoose, { Schema } from "mongoose";
 const groupSchema = new Schema(
   {
     groupName: { type: String, require: true },
-    enrollmentLimit: { type: Number, require: true },
     description: { type: String },
     status: { type: String },
     projectId: {

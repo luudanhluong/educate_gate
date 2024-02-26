@@ -3,6 +3,6 @@ import projectController from "../../controllers/projectController/projectContro
 
 const projectRouter = express.Router();
 
-projectRouter.post("/create_project", projectController.createProject);
+projectRouter.post("/update_project", projectController.updateProject);
 
 export default projectRouter;

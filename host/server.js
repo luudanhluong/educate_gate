@@ -11,8 +11,9 @@ import {
   mentorCategoriesRouter,
   userRouter,
   teacherRouter,
+  projectCategoryRouter,
+  projectRouter,
 } from "./routes/index.js";
-import projectRouter from "./routes/projectRouter/projectRouter.js";
 
 const app = express();
 dotnv.config();
@@ -39,6 +40,7 @@ app.use("/user", userRouter);
 app.use("/class", classRouter);
 app.use("/category", catergoryRouter);
 app.use("/mentor_category", mentorCategoriesRouter);
+app.use("/project_category", projectCategoryRouter);
 app.use("/admins", upload.single("file"), adminsRouter);
 app.listen(port, (req, res) => {
   connectDB();
