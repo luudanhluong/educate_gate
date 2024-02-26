@@ -44,7 +44,10 @@ const UpdateProject = () => {
     axios
       .patch(
         `${BASE_URL}/project/update_project/${pid}`,
-        { values },
+        {
+          name: values.name,
+          description: values.description,
+        },
         {
           headers: {
             "Content-Type": "application/json",

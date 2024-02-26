@@ -74,7 +74,7 @@ const GroupDetail = () => {
       <DefaultNavbar routes={routes} />
       {active_popup ? <UpdateProject /> : ""}
       <MKBox>
-        <MKButton disabled={!isLeader} onClick={() => dispatch(setActivePopup(true))}>
+        <MKButton disabled={isLeader} onClick={() => dispatch(setActivePopup(true))}>
           Cập nhật dự án
         </MKButton>
         <MKButton onClick={handleShowGroupMember}>Thành viên nhóm</MKButton>

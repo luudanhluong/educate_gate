@@ -5,5 +5,4 @@ const projectRouter = express.Router();
 
 projectRouter.get("/:id", projectController.getProjectById);
 projectRouter.patch("/update_project/:id", projectController.updateProject);
-
 export default projectRouter;
