@@ -11,6 +11,8 @@ import { setCategories } from "app/slices/categorySlice";
 import axios from "axios";
 import { BASE_URL } from "utilities/initialValue";
 import GroupMember from "./GroupDetail";
+import { setProject } from "app/slices/projectSlice";
+import { setProjectCategories } from "app/slices/projectSlice";
 
 const GroupDetail = () => {
   const dispatch = useDispatch();
