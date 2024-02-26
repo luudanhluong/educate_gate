@@ -1,4 +1,4 @@
-import groupDAO from "../../repositories/group";
+import groupDAO from "../../repositories/group/index.js";
 
 const getGroupById = async (req, res) => {
   try {
