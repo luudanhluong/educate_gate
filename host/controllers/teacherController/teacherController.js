@@ -7,7 +7,6 @@ const getClassListByTeacher = async (req, res) => {
   try {
     const decoded = jwt.verify(tokenString, process.env.SECRETKEY);
     req.user = decoded;
-    console.log(decoded._id);
     const result = await teacherDAO.getClassByTeacherId(decoded._id);
     res.status(200).json(result);
   } catch (error) {

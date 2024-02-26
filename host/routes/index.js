@@ -6,6 +6,8 @@ import mentorCategoriesRouter from "./mentorCategoryRouter/mentorCategoryRouter.
 import teacherRouter from "./teacherRouter/teacherRouter.js";
 import projectCategoryRouter from "./projectCategoryRouter/projectCategoryRouter.js";
 import projectRouter from "./projectRouter/projectRouter.js";
+import groupRouter from "./groupRouter/groupRouter.js";
+
 export {
   userRouter,
   classRouter,
@@ -13,6 +15,4 @@ export {
   adminsRouter,
   mentorCategoriesRouter,
   teacherRouter,
-  projectCategoryRouter,
-  projectRouter,
 };

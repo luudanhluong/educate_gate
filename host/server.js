@@ -13,6 +13,7 @@ import {
   teacherRouter,
   projectCategoryRouter,
   projectRouter,
+  groupRouter,
 } from "./routes/index.js";
 
 const app = express();
@@ -37,6 +38,7 @@ app.get("/", (req, res) => {
 app.use("/project", projectRouter);
 app.use("/teacher", teacherRouter);
 app.use("/user", userRouter);
+app.use("/group", groupRouter);
 app.use("/class", classRouter);
 app.use("/category", catergoryRouter);
 app.use("/group", catergoryRouter);
