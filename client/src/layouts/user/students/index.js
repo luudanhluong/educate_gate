@@ -44,12 +44,13 @@ const GroupDetail = () => {
         .catch((err) => console.log(err.message));
     dispatch(setActivePopup(false));
   }, [dispatch, jwt]);
+
   return (
     <>
       <DefaultNavbar routes={routes} />
       {active_popup ? <UpdateProject /> : ""}
       <MKBox>
-        <MKButton disabled={isLeader} onClick={() => dispatch(setActivePopup(true))}>
+        <MKButton disabled={!isLeader} onClick={() => dispatch(setActivePopup(true))}>
           Cập nhật dự án
         </MKButton>
       </MKBox>
