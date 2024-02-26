@@ -9,11 +9,6 @@ const getGroupById = async (req, res) => {
   }
 };
 
-export default {
-  getGroupById,
-};
-import groupDAO from "../../repositories/group/index.js";
-
 const getGroupMembers = async (req, res) => {
   const { groupId } = req.params;
   try {
@@ -31,4 +26,5 @@ const getGroupMembers = async (req, res) => {
 
 export default {
   getGroupMembers,
+  getGroupById,
 };
