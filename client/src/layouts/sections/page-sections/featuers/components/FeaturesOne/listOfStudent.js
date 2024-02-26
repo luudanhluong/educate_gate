@@ -15,8 +15,8 @@ const StudentsList = () => {
                 <tr>
                   <th>Username</th>
                   <th>Email</th>
-                  <th>Group Name</th>
                   <th>Leader</th>
+                  <th>Group Name</th>
                 </tr>
               </thead>
               <tbody>
@@ -25,7 +25,15 @@ const StudentsList = () => {
                       <tr key={student.email}>
                         <td>{student.username}</td>
                         <td>{student.email}</td>
-                        <td>{student.isLeader ? <Icon>star</Icon> : ""}</td>
+                        <td>
+                          {student.isLeader ? (
+                            <Icon sx={{ marginLeft: "8px", fontSize: "20px !important" }}>
+                              star
+                            </Icon>
+                          ) : (
+                            ""
+                          )}
+                        </td>
                       </tr>
                     ))
                   : ""}
