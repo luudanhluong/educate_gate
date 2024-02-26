@@ -21,7 +21,6 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { BASE_URL } from "utilities/initialValue";
 import { setMentorCategories } from "app/slices/categorySlice";
-import { setUserLogin } from "app/slices/userSlice";
 
 const UpdateProject = () => {
   const dispatch = useDispatch();
@@ -40,11 +39,10 @@ const UpdateProject = () => {
     setFormValues({ ...userLogin });
   }, [userLogin]);
   const handleSubmit = (values) => {
-    const { username, gender, Dob, phoneNumber, menteeCount, degree } = values;
     axios
       .patch(
-        `${BASE_URL}/user/profile/update`,
-        { username, gender, Dob: new Date(Dob), phoneNumber, menteeCount, degree },
+        `${BASE_URL}/project/update_project`,
+        { values },
         {
           headers: {
             "Content-Type": "application/json",
@@ -52,20 +50,7 @@ const UpdateProject = () => {
           },
         }
       )
-      .then((res) => {
-        localStorage.setItem("jwt", res.data);
-        axios
-          .get(BASE_URL + "/user/profile", {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${jwt}`,
-            },
-          })
-          .then((res) => {
-            isActivePopup();
-            dispatch(setUserLogin(res.data));
-          });
-      })
+      .then(() => {})
       .catch((err) => {
         console.log(err.message);
       });
@@ -74,9 +59,9 @@ const UpdateProject = () => {
     name: Yup.string().required("Vui lòng nhập họ và tên."),
     description: Yup.string(),
   });
-  const getAllMentorCategory = (id) => {
+  const getAllProjectCategory = (id) => {
     axios
-      .get(BASE_URL + "/mentor_category/" + id, {
+      .get(BASE_URL + "/project_category/" + id, {
         headers: {
           "Content-Type": "application/json",
           authorization: `Bearer ${jwt}`,
@@ -102,233 +87,231 @@ const UpdateProject = () => {
       sx={{ display: "grid", placeItems: "center", overflow: "auto" }}
     >
       <Slide direction="down" in={active_popup} timeout={500}>
-        <>
-          <Grid width={500} position="relative" item xs={12} md={6}>
-            <Card id={"edit-profile"}>
-              <MKBox
-                variant="gradient"
-                bgColor="info"
-                borderRadius="lg"
-                coloredShadow="info"
-                mx={2}
-                mt={-1}
-                p={2}
-                mb={1}
-                textAlign="center"
-              >
-                <MKBox position="relative">
-                  <MKTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-                    Chỉnh sửa thông tin cá nhân
-                  </MKTypography>
-                  <MKBox
-                    onClick={isActivePopup}
-                    position="absolute"
-                    right={0}
-                    fontSize={24}
-                    top="50%"
-                    sx={{
-                      transform: "translateY(-50%)",
-                      "&:hover": {
-                        backgroundColor: "rgba(0,0,0,0.5)",
-                        borderRadius: "50%",
-                        color: "#FFF",
-                      },
-                      lineHeight: 1,
-                      padding: "5px 5px 2px",
-                      cursor: "pointer",
-                    }}
-                  >
-                    <Icon>clear</Icon>
-                  </MKBox>
+        <Grid width={500} position="relative" item xs={12} md={6}>
+          <Card id={"edit-profile"}>
+            <MKBox
+              variant="gradient"
+              bgColor="info"
+              borderRadius="lg"
+              coloredShadow="info"
+              mx={2}
+              mt={-1}
+              p={2}
+              mb={1}
+              textAlign="center"
+            >
+              <MKBox position="relative">
+                <MKTypography variant="h4" fontWeight="medium" color="white" mt={1}>
+                  Chỉnh sửa thông tin cá nhân
+                </MKTypography>
+                <MKBox
+                  onClick={isActivePopup}
+                  position="absolute"
+                  right={0}
+                  fontSize={24}
+                  top="50%"
+                  sx={{
+                    transform: "translateY(-50%)",
+                    "&:hover": {
+                      backgroundColor: "rgba(0,0,0,0.5)",
+                      borderRadius: "50%",
+                      color: "#FFF",
+                    },
+                    lineHeight: 1,
+                    padding: "5px 5px 2px",
+                    cursor: "pointer",
+                  }}
+                >
+                  <Icon>clear</Icon>
                 </MKBox>
               </MKBox>
-              <MKBox pt={4} pb={3} px={3}>
-                <MKBox mb={2}>
-                  <Formik
-                    validationSchema={validateSchema}
-                    initialValues={formvalues}
-                    onSubmit={(values) => {
-                      handleSubmit(values);
-                    }}
-                  >
-                    {({ values, handleChange, handleBlur }) => (
-                      <Form style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-                        <MKBox>
-                          <Field
-                            name="name"
-                            id="name"
-                            value={values.name}
-                            component={MKInput}
-                            label="Tên dự án"
-                            placeholder="eg. Thomas Shelby"
-                            fullWidth
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            InputLabelProps={{ shrink: true }}
-                          />
-                          <ErrorMessage name="name" component="div" className="lg_error_message" />
-                        </MKBox>
-                        <MKBox>
-                          <Field
-                            name="description"
-                            id="description"
-                            value={values ? values.description : ""}
-                            component={MKInput}
-                            label="Mô tả dự án"
-                            multiline
-                            fullWidth
-                            placeholder="eg. Thomas Shelby"
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            InputLabelProps={{ shrink: true }}
-                          />
-                          <ErrorMessage
-                            name="description"
-                            component="div"
-                            className="lg_error_message"
-                          />
-                        </MKBox>
-                        <FormControl>
-                          <InputLabel id="select-gender-label">
-                            Chọn thể loại được hướng dẫn{" "}
-                            <MKTypography as={"span"} color={"error"}>
-                              (Tối đa 3)
-                            </MKTypography>
-                          </InputLabel>
-                          <Select
-                            onChange={(event) => {
-                              const catId = event.target.value;
-                              if (mentorCategories.length <= 2 && catId.length > 0) {
-                                const selectedCategory = mentorCategories.some(
-                                  (d) => d.categoryId === catId
-                                );
-                                console.log(selectedCategory);
-                                if (!selectedCategory && uId) {
-                                  axios
-                                    .post(
-                                      `${BASE_URL}/mentor_category/add_new`,
-                                      {
-                                        categoryId: catId,
-                                        userId: uId,
+            </MKBox>
+            <MKBox pt={4} pb={3} px={3}>
+              <MKBox mb={2}>
+                <Formik
+                  validationSchema={validateSchema}
+                  initialValues={formvalues}
+                  onSubmit={(values) => {
+                    handleSubmit(values);
+                  }}
+                >
+                  {({ values, handleChange, handleBlur }) => (
+                    <Form style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+                      <MKBox>
+                        <Field
+                          name="name"
+                          id="name"
+                          value={values.name}
+                          component={MKInput}
+                          label="Tên dự án"
+                          placeholder="eg. Thomas Shelby"
+                          fullWidth
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          InputLabelProps={{ shrink: true }}
+                        />
+                        <ErrorMessage name="name" component="div" className="lg_error_message" />
+                      </MKBox>
+                      <MKBox>
+                        <Field
+                          name="description"
+                          id="description"
+                          value={values ? values.description : ""}
+                          component={MKInput}
+                          label="Mô tả dự án"
+                          multiline
+                          fullWidth
+                          placeholder="eg. Thomas Shelby"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          InputLabelProps={{ shrink: true }}
+                        />
+                        <ErrorMessage
+                          name="description"
+                          component="div"
+                          className="lg_error_message"
+                        />
+                      </MKBox>
+                      <FormControl>
+                        <InputLabel id="select-gender-label">
+                          Chọn thể loại được hướng dẫn{" "}
+                          <MKTypography as={"span"} color={"error"}>
+                            (Tối đa 3)
+                          </MKTypography>
+                        </InputLabel>
+                        <Select
+                          onChange={(event) => {
+                            const catId = event.target.value;
+                            if (mentorCategories.length <= 2 && catId.length > 0) {
+                              const selectedCategory = mentorCategories.some(
+                                (d) => d.categoryId === catId
+                              );
+                              console.log(selectedCategory);
+                              if (!selectedCategory && uId) {
+                                axios
+                                  .post(
+                                    `${BASE_URL}/mentor_category/add_new`,
+                                    {
+                                      categoryId: catId,
+                                      userId: uId,
+                                    },
+                                    {
+                                      headers: {
+                                        "Content-Type": "application/json",
+                                        authorization: `Bearer ${jwt}`,
                                       },
-                                      {
-                                        headers: {
-                                          "Content-Type": "application/json",
-                                          authorization: `Bearer ${jwt}`,
-                                        },
-                                      }
-                                    )
-                                    .then(() => {
-                                      getAllMentorCategory(uId);
-                                    })
-                                    .catch((err) => {
-                                      console.log(err.message);
-                                    });
-                                }
+                                    }
+                                  )
+                                  .then(() => {
+                                    getAllProjectCategory(uId);
+                                  })
+                                  .catch((err) => {
+                                    console.log(err.message);
+                                  });
                               }
-                              handleChange(event);
-                            }}
-                            onBlur={handleBlur}
-                            labelId="select-category-label"
-                            id="select-category"
-                            name="category"
-                            disabled={mentorCategories.length >= 3}
-                            value={" "}
-                            fullWidth
-                            label="Chọn thể loại hướng dẫn(Tối đa 3)"
-                          >
-                            <MenuItem value=" ">
-                              <em>{result.join(", ")}</em>
-                            </MenuItem>
-                            {categories
-                              ? categories.map(
-                                  (d) =>
-                                    !mentorCategories.some((mc) => mc.categoryId === d._id) && (
-                                      <MenuItem key={d._id} value={d._id}>
-                                        {d.name}
-                                      </MenuItem>
-                                    )
-                                )
-                              : ""}
-                          </Select>
-                          <MKBox
-                            display={"flex"}
-                            flexDirection={"row"}
-                            flexWrap={"wrap"}
-                            gap={"0.5rem"}
-                            py={1}
-                          >
-                            {mentorCategories
-                              ? mentorCategories.map((mc) => (
-                                  <MKBox
-                                    display={"flex"}
-                                    flexDirection={"row"}
-                                    justifyContent={"space-around"}
-                                    gap={"0.5rem"}
-                                    sx={{
-                                      fontSize: "0.825rem",
-                                      padding: "8px 12px",
-                                      border: "1px solid #ccc",
-                                      borderRadius: "30px",
-                                      lineHeight: 1,
-                                    }}
-                                    key={mc._id}
-                                  >
-                                    <MKTypography as={"span"}>
-                                      {categories.map((cat) =>
-                                        mc.categoryId === cat._id ? cat.name : ""
-                                      )}
-                                    </MKTypography>
-                                    <Icon
-                                      onClick={() => {
-                                        axios
-                                          .delete(`${BASE_URL}/mentor_category/delete/${mc._id}`, {
-                                            headers: {
-                                              "Content-Type": "application/json",
-                                              authorization: `Bearer ${jwt}`,
-                                            },
-                                          })
-                                          .then(() => {
-                                            getAllMentorCategory(uId);
-                                          })
-                                          .catch((err) => {
-                                            console.log(err.message);
-                                          });
-                                      }}
-                                      sx={{
-                                        height: "100%",
-                                        lineHeight: 1,
-                                        marginTop: "1px",
-                                        cursor: "pointer",
-                                      }}
-                                    >
-                                      clear
-                                    </Icon>
-                                  </MKBox>
-                                ))
-                              : ""}
-                          </MKBox>
-                        </FormControl>
-                        <MKButton
-                          type="submit"
-                          sx={{
-                            fontSize: "16px",
-                            color: "#FFFFFF",
-                            marginTop: "5px",
+                            }
+                            handleChange(event);
                           }}
-                          variant="gradient"
-                          color="info"
+                          onBlur={handleBlur}
+                          labelId="select-category-label"
+                          id="select-category"
+                          name="category"
+                          // disabled={mentorCategories.length >= 3}
+                          value={" "}
+                          fullWidth
+                          label="Chọn thể loại hướng dẫn(Tối đa 3)"
                         >
-                          Cập nhật
-                        </MKButton>
-                      </Form>
-                    )}
-                  </Formik>
-                </MKBox>
+                          <MenuItem value=" ">
+                            <em>{result.join(", ")}</em>
+                          </MenuItem>
+                          {categories
+                            ? categories.map(
+                                (d) =>
+                                  !mentorCategories.some((mc) => mc.categoryId === d._id) && (
+                                    <MenuItem key={d._id} value={d._id}>
+                                      {d.name}
+                                    </MenuItem>
+                                  )
+                              )
+                            : ""}
+                        </Select>
+                        <MKBox
+                          display={"flex"}
+                          flexDirection={"row"}
+                          flexWrap={"wrap"}
+                          gap={"0.5rem"}
+                          py={1}
+                        >
+                          {mentorCategories
+                            ? mentorCategories.map((mc) => (
+                                <MKBox
+                                  display={"flex"}
+                                  flexDirection={"row"}
+                                  justifyContent={"space-around"}
+                                  gap={"0.5rem"}
+                                  sx={{
+                                    fontSize: "0.825rem",
+                                    padding: "8px 12px",
+                                    border: "1px solid #ccc",
+                                    borderRadius: "30px",
+                                    lineHeight: 1,
+                                  }}
+                                  key={mc._id}
+                                >
+                                  <MKTypography as={"span"}>
+                                    {categories.map((cat) =>
+                                      mc.categoryId === cat._id ? cat.name : ""
+                                    )}
+                                  </MKTypography>
+                                  <Icon
+                                    onClick={() => {
+                                      axios
+                                        .delete(`${BASE_URL}/mentor_category/delete/${mc._id}`, {
+                                          headers: {
+                                            "Content-Type": "application/json",
+                                            authorization: `Bearer ${jwt}`,
+                                          },
+                                        })
+                                        .then(() => {
+                                          getAllProjectCategory(uId);
+                                        })
+                                        .catch((err) => {
+                                          console.log(err.message);
+                                        });
+                                    }}
+                                    sx={{
+                                      height: "100%",
+                                      lineHeight: 1,
+                                      marginTop: "1px",
+                                      cursor: "pointer",
+                                    }}
+                                  >
+                                    clear
+                                  </Icon>
+                                </MKBox>
+                              ))
+                            : ""}
+                        </MKBox>
+                      </FormControl>
+                      <MKButton
+                        type="submit"
+                        sx={{
+                          fontSize: "16px",
+                          color: "#FFFFFF",
+                          marginTop: "5px",
+                        }}
+                        variant="gradient"
+                        color="info"
+                      >
+                        Cập nhật
+                      </MKButton>
+                    </Form>
+                  )}
+                </Formik>
               </MKBox>
-            </Card>
-          </Grid>
-        </>
+            </MKBox>
+          </Card>
+        </Grid>
       </Slide>
     </Modal>
   );

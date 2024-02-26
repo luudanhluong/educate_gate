@@ -19,12 +19,8 @@ const ListOfClasses = ({ classes = [] }) => {
         .catch((error) => console.log(error.message));
   }, [classes, selectedClassIndex]);
 
-  const getClassStudent = async (classId, index) => {
+  const getClassStudent = (index) => {
     setSelectedClassIndex(index);
-    await axios
-      .get(`http://localhost:9999/class/${classId}/students`)
-      .then((res) => dispatch(setClassStudent(res.data)))
-      .catch((error) => console.log(error.message));
   };
 
   return (
@@ -36,7 +32,7 @@ const ListOfClasses = ({ classes = [] }) => {
           px={"0.5rem"}
           key={classItem._id}
           className={`ClassItem ${selectedClassIndex === index ? "selected" : ""}`}
-          onClick={() => getClassStudent(classItem._id, index)}
+          onClick={() => getClassStudent(index)}
           style={{
             padding: selectedClassIndex === index ? "2px 2px 2px 26px" : "2px",
             backgroundColor: selectedClassIndex === index ? "#009879" : "",

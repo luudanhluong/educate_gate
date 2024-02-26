@@ -14,6 +14,7 @@ import { BASE_URL } from "utilities/initialValue";
 
 const GroupDetail = () => {
   const dispatch = useDispatch();
+  //   project;
   const jwt = localStorage.getItem("jwt");
   const { userLogin } = useSelector((state) => state.user);
   const { active_popup } = useSelector((state) => state.active);
@@ -34,7 +35,7 @@ const GroupDetail = () => {
       .catch((err) => console.log(err));
     if (id)
       axios
-        .get(BASE_URL + "/mentor_category/" + id, {
+        .get(BASE_URL + "/project_category/" + id, {
           headers: {
             "Content-Type": "application/json",
             authorization: `Bearer ${jwt}`,

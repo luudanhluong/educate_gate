@@ -5,8 +5,15 @@ const createProject = async (projectData) => {
     const project = await Project.create(projectData);
     return project;
   } catch (error) {
-    console.error("Error saving to database:", error);
     throw new Error("Internal Server Error");
+  }
+};
+const updateProject = async (id, project) => {
+  try {
+    const project = await Project.findByIdAndUpdate(id, project);
+    return project;
+  } catch (error) {
+    throw new Error(error.message);
   }
 };
 const findProjectById = async (id) => {
@@ -14,7 +21,6 @@ const findProjectById = async (id) => {
     const project = await Project.findOne({ id });
     return project;
   } catch (error) {
-    console.error("Error finding project by ID:", error);
     throw new Error("Error finding project");
   }
 };
@@ -22,4 +28,5 @@ const findProjectById = async (id) => {
 export default {
   createProject,
   findProjectById,
+  updateProject,
 };
