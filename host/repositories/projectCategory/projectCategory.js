@@ -4,8 +4,10 @@ import ProjectCategory from "../../models/projectCategory.js";
 
 const create = async ({ categoryId, projectId }) => {
   try {
-    const projectCategory = new ProjectCategory({ categoryId, projectId });
-    await projectCategory.save();
+    const projectCategory = await ProjectCategory.create({
+      categoryId,
+      projectId,
+    });
     return projectCategory;
   } catch (error) {
     console.error("Error creating project category:", error);
