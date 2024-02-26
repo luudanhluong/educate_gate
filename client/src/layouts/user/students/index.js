@@ -11,7 +11,6 @@ import { setCategories } from "app/slices/categorySlice";
 import axios from "axios";
 import { BASE_URL } from "utilities/initialValue";
 import GroupMember from "./GroupDetail";
-import { setProject, setProjectCategories } from "app/slices/projectSlice";
 
 const GroupDetail = () => {
   const dispatch = useDispatch();
@@ -20,6 +19,31 @@ const GroupDetail = () => {
   const { userLogin } = useSelector((state) => state.user);
   const { active_popup } = useSelector((state) => state.active);
   const { _id: id, isLeader } = userLogin || {};
+  const [showGroupMember, setShowGroupMember] = useState(false);
+
+  useEffect(() => {
+    axios
+      .get(BASE_URL + "/project/" + pid, {
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${jwt}`,
+        },
+      })
+      .then((res) => dispatch(setProject(res.data)))
+      .catch((err) => console.log(err.message));
+  }, []);
+  useEffect(() => {
+    if (id)
+      axios
+        .get(BASE_URL + "/project_category/" + id, {
+          headers: {
+            "Content-Type": "application/json",
+            authorization: `Bearer ${jwt}`,
+          },
+        })
+        .then((res) => dispatch(setProjectCategories(res.data)))
+        .catch((err) => console.log(err.message));
+  }, [dispatch, userLogin]);
   useEffect(() => {
     axios
       .get(BASE_URL + "/user/profile", {
