@@ -15,4 +15,7 @@ export {
   adminsRouter,
   mentorCategoriesRouter,
   teacherRouter,
+  projectCategoryRouter,
+  projectRouter,
+  groupRouter,
 };
