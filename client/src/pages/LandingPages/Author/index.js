@@ -22,6 +22,20 @@ function Author() {
   const { active_popup } = useSelector((state) => state.active);
   const { _id: id } = userLogin || {};
   useEffect(() => {
+    axios
+      .get(BASE_URL + "/user/profile", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${jwt}`,
+        },
+      })
+      .then((res) => dispatch(setUserLogin(res.data)))
+      .catch((err) => console.log(err));
+    axios
+      .get(BASE_URL + "/category")
+      .then((res) => dispatch(setCategories(res.data)))
+      .catch((err) => console.log(err));
+    dispatch(setActivePopup(false));
     if (id)
       axios
         .get(BASE_URL + "/mentor_category/" + id, {
@@ -30,40 +44,9 @@ function Author() {
             authorization: `Bearer ${jwt}`,
           },
         })
-        .then((res) => {
-          dispatch(setMentorCategories(res.data));
-          return res;
-        })
-        .catch((err) => {
-          console.log(err.message);
-        });
-  }, [userLogin, dispatch]);
-  useEffect(() => {
-    axios
-      .get(BASE_URL + "/user/profile", {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${jwt}`,
-        },
-      })
-      .then((res) => {
-        dispatch(setUserLogin(res.data));
-        return res;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    axios
-      .get(BASE_URL + "/category")
-      .then((res) => {
-        dispatch(setCategories(res.data));
-        return res;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    dispatch(setActivePopup(false));
-  }, [dispatch, jwt]);
+        .then((res) => dispatch(setMentorCategories(res.data)))
+        .catch((err) => console.log(err.message));
+  }, [dispatch, jwt, userLogin]);
   return (
     <>
       <DefaultNavbar routes={routes} brand="Education Gate" transparent light sticky />

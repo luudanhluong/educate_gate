@@ -45,7 +45,7 @@ const EditProfile = () => {
   const jwt = localStorage.getItem("jwt");
   useEffect(() => {
     setFormValues({ ...userLogin });
-  }, [userLogin]);
+  }, [userLogin, dispatch]);
   const handleSubmit = (values) => {
     const { username, gender, Dob, phoneNumber, menteeCount, degree } = values;
     axios
