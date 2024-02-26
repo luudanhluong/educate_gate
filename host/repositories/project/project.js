@@ -5,28 +5,27 @@ const createProject = async (projectData) => {
     const project = await Project.create(projectData);
     return project;
   } catch (error) {
-    throw new Error("Internal Server Error");
+    throw new Error(error.message);
   }
 };
 const updateProject = async (id, project) => {
   try {
-    const project = await Project.findByIdAndUpdate(id, project);
+    return await Project.findByIdAndUpdate(id, project);
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+const getProjectById = async (id) => {
+  try {
+    const project = await Project.findOne({ _id: id }).exec();
     return project;
   } catch (error) {
     throw new Error(error.message);
   }
 };
-const findProjectById = async (id) => {
-  try {
-    const project = await Project.findOne({ id });
-    return project;
-  } catch (error) {
-    throw new Error("Error finding project");
-  }
-};
 
 export default {
   createProject,
-  findProjectById,
+  getProjectById,
   updateProject,
 };
