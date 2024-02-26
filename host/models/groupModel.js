@@ -2,7 +2,7 @@ import mongoose, { Schema } from "mongoose";
 
 const groupSchema = new Schema(
   {
-    groupName: { type: String, require: true },
+    name: { type: String, require: true },
     description: { type: String },
     status: { type: String },
     projectId: {

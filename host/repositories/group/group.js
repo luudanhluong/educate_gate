@@ -1,11 +1,10 @@
 import Group from "../../models/groupModel.js";
 import User from "../../models/userModel.js";
-const findGroupById = async (id) => {
+const getGroupById = async (id) => {
   try {
     const group = await Group.findOne({ id }).exec();
     return group;
   } catch (error) {
-    console.error("Error finding group by ID:", error);
     throw new Error("Error finding group");
   }
 };
@@ -19,6 +18,6 @@ const getGroupMembers = async (groupId) => {
   }
 };
 export default {
-  findGroupById,
+  getGroupById,
   getGroupMembers,
 };

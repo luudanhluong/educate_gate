@@ -100,11 +100,13 @@ const EditProfile = () => {
         console.log(err);
       });
   };
-  const result = mentorCategories.reduce((accumulator, mc) => {
-    const categoryName = categories.find((cat) => cat._id === mc.categoryId)?.name;
-    if (categoryName) accumulator.push(categoryName);
-    return accumulator;
-  }, []);
+  const result = mentorCategories
+    ? mentorCategories.reduce((accumulator, mc) => {
+        const categoryName = categories.find((cat) => cat._id === mc.categoryId)?.name;
+        if (categoryName) accumulator.push(categoryName);
+        return accumulator;
+      }, [])
+    : [];
 
   return (
     <Modal

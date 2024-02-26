@@ -41,6 +41,7 @@ app.use("/user", userRouter);
 app.use("/group", groupRouter);
 app.use("/class", classRouter);
 app.use("/category", catergoryRouter);
+app.use("/group", catergoryRouter);
 app.use("/mentor_category", mentorCategoriesRouter);
 app.use("/project_category", projectCategoryRouter);
 app.use("/admins", upload.single("file"), adminsRouter);

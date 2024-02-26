@@ -20,28 +20,30 @@ import MKInput from "components/MKInput";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { BASE_URL } from "utilities/initialValue";
-import { setMentorCategories } from "app/slices/categorySlice";
+import { setProjectCategories } from "app/slices/projectSlice";
 
 const UpdateProject = () => {
   const dispatch = useDispatch();
+  const pid = "65dc4b9c953a7fb8412cf81f";
   const { userLogin } = useSelector((state) => state.user);
   const { active_popup } = useSelector((state) => state.active);
   const { data: categories } = useSelector((state) => state.category.categories);
-  const { data: mentorCategories } = useSelector((state) => state.category.mentorCategories);
-  const { _id: uId, username, gender } = userLogin;
+  const { projectCategories } = useSelector((state) => state.project);
+  const { _id: uId, username } = userLogin;
   const [formvalues, setFormValues] = useState({
     name: username || "",
-    description: gender || "",
+    description: "",
   });
   const isActivePopup = () => dispatch(setActivePopup(!active_popup));
   const jwt = localStorage.getItem("jwt");
   useEffect(() => {
+    getAllProjectCategory(pid);
     setFormValues({ ...userLogin });
   }, [userLogin]);
   const handleSubmit = (values) => {
     axios
       .patch(
-        `${BASE_URL}/project/update_project`,
+        `${BASE_URL}/project/update_project/${pid}`,
         { values },
         {
           headers: {
@@ -67,18 +69,16 @@ const UpdateProject = () => {
           authorization: `Bearer ${jwt}`,
         },
       })
-      .then((res) => dispatch(setMentorCategories(res.data)))
-      .catch((err) => {
-        console.log(err);
-      });
+      .then((res) => dispatch(setProjectCategories(res.data)))
+      .catch((err) => console.log(err));
   };
-  const result = mentorCategories
-    ? mentorCategories.reduce((accumulator, mc) => {
+  const result = projectCategories
+    ? projectCategories.reduce((accumulator, mc) => {
         const categoryName = categories.find((cat) => cat._id === mc.categoryId)?.name;
         if (categoryName) accumulator.push(categoryName);
         return accumulator;
       }, [])
-    : "";
+    : [];
 
   return (
     <Modal
@@ -102,7 +102,7 @@ const UpdateProject = () => {
             >
               <MKBox position="relative">
                 <MKTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-                  Chỉnh sửa thông tin cá nhân
+                  Cập nhật thông tin dự án
                 </MKTypography>
                 <MKBox
                   onClick={isActivePopup}
@@ -182,18 +182,17 @@ const UpdateProject = () => {
                         <Select
                           onChange={(event) => {
                             const catId = event.target.value;
-                            if (mentorCategories.length <= 2 && catId.length > 0) {
-                              const selectedCategory = mentorCategories.some(
-                                (d) => d.categoryId === catId
-                              );
-                              console.log(selectedCategory);
+                            if (catId.length > 0) {
+                              const selectedCategory = projectCategories
+                                ? projectCategories.some((d) => d.categoryId === catId)
+                                : false;
                               if (!selectedCategory && uId) {
                                 axios
                                   .post(
-                                    `${BASE_URL}/mentor_category/add_new`,
+                                    `${BASE_URL}/project_category/add_new`,
                                     {
                                       categoryId: catId,
-                                      userId: uId,
+                                      projectId: pid,
                                     },
                                     {
                                       headers: {
@@ -202,12 +201,8 @@ const UpdateProject = () => {
                                       },
                                     }
                                   )
-                                  .then(() => {
-                                    getAllProjectCategory(uId);
-                                  })
-                                  .catch((err) => {
-                                    console.log(err.message);
-                                  });
+                                  .then(() => getAllProjectCategory(pid))
+                                  .catch((err) => console.log(err.message));
                               }
                             }
                             handleChange(event);
@@ -216,18 +211,18 @@ const UpdateProject = () => {
                           labelId="select-category-label"
                           id="select-category"
                           name="category"
-                          // disabled={mentorCategories.length >= 3}
+                          disabled={projectCategories.length >= 3}
                           value={" "}
                           fullWidth
                           label="Chọn thể loại hướng dẫn(Tối đa 3)"
                         >
                           <MenuItem value=" ">
-                            <em>{result.join(", ")}</em>
+                            <em>{result.length === 0 ? "Chưa chọn" : result.join(", ")}</em>
                           </MenuItem>
                           {categories
                             ? categories.map(
                                 (d) =>
-                                  !mentorCategories.some((mc) => mc.categoryId === d._id) && (
+                                  !projectCategories.some((mc) => mc.categoryId === d._id) && (
                                     <MenuItem key={d._id} value={d._id}>
                                       {d.name}
                                     </MenuItem>
@@ -242,8 +237,8 @@ const UpdateProject = () => {
                           gap={"0.5rem"}
                           py={1}
                         >
-                          {mentorCategories
-                            ? mentorCategories.map((mc) => (
+                          {projectCategories
+                            ? projectCategories.map((pc) => (
                                 <MKBox
                                   display={"flex"}
                                   flexDirection={"row"}
@@ -256,28 +251,24 @@ const UpdateProject = () => {
                                     borderRadius: "30px",
                                     lineHeight: 1,
                                   }}
-                                  key={mc._id}
+                                  key={pc._id}
                                 >
                                   <MKTypography as={"span"}>
                                     {categories.map((cat) =>
-                                      mc.categoryId === cat._id ? cat.name : ""
+                                      pc.categoryId === cat._id ? cat.name : ""
                                     )}
                                   </MKTypography>
                                   <Icon
                                     onClick={() => {
                                       axios
-                                        .delete(`${BASE_URL}/mentor_category/delete/${mc._id}`, {
+                                        .delete(`${BASE_URL}/project_category/delete/${pc._id}`, {
                                           headers: {
                                             "Content-Type": "application/json",
                                             authorization: `Bearer ${jwt}`,
                                           },
                                         })
-                                        .then(() => {
-                                          getAllProjectCategory(uId);
-                                        })
-                                        .catch((err) => {
-                                          console.log(err.message);
-                                        });
+                                        .then(() => getAllProjectCategory(pid))
+                                        .catch((err) => console.log(err.message));
                                     }}
                                     sx={{
                                       height: "100%",

@@ -2,27 +2,30 @@
 
 import ProjectCategory from "../../models/projectCategory.js";
 
-const create = async ({ categoryId, projectId }) => {
+const createProjectCategory = async (values) => {
   try {
-    const projectCategory = await ProjectCategory.create({
-      categoryId,
-      projectId,
-    });
+    const projectCategory = await ProjectCategory.create(values);
     return projectCategory;
   } catch (error) {
-    console.error("Error creating project category:", error);
-    throw new Error("Error creating project category");
+    throw new Error(error.message);
   }
 };
 
-const deleteByProjectId = async (projectId) => {
+const deleteProjectCategorybyId = async (id) => {
   try {
-    await ProjectCategory.deleteOne({ projectId: projectId });
+    return await ProjectCategory.deleteOne({ _id: id });
   } catch (error) {
-    console.error("Error deleting project categories:", error);
-    throw new Error("Error deleting project categories");
+    throw new Error(error.message);
   }
 };
+const getAllProjectCategorybyId = async (projectId) => {
+  try {
+    return await ProjectCategory.find({ projectId: projectId });
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
 const updateProjectCategories = async (projectId, categoryIds) => {
   try {
     await deleteByProjectId(projectId);
@@ -31,13 +34,13 @@ const updateProjectCategories = async (projectId, categoryIds) => {
     );
     return projectCategories;
   } catch (error) {
-    console.error("Error updating project categories:", error);
-    throw new Error("Error updating project categories");
+    throw new Error(error.message);
   }
 };
 
 export default {
-  create,
-  deleteByProjectId,
+  createProjectCategory,
+  deleteProjectCategorybyId,
   updateProjectCategories,
+  getAllProjectCategorybyId,
 };
