@@ -47,6 +47,18 @@ const Category = () => {
         .catch(() => navigate("/pages/authentication/sign-in"));
     isActivePopup({ type: "close", payload: "" });
   };
+  const deleteSemester = (id) => {
+    console.log(id);
+    axios
+      .delete(`${BASE_URL}/admins/delete_category/${id}`, headers)
+      .then(() =>
+        axios
+          .get(`${BASE_URL}/admins/all_categories`, headers)
+          .then((res) => dispatch(setCategories(res.data)))
+      );
+    // .catch(() => navigate("/pages/authentication/sign-in"));
+    isActivePopup({ type: "close", payload: "" });
+  };
   const initialValues = Yup.object().shape({
     name: Yup.string().required("Vui lòng nhập tên của kỳ học"),
   });
@@ -119,23 +131,46 @@ const Category = () => {
                   ) : (
                     ""
                   )}
-                  <MKButton
-                    type="submit"
-                    sx={{
-                      background: "#1A73E8",
-                      marginTop: "6px",
-                      color: "#FFFFFF",
-                      width: "100%",
-                      "&:hover": {
-                        backgroundColor: "#1865ca !important",
-                      },
-                      "&:focus:not(:hover)": {
-                        backgroundColor: "#1865ca",
-                      },
-                    }}
-                  >
-                    Thêm
-                  </MKButton>
+                  <MKBox display="flex" gap="3.5rem">
+                    <MKButton
+                      type="submit"
+                      sx={{
+                        background: "#1A73E8",
+                        marginTop: "6px",
+                        color: "#FFFFFF",
+                        width: "100%",
+                        "&:hover": {
+                          backgroundColor: "#1865ca !important",
+                        },
+                        "&:focus:not(:hover)": {
+                          backgroundColor: "#1865ca",
+                        },
+                      }}
+                    >
+                      Thêm
+                    </MKButton>
+                    {active_popup.type === "update" ? (
+                      <MKButton
+                        onClick={() => deleteSemester(values._id)}
+                        sx={{
+                          background: "#1A73E8",
+                          marginTop: "6px",
+                          color: "#FFFFFF",
+                          width: "100%",
+                          "&:hover": {
+                            backgroundColor: "#1865ca !important",
+                          },
+                          "&:focus:not(:hover)": {
+                            backgroundColor: "#1865ca",
+                          },
+                        }}
+                      >
+                        Xóa
+                      </MKButton>
+                    ) : (
+                      ""
+                    )}
+                  </MKBox>
                 </Form>
               )}
             </Formik>

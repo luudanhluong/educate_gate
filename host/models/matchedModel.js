@@ -4,11 +4,11 @@ const MatchedSchema = new Schema(
   {
     groupId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "groups",
+      ref: "Group",
     },
     mentorId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "users",
+      ref: "User",
     },
     status: { type: String },
   },

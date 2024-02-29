@@ -182,6 +182,26 @@ const updateSemester = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+const deleteSemester = async (req, res) => {
+  const token = req.headers["authorization"];
+  if (!token) return res.status(401).send("Access denied");
+  try {
+    const { id } = req.params;
+    res.status(200).json(await adminsRepository.deleteSemester(id));
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+const deleteCategory = async (req, res) => {
+  const token = req.headers["authorization"];
+  if (!token) return res.status(401).send("Access denied");
+  try {
+    const { id } = req.params;
+    res.status(200).json(await adminsRepository.deleteCategory(id));
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
 export default {
   getUsers,
   insertListUsers,
@@ -196,4 +216,6 @@ export default {
   updateSemester,
   createNewSemester,
   getAllSemesters,
+  deleteSemester,
+  deleteCategory,
 };

@@ -336,12 +336,13 @@ const EditProfile = () => {
                               label="Chọn thể loại hướng dẫn(Tối đa 3)"
                             >
                               <MenuItem value=" ">
-                                <em>{result.join(", ")}</em>
+                                <em>
+                                  {result.length > 0 ? result.join(", ") : "Hãy chọn thể loại"}
+                                </em>
                               </MenuItem>
                               {categories
                                 ? categories.map(
                                     (d) =>
-                                      d.state === "active" &&
                                       !mentorCategories.some((mc) => mc.categoryId === d._id) && (
                                         <MenuItem key={d._id} value={d._id}>
                                           {d.name}

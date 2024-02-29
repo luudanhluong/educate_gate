@@ -64,7 +64,10 @@ const Dashboard = () => {
                     ))
                   : ""}
                 <MenuItem
-                  onClick={() => isActivePopup({ type: "open", payload: "semester" })}
+                  onClick={() => {
+                    isActivePopup({ type: "open", payload: "semester" });
+                    dispatch(setSemester({}));
+                  }}
                   sx={{
                     display: "flex",
                     justifyContent: "center",
