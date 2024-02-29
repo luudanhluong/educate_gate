@@ -31,6 +31,7 @@ import ListAccountBase from "layouts/admin/add-list-account";
 import AddListClassBase from "layouts/admin/add-list-class";
 import TeacherFunction from "layouts/sections/page-sections/featuers";
 import GroupDetail from "layouts/user/students";
+import DashboardAdmin from "layouts/admin/dashboard";
 
 const routes = [
   {
@@ -237,7 +238,12 @@ const routes = [
     name: "admins",
     dropdown: true,
     description: "Xem tất cả",
-    collapse: [
+    _collapse: [
+      {
+        name: "",
+        route: "/admin/dashboard",
+        component: <DashboardAdmin />,
+      },
       {
         name: "Thêm danh sách người dùng",
         route: "/admin/create-new-list-account",
@@ -249,6 +255,12 @@ const routes = [
         component: <AddListClassBase />,
       },
     ],
+    get collapse() {
+      return this._collapse;
+    },
+    set collapse(value) {
+      this._collapse = value;
+    },
   },
   {
     name: "Chức năng",

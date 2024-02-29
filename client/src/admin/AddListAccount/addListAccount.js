@@ -29,31 +29,30 @@ function AddListAccount() {
   const { active_popup } = useSelector((state) => state.active);
   const isActivePopup = () => dispatch(setActivePopup(!active_popup));
   const { filterRole, searchValue, sort, pageNo } = useSelector((state) => state.user);
+  const jwt = localStorage.getItem("jwt");
+  const headers = {
+    headers: {
+      "Content-Type": "application/json",
+      authorization: `Bearer ${jwt}`,
+    },
+  };
   const limitUser = 10;
   const handleSubmit = async () => {
     const formData = new FormData();
     formData.append("file", fileName);
     await axios
-      .post(`${BASE_URL}/admins/insert-list-users`, formData)
-      .then((response) => {
+      .post(`${BASE_URL}/admins/insert-list-users`, formData, headers)
+      .then(() =>
         axios
           .get(
             `${BASE_URL}/admins/users?item=createdAt&order=${sort}&skip=${
               pageNo * limitUser
             }&limit=${limitUser}&role=${filterRole}&search=${searchValue}`
           )
-          .then((res) => {
-            dispatch(setUsers(res.data));
-            return res;
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-        return response;
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
+          .then((res) => dispatch(setUsers(res.data)))
+          .catch((err) => console.log(err))
+      )
+      .catch((error) => console.error("Error:", error));
   };
   return (
     <Modal

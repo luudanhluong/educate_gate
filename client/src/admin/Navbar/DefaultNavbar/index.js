@@ -1,17 +1,9 @@
 // react-router components
 import { Link } from "react-router-dom";
-
-// prop-types is a library for typechecking of props.
 import PropTypes from "prop-types";
-
-// @mui material components
-// import Container from "@mui/material/Container";
-
-// Material Dashboard 2 React base sxs
-
-// Material Dashboard 2 React context
 import DefaultNavbarLink from "./DefaultNavbarLink";
 import MKBox from "components/MKBox";
+import MKButton from "components/MKButton";
 
 function DefaultNavbar({ transparent, light = true }) {
   return (
@@ -37,15 +29,20 @@ function DefaultNavbar({ transparent, light = true }) {
           width={"100%"}
           component={Link}
           textAlign="center"
-          to="/admin"
+          to="/admin/dashboard"
           mt={2}
-          py={transparent ? 1.5 : 0.75}
           lineHeight={1}
         >
           <MKBox
-            variant="button"
+            component={MKButton}
             sx={{
               fontSize: "1.425rem",
+              "&: hover": {
+                background: "transparent",
+              },
+              "&:focus:not(:hover)": {
+                background: "transparent",
+              },
             }}
             fontWeight="bold"
             color={light ? "white" : "dark"}
@@ -62,7 +59,12 @@ function DefaultNavbar({ transparent, light = true }) {
           p={0}
         >
           <MKBox className={"ithv_elm_bl"} sx={{ padding: "2px 4px" }}>
-            <DefaultNavbarLink icon="person" name="Dashboard" route="/admin" light={light} />
+            <DefaultNavbarLink
+              icon="person"
+              name="Dashboard"
+              route="/admin/dashboard"
+              light={light}
+            />
           </MKBox>
           <MKBox className={"ithv_elm_bl"} sx={{ padding: "2px 4px" }}>
             <DefaultNavbarLink
@@ -77,22 +79,6 @@ function DefaultNavbar({ transparent, light = true }) {
               icon="account_circle"
               name="Create new classes"
               route="/admin/create-new-class"
-              light={light}
-            />
-          </MKBox>
-          <MKBox className={"ithv_elm_bl"} sx={{ padding: "2px 4px" }}>
-            <DefaultNavbarLink
-              icon="key"
-              name="danh sách lớp học sinh"
-              route="/admin/list-class-students"
-              light={light}
-            />
-          </MKBox>
-          <MKBox className={"ithv_elm_bl"} sx={{ padding: "2px 4px" }}>
-            <DefaultNavbarLink
-              icon="key"
-              name="sign in"
-              route="/authentication/sign-in"
               light={light}
             />
           </MKBox>

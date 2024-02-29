@@ -20,6 +20,8 @@ const getUsers = async (req, res) => {
   }
 };
 const insertListUsers = async (req, res, next) => {
+  const token = req.headers["authorization"];
+  if (!token) return res.status(401).send("Access denied");
   try {
     const password = "Aa@123";
     const saltRounds = 12;
@@ -45,6 +47,8 @@ const insertListUsers = async (req, res, next) => {
 };
 
 const createNewListClass = async (req, res) => {
+  const token = req.headers["authorization"];
+  if (!token) return res.status(401).send("Access denied");
   try {
     const { suffName, preName, quantity, limmitStudent } = req.body;
     let result;
@@ -75,7 +79,7 @@ const getClasses = async (req, res, next) => {
       limit: Number(limit),
       skip: Number(skip),
       preName,
-      search: Number(search),
+      search: search,
     });
     res.status(201).json(result);
   } catch (error) {
@@ -83,6 +87,8 @@ const getClasses = async (req, res, next) => {
   }
 };
 const addStuentdInClass = async (req, res) => {
+  const token = req.headers["authorization"];
+  if (!token) return res.status(401).send("Access denied");
   try {
     const result = await adminsRepository.addStudentInClasses();
     res.status(200).json(result);
@@ -91,6 +97,8 @@ const addStuentdInClass = async (req, res) => {
   }
 };
 const deleteClassEmpty = async (req, res) => {
+  const token = req.headers["authorization"];
+  if (!token) return res.status(401).send("Access denied");
   try {
     const result = await adminsRepository.deleteClassEmpty();
     res.status(200).json(result);
@@ -99,9 +107,77 @@ const deleteClassEmpty = async (req, res) => {
   }
 };
 const addTeacherInClass = async (req, res) => {
+  const token = req.headers["authorization"];
+  if (!token) return res.status(401).send("Access denied");
   try {
     const result = await adminsRepository.addTeacherInClass();
     res.status(200).json(result);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+const getAllCategories = async (req, res) => {
+  const token = req.headers["authorization"];
+  if (!token) return res.status(401).send("Access denied");
+  try {
+    res.status(200).json(await adminsRepository.getAllCategories());
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+const getAllSemesters = async (req, res) => {
+  const token = req.headers["authorization"];
+  if (!token) return res.status(401).send("Access denied");
+  try {
+    res.status(200).json(await adminsRepository.getAllSemesters());
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+const addNewCategory = async (req, res) => {
+  const token = req.headers["authorization"];
+  if (!token) return res.status(401).send("Access denied");
+  try {
+    const { name } = req.body;
+    console.log(name);
+    res.status(200).json(await adminsRepository.addNewCategory(name));
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+const createNewSemester = async (req, res) => {
+  const token = req.headers["authorization"];
+  if (!token) return res.status(401).send("Access denied");
+  try {
+    const { name } = req.body;
+    console.log(name);
+    res.status(200).json(await adminsRepository.createNewSemester(name));
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+const updateCategory = async (req, res) => {
+  const token = req.headers["authorization"];
+  if (!token) return res.status(401).send("Access denied");
+  try {
+    const { status, name } = req.body;
+    const { id } = req.params;
+    res
+      .status(200)
+      .json(await adminsRepository.updateCategory(id, { status, name }));
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+const updateSemester = async (req, res) => {
+  const token = req.headers["authorization"];
+  if (!token) return res.status(401).send("Access denied");
+  try {
+    const { status, name } = req.body;
+    const { id } = req.params;
+    res
+      .status(200)
+      .json(await adminsRepository.updateSemester(id, { status, name }));
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -114,4 +190,10 @@ export default {
   addStuentdInClass,
   deleteClassEmpty,
   addTeacherInClass,
+  getAllCategories,
+  addNewCategory,
+  updateCategory,
+  updateSemester,
+  createNewSemester,
+  getAllSemesters,
 };

@@ -6,6 +6,7 @@ import ErrorSlice from "./slices/errorSlice";
 import mockupSlice from "./slices/mockupSlice";
 import classSlice from "./slices/classSlice";
 import categorySlice from "./slices/categorySlice";
+import semesterSlice from "./slices/semesterSlice";
 import projectSlice from "./slices/projectSlice";
 import { applyMiddleware } from "redux";
 import * as thunk from "redux-thunk";
@@ -16,6 +17,7 @@ const rootReducer = {
   project: projectSlice,
   class: classSlice,
   category: categorySlice,
+  semester: semesterSlice,
   error: ErrorSlice,
   mockup: mockupSlice,
   classOnerTeacher: classOnerTeacherSlice,

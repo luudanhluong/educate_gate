@@ -301,7 +301,6 @@ const EditProfile = () => {
                                   const selectedCategory = mentorCategories.some(
                                     (d) => d.categoryId === catId
                                   );
-                                  console.log(selectedCategory);
                                   if (!selectedCategory && uId) {
                                     axios
                                       .post(
@@ -342,6 +341,7 @@ const EditProfile = () => {
                               {categories
                                 ? categories.map(
                                     (d) =>
+                                      d.state === "active" &&
                                       !mentorCategories.some((mc) => mc.categoryId === d._id) && (
                                         <MenuItem key={d._id} value={d._id}>
                                           {d.name}
