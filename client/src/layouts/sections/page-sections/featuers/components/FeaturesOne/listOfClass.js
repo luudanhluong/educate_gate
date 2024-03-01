@@ -6,38 +6,57 @@ import MKBox from "components/MKBox";
 import "./studentList.css";
 import axios from "axios";
 import { Typography } from "@mui/material";
+import { BASE_URL } from "utilities/initialValue";
+import { setGroups } from "app/slices/groupSlice";
 
 const ListOfClasses = ({ classes = [] }) => {
   const dispatch = useDispatch();
   const [selectedClassIndex, setSelectedClassIndex] = useState(0);
-
+  const jwt = localStorage.getItem("jwt");
+  const headers = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${jwt}`,
+    },
+  };
   useEffect(() => {
-    if (classes.length > 0)
+    if (classes.length > 0) {
       axios
-        .get(`http://localhost:9999/class/${classes[selectedClassIndex]._id}/students`)
+        .get(`${BASE_URL}/class/${classes[0]._id}/students`)
         .then((res) => dispatch(setClassStudent(res.data)))
         .catch((error) => console.log(error.message));
-  }, [classes, selectedClassIndex]);
+      setSelectedClassIndex(classes[0]._id);
+      axios
+        .get(`${BASE_URL}/group/${classes[0]._id}/groups`, headers)
+        .then((res) => dispatch(setGroups(res.data)));
+    }
+  }, [classes]);
 
-  const getClassStudent = (index) => {
-    setSelectedClassIndex(index);
+  const getClassStudent = (id) => {
+    axios
+      .get(`${BASE_URL}/group/${id}/groups`, headers)
+      .then((res) => dispatch(setGroups(res.data)));
+    axios
+      .get(`${BASE_URL}/class/${id}/students`)
+      .then((res) => dispatch(setClassStudent(res.data)))
+      .catch((error) => console.log(error.message));
+    setSelectedClassIndex(id);
   };
-
   return (
     <MKBox className="ClassListWrapper" ml={1}>
-      {classes.map((classItem, index) => (
+      {classes.map((classItem) => (
         <Typography
           component="span"
           fontSize="0.725rem"
           px={"0.5rem"}
           key={classItem._id}
-          className={`ClassItem ${selectedClassIndex === index ? "selected" : ""}`}
-          onClick={() => getClassStudent(index)}
+          className={`ClassItem ${selectedClassIndex === classItem._id ? "selected" : ""}`}
+          onClick={() => getClassStudent(classItem._id)}
           style={{
-            padding: selectedClassIndex === index ? "2px 2px 2px 26px" : "2px",
-            backgroundColor: selectedClassIndex === index ? "#009879" : "",
-            color: selectedClassIndex === index ? "#ffffff" : "black",
-            transform: selectedClassIndex === index ? "scale(1.05)" : "",
+            padding: selectedClassIndex === classItem._id ? "2px 2px 2px 26px" : "2px",
+            backgroundColor: selectedClassIndex === classItem._id ? "#009879" : "",
+            color: selectedClassIndex === classItem._id ? "#ffffff" : "black",
+            transform: selectedClassIndex === classItem._id ? "scale(1.05)" : "",
           }}
         >
           {classItem.preName}
@@ -52,8 +71,10 @@ const ListOfClasses = ({ classes = [] }) => {
 ListOfClasses.propTypes = {
   classes: PropTypes.arrayOf(
     PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
+      _id: PropTypes.string.isRequired,
+      preName: PropTypes.string,
+      code: PropTypes.number,
+      suffName: PropTypes.string,
     })
   ).isRequired,
 };

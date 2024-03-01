@@ -3,10 +3,8 @@
   width: 100%;
   border-collapse: collapse;
   font-size: 0.9em;
-  font-family: sans-serif;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
 }
-
 .styled-table thead tr {
   background-color: #009879;
   color: #ffffff;
@@ -14,7 +12,7 @@
 }
 
 .styled-table th {
-  padding: 12px 15px;
+  padding: 12px 13px;
 }
 .styled-table td {
   padding: 10px 15px;

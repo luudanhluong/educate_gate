@@ -10,7 +10,9 @@ import { setUserLogin } from "app/slices/userSlice";
 import { setCategories } from "app/slices/categorySlice";
 import axios from "axios";
 import { BASE_URL } from "utilities/initialValue";
-import GroupMember from "./GroupDetail";
+import GroupMember from "./GroupMember";
+import { setProject } from "app/slices/projectSlice";
+import { setProjectCategories } from "app/slices/projectSlice";
 
 const GroupDetail = () => {
   const dispatch = useDispatch();
@@ -61,12 +63,9 @@ const GroupDetail = () => {
     dispatch(setActivePopup(false));
   }, [dispatch, jwt]);
   const handleShowGroupMember = () => {
-    setShowGroupMember(true); // Khi click vào nút, chuyển state thành true để hiển thị GroupMember
+    setShowGroupMember(true);
   };
 
-  const handleCloseGroupMember = () => {
-    setShowGroupMember(false); // Đóng GroupMember
-  };
   return (
     <>
       <DefaultNavbar routes={routes} />
@@ -76,7 +75,7 @@ const GroupDetail = () => {
           Cập nhật dự án
         </MKButton>
         <MKButton onClick={handleShowGroupMember}>Thành viên nhóm</MKButton>
-        {showGroupMember && <GroupMember onClose={handleCloseGroupMember} />}
+        {showGroupMember && <GroupMember />}
       </MKBox>
     </>
   );

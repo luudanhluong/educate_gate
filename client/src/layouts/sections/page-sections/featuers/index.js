@@ -2,18 +2,19 @@ import React, { useState, useEffect } from "react";
 import MKBox from "components/MKBox";
 import Grid from "@mui/material/Grid";
 import { useSelector } from "react-redux";
-// import GroupDetails from "./components/FeaturesOne/groupDetail";
-// import GroupsList from "./components/FeaturesOne/listOfGroup";
+import ListOfGroups from "./components/FeaturesOne/listOfGroup";
 import StudentOfClassesList from "./components/FeaturesOne/listOfStudent";
 import axios from "axios";
 import TeacherDefaultNavbar from "./TeacherAction";
 import DefaultNavbar from "Navbars/DefaultNavbar";
 import routes from "routes";
 import { CSSTransition } from "react-transition-group";
-import "../featuers/components/FeaturesOne/studentList.css";
+
 const TeachersFunction = () => {
   const selectedClassId = useSelector((state) => state.classOnerTeacher.classId);
   const [students, setStudents] = useState([]);
+  // const [classGroups, setClassGroups] = useState([]);
+
   const [lastScrollTop, setLastScrollTop] = useState(0);
   const [navbarVisible, setNavbarVisible] = useState(true);
 
@@ -42,7 +43,9 @@ const TeachersFunction = () => {
               },
             }
           );
-          setStudents(response.data); // Update state with fetched students
+          setStudents(response.data);
+
+          // setClassGroups(groupsResponse.data);
         }
       } catch (error) {
         console.error("Error fetching students:", error);
@@ -51,44 +54,6 @@ const TeachersFunction = () => {
 
     fetchStudents();
   }, [selectedClassId]);
-  // const [groupDetails, setGroupDetails] = useState(null);
-  // const [groups, setGroups] = useState([]);
-  // const [groupId, setGroupId] = useState(null);
-
-  // useEffect(() => {
-  //   const jwt = localStorage.getItem("jwt");
-  //   const config = {
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //       Authorization: `Bearer ${jwt}`,
-  //     },
-  //   };
-  //   axios
-  //     .get(`http://localhost:9999/class/${selectedClassId}/groups`, config)
-  //     .then((res) => {
-  //       setGroups(res.data);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error.message);
-  //     });
-  // }, [selectedClassId]);
-
-  // const handleSelectGroup = async (id) => {
-  //   const jwt = localStorage.getItem("jwt");
-  //   const config = {
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //       Authorization: `Bearer ${jwt}`,
-  //     },
-  //   };
-  //   setGroupId(id);
-  //   try {
-  //     const response = await axios.get(`http://localhost:9999/group/${id}/details`, config);
-  //     setGroupDetails(response.data);
-  //   } catch (error) {
-  //     console.error("Error fetching specific group details:", error);
-  //   }
-  // };
 
   return (
     <>
@@ -112,7 +77,8 @@ const TeachersFunction = () => {
             <TeacherDefaultNavbar transparent />
           </Grid>
           <Grid item xs={12} md={10}>
-            <MKBox p={0}>
+            <MKBox p={0} display="flex" flexDirection="column">
+              <ListOfGroups />
               <StudentOfClassesList classId={students} />
             </MKBox>
           </Grid>

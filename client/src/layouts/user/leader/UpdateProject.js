@@ -29,9 +29,9 @@ const UpdateProject = () => {
   const { active_popup } = useSelector((state) => state.active);
   const { data: categories } = useSelector((state) => state.category.categories);
   const { projectCategories } = useSelector((state) => state.project);
-  const { _id: uId, username } = userLogin;
+  const { _id: uId } = userLogin;
   const [formvalues, setFormValues] = useState({
-    name: username || "",
+    name: "",
     description: "",
   });
   const isActivePopup = () => dispatch(setActivePopup(!active_popup));
