@@ -9,19 +9,7 @@ import { Container, Icon, Typography } from "@mui/material";
 
 const TeacherDefaultNavbar = ({ transparent, light = true }) => {
   const dispatch = useDispatch();
-  // const [showClassList, setShowClassList] = useState(false);
   const [classes, setClasses] = useState([]);
-  // const [isHovered, setIsHovered] = useState(false);
-
-  // const defaultStyle = {
-  //   color: "black",
-  //   cursor: "pointer",
-  //   transition: "all 0.3s ease",
-  // };
-
-  // const hoverStyle = {
-  //   transform: "scale(1.05)",
-  // };
 
   useEffect(() => {
     const jwt = localStorage.getItem("jwt");
@@ -44,9 +32,6 @@ const TeacherDefaultNavbar = ({ transparent, light = true }) => {
         });
     }
   }, []);
-
-  // const handleToggleClassList = () => setShowClassList(!showClassList);
-  // console.log(showClassList);
 
   const handleSelectClass = (classId) => {
     console.log("Selected class 1:", classId);
@@ -105,9 +90,6 @@ const TeacherDefaultNavbar = ({ transparent, light = true }) => {
                 cursor: "default",
               },
             }}
-            // onMouseEnter={() => setIsHovered(true)}
-            // onMouseLeave={() => setIsHovered(false)}
-            // onClick={handleToggleClassList}
             light={light}
           >
             <Icon>donut_large</Icon>

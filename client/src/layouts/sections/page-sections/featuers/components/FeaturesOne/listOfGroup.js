@@ -1,17 +1,26 @@
 import React, { useState, useEffect } from "react";
 import { Typography, Box, Avatar } from "@mui/material";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const ListOfGroups = () => {
   const [groupData, setGroupData] = useState([]);
   const groups = useSelector((state) => state.group.groups);
+  const navigate = useNavigate();
 
+  const handleGroupDetailClick = (groupId) => {
+    navigate(`/group/${groupId}/members`);
+  };
   useEffect(() => {
     setGroupData(groups);
   }, [groups]);
 
   if (groupData.length === 0) {
-    return <Typography>No groups found in this class.</Typography>;
+    return (
+      <Typography textAlign={"center"} mb={"10px"}>
+        No groups found in this class.
+      </Typography>
+    );
   }
 
   return (
@@ -43,6 +52,7 @@ const ListOfGroups = () => {
           display: "flex",
           flexWrap: "wrap",
           justifyContent: "space-between",
+          gap: 1,
         }}
       >
         {groupData.map((group) => (
@@ -126,6 +136,13 @@ const ListOfGroups = () => {
               }}
             >
               <Typography variant="body2">{group.membersCount} Members</Typography>
+              <Typography
+                variant="body2"
+                sx={{ cursor: "pointer", textDecoration: "underline" }}
+                onClick={() => handleGroupDetailClick(group._id)}
+              >
+                <em> Group Detail</em>
+              </Typography>
             </Box>
           </Box>
         ))}

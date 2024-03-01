@@ -50,7 +50,7 @@ const ListOfClasses = ({ classes = [] }) => {
           fontSize="0.725rem"
           px={"0.5rem"}
           key={classItem._id}
-          className={`ClassItem ${selectedClassIndex === classItem._id ? "selected" : ""}`}
+          className={`ClassItem ${selectedClassIndex === classItem._id ? "gradient-animated" : ""}`}
           onClick={() => getClassStudent(classItem._id)}
           style={{
             padding: selectedClassIndex === classItem._id ? "2px 2px 2px 26px" : "2px",

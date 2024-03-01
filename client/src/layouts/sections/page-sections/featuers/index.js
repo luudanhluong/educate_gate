@@ -13,7 +13,6 @@ import { CSSTransition } from "react-transition-group";
 const TeachersFunction = () => {
   const selectedClassId = useSelector((state) => state.classOnerTeacher.classId);
   const [students, setStudents] = useState([]);
-  // const [classGroups, setClassGroups] = useState([]);
 
   const [lastScrollTop, setLastScrollTop] = useState(0);
   const [navbarVisible, setNavbarVisible] = useState(true);
@@ -44,8 +43,6 @@ const TeachersFunction = () => {
             }
           );
           setStudents(response.data);
-
-          // setClassGroups(groupsResponse.data);
         }
       } catch (error) {
         console.error("Error fetching students:", error);

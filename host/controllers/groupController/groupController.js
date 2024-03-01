@@ -1,7 +1,8 @@
 import groupDAO from "../../repositories/group/index.js";
 import User from "../../models/userModel.js";
 import Project from "../../models/projectModel.js";
-
+import Group from "../../models/groupModel.js";
+import Matched from "../../models/matchedModel.js";
 const getGroupById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -14,21 +15,46 @@ const getGroupById = async (req, res) => {
 const groupDetail = async (req, res) => {
   try {
     const { groupId } = req.params;
-    const group = await groupDAO.getGroupById(groupId);
+    const group = await Group.findById(groupId).populate("projectId").exec();
     if (!group) {
       return res.status(404).json({ message: "Group not found" });
     }
-    const members = await groupDAO.getGroupMembers(groupId);
-    if (!members) {
+
+    const matched = await Matched.findOne({ groupId: group._id })
+      .populate("mentorId")
+      .exec();
+    if (!matched) {
       return res
         .status(404)
-        .json({ message: "No members found for this group" });
+        .json({ message: "Matched mentor not found for this group" });
     }
+
+    const mentor = matched.mentorId
+      ? {
+          name: matched.mentorId.username,
+          email: matched.mentorId.email,
+          image: matched.mentorId.image,
+        }
+      : null;
+
+    const members = await User.find({ groupId: groupId });
     const membersCount = members.length;
+
     res.json({
       groupName: group.name,
       membersCount: membersCount,
-      members: members,
+      members: members.map((member) => ({
+        username: member.username,
+        email: member.email,
+      })),
+      project: group.projectId
+        ? {
+            projectId: group.projectId._id,
+            nameProject: group.projectId.name,
+            description: group.projectId.description,
+          }
+        : null,
+      mentor: mentor,
     });
   } catch (error) {
     res.status(500).json({ message: error.message });

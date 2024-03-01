@@ -10,6 +10,7 @@ import Presentation from "layouts/pages/presentation";
 import routes from "routes";
 import "./App.css";
 import Dashboard from "admin/Dashboard";
+import GroupDetail from "layouts/user/students/index";
 
 export default function App() {
   const { pathname } = useLocation();
@@ -34,6 +35,7 @@ export default function App() {
       {/* <CssBaseline /> */}
       <Routes>
         {getRoutes(routes)}
+        <Route path="/group/:groupId/members" element={<GroupDetail />} />
         <Route path="/admin/dashboard" element={<Dashboard />} />
         <Route path="/presentation" element={<Presentation />} />
         <Route path="*" element={<Navigate to="/presentation" />} />

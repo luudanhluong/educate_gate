@@ -12,7 +12,7 @@ const StudentsList = () => {
           <div className="table-container">
             <table className="styled-table">
               <thead>
-                <tr>
+                <tr className="gradient-animated">
                   <th>Username</th>
                   <th>Email</th>
                   <th>Leader</th>
