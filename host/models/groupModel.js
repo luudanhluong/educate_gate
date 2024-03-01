@@ -7,15 +7,15 @@ const groupSchema = new Schema(
     status: { type: String },
     projectId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "projects",
+      ref: "Project",
     },
     classId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "classes",
+      ref: "Class",
     },
-    mentorId: {
+    matchedId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "users",
+      ref: "Matched",
     },
   },
   {

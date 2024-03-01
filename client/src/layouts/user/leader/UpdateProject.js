@@ -43,8 +43,11 @@ const UpdateProject = () => {
   const handleSubmit = (values) => {
     axios
       .patch(
-        `${BASE_URL}/project/update_project/${pid}`,
-        { values },
+        `${BASE_URL}/project/${pid}/update_project`,
+        {
+          name: values.name,
+          description: values.description,
+        },
         {
           headers: {
             "Content-Type": "application/json",

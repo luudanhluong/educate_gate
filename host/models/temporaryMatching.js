@@ -4,11 +4,13 @@ const temporaryMatchingSchema = new Schema(
   {
     groupId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "groups",
+      require: true,
+      ref: "Group",
     },
     mentorId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "users",
+      require: true,
+      ref: "User",
     },
     status: { type: String },
   },
@@ -16,5 +18,8 @@ const temporaryMatchingSchema = new Schema(
     timestamps: true,
   }
 );
-const TemporaryMatching = mongoose.model("TemporaryMatching", temporaryMatchingSchema);
+const TemporaryMatching = mongoose.model(
+  "TemporaryMatching",
+  temporaryMatchingSchema
+);
 export default TemporaryMatching;

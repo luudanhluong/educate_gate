@@ -285,6 +285,8 @@ a {
   animation: top_to_center 1.2s ease-in-out;
 }
 #select-gender,
-#select-category {
+#select-category,
+#select-category-action,
+#select-semester-action {
   padding: 0.75rem 0.75rem !important;
 }

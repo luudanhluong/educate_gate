@@ -1,14 +1,14 @@
 import mongoose, { Schema } from "mongoose";
 
 const semesterDetailSchema = new Schema(
-  { 
+  {
     semesterId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "semesters",
+      ref: "Semester",
     },
     userId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "users",
+      ref: "User",
     },
     status: { type: String },
   },

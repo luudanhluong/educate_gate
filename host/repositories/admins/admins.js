@@ -1,4 +1,6 @@
+import Category from "../../models/categoryModel.js";
 import Class from "../../models/classModel.js";
+import Semester from "../../models/semesterModel.js";
 import User from "../../models/userModel.js";
 import UserType from "../../models/userTypeModel.js";
 import shuffleArray from "../../utilities/shuffleArray.js";
@@ -106,14 +108,14 @@ const createNewListClass = async ({
   }
 };
 const getClasses = async ({ item, order, limit, skip, preName, search }) => {
-  let query = {};
-  if (search && search > 0) {
-    query.code = search;
-  }
-  if (preName && preName.length > 0) {
-    query.preName = preName;
-  }
   try {
+    let query = {};
+    if (search && search.length > 0) {
+      query["teacher.email"] = { $regex: search };
+    }
+    if (preName && preName.length > 0) {
+      query.preName = preName;
+    }
     const result = await Class.aggregate([
       {
         $lookup: {
@@ -164,7 +166,7 @@ const addStudentInClasses = async () => {
     let studentCount = 0;
     let classIndex = 0;
     const bulkUpdateOps = [];
-    const targetStudentsPerClass = 28;
+    const targetStudentsPerClass = 30;
     const users = await User.find({
       $or: [{ classId: { $exists: false } }, { classId: { $eq: null } }],
       role: studentsRole,
@@ -248,6 +250,66 @@ const addTeacherInClass = async () => {
     throw new Error(error.message);
   }
 };
+
+const getAllCategories = async () => {
+  try {
+    const result = await Category.find({}).sort({ createdAt: -1 }).exec();
+    return { data: result };
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+const getAllSemesters = async () => {
+  try {
+    const result = await Semester.find({}).sort({ createdAt: -1 }).exec();
+    return { data: result };
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+const updateCategory = async (id, values) => {
+  try {
+    return await Category.findByIdAndUpdate(id, values).exec();
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+const updateSemester = async (id, values) => {
+  try {
+    return await Semester.findByIdAndUpdate(id, values).exec();
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+const addNewCategory = async (name) => {
+  try {
+    return await Category.create({ name });
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+const createNewSemester = async (name) => {
+  try {
+    return await Semester.create({ name });
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+const deleteSemester = async (id) => {
+  try {
+    return await Semester.findByIdAndDelete(id);
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+const deleteCategory = async (id) => {
+  try {
+    return await Category.findByIdAndDelete(id);
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
 export default {
   getUsers,
   createListUsers,
@@ -257,4 +319,12 @@ export default {
   deleteClassEmpty,
   addTeacherInClass,
   createNewListClassesFromFile,
+  getAllCategories,
+  updateCategory,
+  addNewCategory,
+  createNewSemester,
+  updateSemester,
+  getAllSemesters,
+  deleteCategory,
+  deleteSemester,
 };

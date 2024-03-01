@@ -22,20 +22,23 @@ function ListClass() {
   const limitClass = 10;
   const { active_popup } = useSelector((state) => state.active);
   const { filterPreName, searchValue, sort, pageNo } = useSelector((state) => state.class);
+  const jwt = localStorage.getItem("jwt");
+  const headers = {
+    headers: {
+      "Content-Type": "application/json",
+      authorization: `Bearer ${jwt}`,
+    },
+  };
   useEffect(() => {
     axios
       .get(
         `${BASE_URL}/admins/list-classes?item=createdAt&order=${sort}&skip=${
           pageNo * limitClass
-        }&limit=${limitClass}&preName=${filterPreName}&search=${searchValue}`
+        }&limit=${limitClass}&preName=${filterPreName}&search=${searchValue}`,
+        headers
       )
-      .then((response) => {
-        dispatch(setclasses(response.data));
-        return response.data;
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+      .then((response) => dispatch(setclasses(response.data)))
+      .catch((error) => console.log(error));
   }, [dispatch, filterPreName, searchValue, sort, pageNo]);
   useEffect(() => {
     dispatch(setActivePopup(false));

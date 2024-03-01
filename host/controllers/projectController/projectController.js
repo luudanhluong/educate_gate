@@ -1,9 +1,9 @@
 import projectDAO from "../../repositories/project/index.js";
 
 const updateProject = async (req, res) => {
-  const { id } = req.params;
-  const { name, description } = req.body;
   try {
+    const { id } = req.params;
+    const { name, description } = req.body;
     const project = await projectDAO.updateProject(id, { name, description });
     res.status(200).json(project);
   } catch (error) {

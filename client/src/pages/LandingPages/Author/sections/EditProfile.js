@@ -301,7 +301,6 @@ const EditProfile = () => {
                                   const selectedCategory = mentorCategories.some(
                                     (d) => d.categoryId === catId
                                   );
-                                  console.log(selectedCategory);
                                   if (!selectedCategory && uId) {
                                     axios
                                       .post(
@@ -337,7 +336,9 @@ const EditProfile = () => {
                               label="Chọn thể loại hướng dẫn(Tối đa 3)"
                             >
                               <MenuItem value=" ">
-                                <em>{result.join(", ")}</em>
+                                <em>
+                                  {result.length > 0 ? result.join(", ") : "Hãy chọn thể loại"}
+                                </em>
                               </MenuItem>
                               {categories
                                 ? categories.map(

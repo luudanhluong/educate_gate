@@ -70,11 +70,6 @@ function AddClassList() {
     const { preName, suffName, limmitStudent, quantity } = values;
     const formData_1 = new FormData();
     formData_1.append("file", fileName);
-    // const formData_2 = new FormData();
-    // formData_2.append("preName", preName.toUpperCase());
-    // formData_2.append("suffName", suffName ? suffName.toUpperCase() : suffName);
-    // formData_2.append("limmitStudent", Number(limmitStudent));
-    // formData_2.append("quantity", Number(quantity));
     axios
       .post(
         BASE_URL + "/admins/create-new-classes",

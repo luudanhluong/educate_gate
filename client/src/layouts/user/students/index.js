@@ -10,7 +10,7 @@ import { setUserLogin } from "app/slices/userSlice";
 import { setCategories } from "app/slices/categorySlice";
 import axios from "axios";
 import { BASE_URL } from "utilities/initialValue";
-import GroupMember from "./GroupMember";
+import GroupMember from "./GroupDetail";
 import { setProject } from "app/slices/projectSlice";
 import { setProjectCategories } from "app/slices/projectSlice";
 
@@ -71,7 +71,7 @@ const GroupDetail = () => {
       <DefaultNavbar routes={routes} />
       {active_popup ? <UpdateProject /> : ""}
       <MKBox>
-        <MKButton disabled={!isLeader} onClick={() => dispatch(setActivePopup(true))}>
+        <MKButton disabled={isLeader} onClick={() => dispatch(setActivePopup(true))}>
           Cập nhật dự án
         </MKButton>
         <MKButton onClick={handleShowGroupMember}>Thành viên nhóm</MKButton>

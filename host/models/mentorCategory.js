@@ -5,12 +5,12 @@ const mentorCatergorySchema = new Schema(
     categoryId: {
       type: mongoose.Schema.Types.ObjectId,
       require: true,
-      ref: "categories",
+      ref: "Category",
     },
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       require: true,
-      ref: "users",
+      ref: "User",
     },
     status: { type: String },
   },
