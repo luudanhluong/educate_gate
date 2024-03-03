@@ -3,7 +3,6 @@ import teacherController from "../../controllers/teacherController/teacherContro
 
 const teacherRouter = express.Router();
 
-// Cập nhật để sử dụng hàm mới trong controller
 teacherRouter.get("/classes", teacherController.getClassListByTeacher);
 
 export default teacherRouter;

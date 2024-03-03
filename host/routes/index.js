@@ -9,7 +9,7 @@ import projectRouter from "./projectRouter/projectRouter.js";
 import groupRouter from "./groupRouter/groupRouter.js";
 import temporaryMatchingRouter from "./temporaryMatchingRouter/temporaryMatchingRouter.js";
 import matchedRouter from "./matchedRouter/matchedRouter.js";
-
+import mentorRouter from "./mentorRouter/mentorRouter.js";
 export {
   userRouter,
   classRouter,
@@ -20,6 +20,7 @@ export {
   projectCategoryRouter,
   projectRouter,
   groupRouter,
+  mentorRouter,
   temporaryMatchingRouter,
   matchedRouter,
 };
