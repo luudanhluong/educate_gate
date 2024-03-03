@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 // Material Dashboard 2 React components
 import MKBox from "components/MKBox";
 
-function DataTableBodyCell({ noBorder, width, align, children }) {
+function DataTableBodyCell({ noBorder, align, children }) {
   return (
     <MKBox
       component="td"
@@ -16,7 +16,7 @@ function DataTableBodyCell({ noBorder, width, align, children }) {
         borderBottom: noBorder ? "none" : `${borderWidth[1]} solid ${light.main}`,
       })}
     >
-      <MKBox display="inline-block" width={width} color="text" sx={{ verticalAlign: "middle" }}>
+      <MKBox display="inline-block" color="text" sx={{ verticalAlign: "middle" }}>
         {children}
       </MKBox>
     </MKBox>

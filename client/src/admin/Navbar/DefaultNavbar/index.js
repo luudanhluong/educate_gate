@@ -5,7 +5,7 @@ import DefaultNavbarLink from "./DefaultNavbarLink";
 import MKBox from "components/MKBox";
 import MKButton from "components/MKButton";
 
-function DefaultNavbar({ transparent, light = true }) {
+function DefaultNavbar({ transparent, light }) {
   return (
     <>
       <MKBox
@@ -33,24 +33,23 @@ function DefaultNavbar({ transparent, light = true }) {
           mt={2}
           lineHeight={1}
         >
-          <MKBox
-            component={MKButton}
+          <MKButton
+            variant="gradient"
+            color="dark"
+            width="100%"
             sx={{
-              fontSize: "1.425rem",
-              "&: hover": {
-                background: "transparent",
-              },
-              "&:focus:not(:hover)": {
-                background: "transparent",
-              },
+              fontSize: "1.225rem",
+              // "&: hover": {
+              //   background: "transparent",
+              // },
+              // "&:focus:not(:hover)": {
+              //   background: "transparent",
+              // },
             }}
             fontWeight="bold"
-            color={light ? "white" : "dark"}
-            px={2}
-            py={1}
           >
             Education Gate
-          </MKBox>
+          </MKButton>
         </MKBox>
         <MKBox
           color="inherit"

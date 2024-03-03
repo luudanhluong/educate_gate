@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 // Material Dashboard 2 React components
 import MKBox from "components/MKBox";
 
-function DataTableBodyCell({ noBorder, align, children }) {
+function DataTableBodyCell({ noBorder, width, align, children }) {
   return (
     <MKBox
       component="td"
@@ -16,12 +16,7 @@ function DataTableBodyCell({ noBorder, align, children }) {
         borderBottom: noBorder ? "none" : `${borderWidth[1]} solid ${light.main}`,
       })}
     >
-      <MKBox
-        display="inline-block"
-        width="max-content"
-        color="text"
-        sx={{ verticalAlign: "middle" }}
-      >
+      <MKBox display="inline-block" width={width} color="text" sx={{ verticalAlign: "middle" }}>
         {children}
       </MKBox>
     </MKBox>
@@ -31,11 +26,13 @@ function DataTableBodyCell({ noBorder, align, children }) {
 // Setting default values for the props of DataTableBodyCell
 DataTableBodyCell.defaultProps = {
   noBorder: false,
+  width: "auto",
   align: "left",
 };
 
 // Typechecking props for the DataTableBodyCell
 DataTableBodyCell.propTypes = {
+  width: PropTypes.string,
   children: PropTypes.node.isRequired,
   noBorder: PropTypes.bool,
   align: PropTypes.oneOf(["left", "right", "center"]),

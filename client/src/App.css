@@ -171,6 +171,9 @@ a {
 .register_area::-webkit-scrollbar {
   width: 0;
 }
+#list-temparary-matching::-webkit-scrollbar {
+  width: 8px;
+}
 #dfa-navbar::-webkit-scrollbar,
 #card-table-user::-webkit-scrollbar,
 .rg_form-register::-webkit-scrollbar,
@@ -181,6 +184,7 @@ a {
 }
 
 #dfa-navbar::-webkit-scrollbar-thumb,
+#list-temparary-matching::-webkit-scrollbar-thumb,
 #card-table-user::-webkit-scrollbar-thumb,
 .rg_form-register::-webkit-scrollbar-thumb,
 .cnc_modle-form::-webkit-scrollbar-thumb,
@@ -189,6 +193,8 @@ a {
   background-color: rgb(216, 213, 213);
   border-radius: 6px;
 }
+
+#list-temparary-matching::-webkit-scrollbar-track,
 #card-table-user::-webkit-scrollbar-track {
   background-color: transparent;
 }
@@ -200,6 +206,7 @@ a {
   background-color: #f1f1f1;
 }
 
+#list-temparary-matching::-webkit-scrollbar-corner,
 #card-table-user::-webkit-scrollbar-corner,
 .rg_form-register::-webkit-scrollbar-corner,
 .cnc_modle-form::-webkit-scrollbar-corner,

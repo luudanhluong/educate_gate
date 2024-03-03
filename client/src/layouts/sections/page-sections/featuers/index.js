@@ -11,6 +11,7 @@ import DefaultNavbar from "Navbars/DefaultNavbar";
 import routes from "routes";
 import { CSSTransition } from "react-transition-group";
 import "../featuers/components/FeaturesOne/studentList.css";
+import TemporaryMatching from "./components/FeaturesOne/listTemporaryMaching";
 const TeachersFunction = () => {
   const selectedClassId = useSelector((state) => state.classOnerTeacher.classId);
   const [students, setStudents] = useState([]);
@@ -95,6 +96,7 @@ const TeachersFunction = () => {
       <CSSTransition in={navbarVisible} timeout={300} s classNames="navbar" unmountOnExit>
         <DefaultNavbar routes={routes} transparent sticky />
       </CSSTransition>
+      <TemporaryMatching />
       <MKBox pt={{ xs: 12, sm: 14 }} height="100vh" display="flex" justifyContent="center">
         <Grid container width="80%" display="flex" justifyContent="center">
           <Grid

@@ -46,7 +46,7 @@ function ListAccount() {
 
   return (
     <MKBox sx={{ display: "flex", alignItems: "center", height: "100%", gap: "1.5rem" }}>
-      <DefaultNavbar light={true} />
+      <DefaultNavbar light />
       {active_popup ? <AddListAccount /> : ""}
       <MKBox width="100%" height="100%" overflow="auto">
         <MKBox px={1} width="100%" mx="auto" position="relative" zIndex={2}>

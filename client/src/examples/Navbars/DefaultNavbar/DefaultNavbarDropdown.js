@@ -87,6 +87,7 @@ DefaultNavbarDropdown.defaultProps = {
   light: false,
   href: "",
   route: "",
+  icon: "user",
 };
 
 // Typechecking props for the DefaultNavbarDropdown

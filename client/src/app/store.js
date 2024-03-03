@@ -8,6 +8,7 @@ import classSlice from "./slices/classSlice";
 import categorySlice from "./slices/categorySlice";
 import semesterSlice from "./slices/semesterSlice";
 import projectSlice from "./slices/projectSlice";
+import temporaryMatchingSlice from "./slices/temporaryMatching";
 import { applyMiddleware } from "redux";
 import * as thunk from "redux-thunk";
 
@@ -21,6 +22,7 @@ const rootReducer = {
   error: ErrorSlice,
   mockup: mockupSlice,
   classOnerTeacher: classOnerTeacherSlice,
+  temporaryMatching: temporaryMatchingSlice,
 };
 
 const store = configureStore(

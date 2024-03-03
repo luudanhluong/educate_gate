@@ -543,6 +543,7 @@ DefaultNavbar.defaultProps = {
   sticky: false,
   relative: false,
   center: false,
+  icon: "",
 };
 
 // Typechecking props for the DefaultNavbar

@@ -7,7 +7,7 @@ const StudentsList = () => {
   const { classStudent } = useSelector((state) => state.classOnerTeacher);
   return (
     <MKBox px={3}>
-      <Grid container spacing={0}>
+      <Grid container>
         <Grid item xs={12}>
           <div className="table-container">
             <table className="styled-table">
@@ -20,23 +20,18 @@ const StudentsList = () => {
                 </tr>
               </thead>
               <tbody>
-                {classStudent.length > 0
-                  ? classStudent.map((student) => (
-                      <tr key={student.email}>
-                        <td>{student.username}</td>
-                        <td>{student.email}</td>
-                        <td>
-                          {student.isLeader ? (
-                            <Icon sx={{ marginLeft: "8px", fontSize: "20px !important" }}>
-                              star
-                            </Icon>
-                          ) : (
-                            ""
-                          )}
-                        </td>
-                      </tr>
-                    ))
-                  : ""}
+                {classStudent.length > 0 &&
+                  classStudent.map((student) => (
+                    <tr key={student._id}>
+                      <td>{student.username}</td>
+                      <td>{student.email}</td>
+                      <td>
+                        {student.isLeader ? (
+                          <Icon sx={{ marginLeft: "8px", fontSize: "20px !important" }}>star</Icon>
+                        ) : null}
+                      </td>
+                    </tr>
+                  ))}
               </tbody>
             </table>
           </div>

@@ -48,7 +48,7 @@ function ListClass() {
   }, [dispatch]);
   return (
     <MKBox sx={{ display: "flex", alignItems: "center", height: "100%", gap: "1.5rem" }}>
-      <DefaultNavbar light={true} />
+      <DefaultNavbar light />
       {active_popup ? <AddClassList /> : ""}
       <MKBox height="100%" width="100%">
         <MKBox px={0} width="100%" mx="auto" position="relative">

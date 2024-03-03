@@ -10,8 +10,8 @@ import TableRow from "@mui/material/TableRow";
 import MKBox from "components/MKBox";
 import MKInput from "components/MKInput";
 
-import DataTableHeadCell from "Tables/DataTableUserList/DataTableHeadCell";
-import DataTableBodyCell from "Tables/DataTableUserList/DataTableBodyCell";
+import DataTableHeadCell from "Tables/DataTableHeadCell";
+import DataTableBodyCell from "Tables/DataTableBodyCell";
 import { useDispatch, useSelector } from "react-redux";
 import { Autocomplete, Icon } from "@mui/material";
 import { setFilterRole, setPageNo, setSearchValue } from "app/slices/userSlice";
@@ -118,6 +118,7 @@ function DataTable({ table, isSorted, noEndBorder }) {
                     key={idx}
                     noBorder={noEndBorder && rows.length - 1 === key}
                     align={cell.column.align ? cell.column.align : "left"}
+                    width={cell.column.width ? cell.column.width : "auto"}
                     {...cell.getCellProps()}
                   >
                     {cell.render("Cell")}

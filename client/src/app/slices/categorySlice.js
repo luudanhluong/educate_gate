@@ -1,6 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 const initialValue = {
-  categories: {},
+  categories: {
+    data: [],
+  },
   category: {},
   mentorCategories: {},
   cid: "",
