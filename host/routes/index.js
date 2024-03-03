@@ -7,7 +7,7 @@ import teacherRouter from "./teacherRouter/teacherRouter.js";
 import projectCategoryRouter from "./projectCategoryRouter/projectCategoryRouter.js";
 import projectRouter from "./projectRouter/projectRouter.js";
 import groupRouter from "./groupRouter/groupRouter.js";
-
+import mentorRouter from "./mentorRouter/mentorRouter.js";
 export {
   userRouter,
   classRouter,
@@ -18,4 +18,5 @@ export {
   projectCategoryRouter,
   projectRouter,
   groupRouter,
+  mentorRouter,
 };

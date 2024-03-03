@@ -4,12 +4,12 @@ const projectCategorySchema = new Schema(
   {
     categoryId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "categories",
+      ref: "Category",
       required: true,
     },
     projectId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "projects",
+      ref: "Project",
       required: true,
     },
     status: { type: String },

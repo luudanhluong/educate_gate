@@ -14,6 +14,7 @@ import {
   projectCategoryRouter,
   projectRouter,
   groupRouter,
+  mentorRouter,
 } from "./routes/index.js";
 
 const app = express();
@@ -35,6 +36,7 @@ const upload = multer({ storage: storage });
 app.get("/", (req, res) => {
   console.log("hello world");
 });
+app.use("/mentor", mentorRouter);
 app.use("/project", projectRouter);
 app.use("/teacher", teacherRouter);
 app.use("/user", userRouter);

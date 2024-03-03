@@ -295,6 +295,20 @@ const createNewSemester = async (name) => {
     throw new Error(error.message);
   }
 };
+const deleteSemester = async (id) => {
+  try {
+    return await Semester.findByIdAndDelete(id);
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+const deleteCategory = async (id) => {
+  try {
+    return await Category.findByIdAndDelete(id);
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
 
 export default {
   getUsers,
@@ -311,4 +325,6 @@ export default {
   createNewSemester,
   updateSemester,
   getAllSemesters,
+  deleteCategory,
+  deleteSemester,
 };

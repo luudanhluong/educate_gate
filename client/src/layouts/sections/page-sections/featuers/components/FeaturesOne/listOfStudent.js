@@ -6,13 +6,13 @@ import { Icon } from "@mui/material";
 const StudentsList = () => {
   const { classStudent } = useSelector((state) => state.classOnerTeacher);
   return (
-    <MKBox px={3}>
+    <MKBox pl={"25px"} pr={"5px"}>
       <Grid container spacing={0}>
         <Grid item xs={12}>
           <div className="table-container">
             <table className="styled-table">
               <thead>
-                <tr>
+                <tr className="gradient-animated">
                   <th>Username</th>
                   <th>Email</th>
                   <th>Leader</th>

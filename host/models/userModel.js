@@ -12,7 +12,6 @@ const userSchema = new Schema(
     email: {
       type: String,
       required: [true, "Email không được để trống"],
-      index: true,
       unique: [true, "Email này đã tồn tại trong hệ thống"],
     },
     password: {
@@ -27,10 +26,6 @@ const userSchema = new Schema(
     classId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: Classes,
-    },
-    mentorCategoryId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: MentorCategory,
     },
     Dob: { type: Date },
     gender: { type: Boolean },

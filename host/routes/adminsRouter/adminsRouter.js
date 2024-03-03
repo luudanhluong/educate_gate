@@ -39,5 +39,13 @@ adminsRouter.post(
   "/insert-list-users",
   adminstrationController.insertListUsers
 );
+adminsRouter.delete(
+  "/delete_category/:id",
+  adminstrationController.deleteCategory
+);
+adminsRouter.delete(
+  "/delete_semester/:id",
+  adminstrationController.deleteSemester
+);
 
 export default adminsRouter;
