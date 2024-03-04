@@ -24,7 +24,7 @@ import { setProjectCategories } from "app/slices/projectSlice";
 
 const UpdateProject = () => {
   const dispatch = useDispatch();
-  const pid = "65dc4b9c953a7fb8412cf81f";
+  const pid = "65db6ccb6347052204abc8ec";
   const { userLogin } = useSelector((state) => state.user);
   const { active_popup } = useSelector((state) => state.active);
   const { data: categories } = useSelector((state) => state.category.categories);

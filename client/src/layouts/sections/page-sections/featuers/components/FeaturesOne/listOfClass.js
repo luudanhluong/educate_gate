@@ -44,26 +44,32 @@ const ListOfClasses = ({ classes = [] }) => {
   };
   return (
     <MKBox className="ClassListWrapper" ml={1}>
-      {classes.map((classItem) => (
-        <Typography
-          component="span"
-          fontSize="0.725rem"
-          px={"0.5rem"}
-          key={classItem._id}
-          className={`ClassItem ${selectedClassIndex === classItem._id ? "gradient-animated" : ""}`}
-          onClick={() => getClassStudent(classItem._id)}
-          style={{
-            padding: selectedClassIndex === classItem._id ? "2px 2px 2px 26px" : "2px",
-            backgroundColor: selectedClassIndex === classItem._id ? "#009879" : "",
-            color: selectedClassIndex === classItem._id ? "#ffffff" : "black",
-            transform: selectedClassIndex === classItem._id ? "scale(1.05)" : "",
-          }}
-        >
-          {classItem.preName}
-          {classItem.code}
-          {classItem.suffName ? `-${classItem.suffName}` : ""}
-        </Typography>
-      ))}
+      {Array.isArray(classes) && classes.length > 0 ? (
+        classes.map((classItem) => (
+          <Typography
+            component="span"
+            fontSize="0.725rem"
+            px={"0.5rem"}
+            key={classItem._id}
+            className={`ClassItem ${
+              selectedClassIndex === classItem._id ? "gradient-animated" : ""
+            }`}
+            onClick={() => getClassStudent(classItem._id)}
+            style={{
+              padding: selectedClassIndex === classItem._id ? "2px 2px 2px 26px" : "2px",
+              backgroundColor: selectedClassIndex === classItem._id ? "#009879" : "",
+              color: selectedClassIndex === classItem._id ? "#ffffff" : "black",
+              transform: selectedClassIndex === classItem._id ? "scale(1.05)" : "",
+            }}
+          >
+            {classItem.preName}
+            {classItem.code}
+            {classItem.suffName ? `-${classItem.suffName}` : ""}
+          </Typography>
+        ))
+      ) : (
+        <Typography>No classes found.</Typography>
+      )}
     </MKBox>
   );
 };

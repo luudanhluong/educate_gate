@@ -53,9 +53,20 @@ const getStudentsInClass = async (classId) => {
       .exec();
     return students;
   } catch (error) {
-    console.error("Error fetching students:", error);
-    throw new Error(error);
+    throw new Error(error.message);
   }
 };
-
-export default { createNewListClass, getClasses, getStudentsInClass };
+const findClassById = async (classId) => {
+  try {
+    const result = await Class.findOne({ _id: classId });
+    return result;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+export default {
+  createNewListClass,
+  getClasses,
+  getStudentsInClass,
+  findClassById,
+};

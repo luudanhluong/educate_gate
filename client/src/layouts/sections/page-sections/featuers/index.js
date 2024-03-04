@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import MKBox from "components/MKBox";
 import Grid from "@mui/material/Grid";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import ListOfGroups from "./components/FeaturesOne/listOfGroup";
 import StudentOfClassesList from "./components/FeaturesOne/listOfStudent";
 import axios from "axios";
@@ -9,8 +9,18 @@ import TeacherDefaultNavbar from "./TeacherAction";
 import DefaultNavbar from "Navbars/DefaultNavbar";
 import routes from "routes";
 import { CSSTransition } from "react-transition-group";
+import { setUserLogin } from "app/slices/userSlice";
+import { BASE_URL } from "utilities/initialValue";
 
 const TeachersFunction = () => {
+  const dispatch = useDispatch();
+  const jwt = localStorage.getItem("jwt");
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${jwt}`,
+    },
+  };
   const selectedClassId = useSelector((state) => state.classOnerTeacher.classId);
   const [students, setStudents] = useState([]);
 
@@ -29,23 +39,19 @@ const TeachersFunction = () => {
   }, [lastScrollTop]);
 
   useEffect(() => {
+    axios
+      .get(BASE_URL + "/user/profile", config)
+      .then((res) => dispatch(setUserLogin(res.data)))
+      .catch((err) => console.log(err));
+  }, []);
+
+  useEffect(() => {
     const fetchStudents = async () => {
-      try {
-        if (selectedClassId) {
-          const jwt = localStorage.getItem("jwt");
-          const response = await axios.get(
-            `http://localhost:9999/class/${selectedClassId}/students`,
-            {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${jwt}`,
-              },
-            }
-          );
-          setStudents(response.data);
-        }
-      } catch (error) {
-        console.error("Error fetching students:", error);
+      if (selectedClassId) {
+        await axios
+          .get(`${BASE_URL}/class/${selectedClassId}/students`, config)
+          .then((res) => setStudents(res.data))
+          .catch((err) => console.log(err));
       }
     };
 

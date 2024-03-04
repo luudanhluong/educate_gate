@@ -34,6 +34,8 @@ const groupDetail = async (req, res) => {
           name: matched.mentorId.username,
           email: matched.mentorId.email,
           image: matched.mentorId.image,
+          phoneNumber: matched.mentorId.phoneNumber,
+          degree: matched.mentorId.degree,
         }
       : null;
 
@@ -46,11 +48,12 @@ const groupDetail = async (req, res) => {
       members: members.map((member) => ({
         username: member.username,
         email: member.email,
+        image: member.image,
       })),
       project: group.projectId
         ? {
-            projectId: group.projectId._id,
-            nameProject: group.projectId.name,
+            id: group.projectId._id,
+            name: group.projectId.name,
             description: group.projectId.description,
           }
         : null,
@@ -96,8 +99,50 @@ const getGroupsByClass = async (req, res) => {
   }
 };
 
+const createRandomGroups = async (req, res) => {
+  const { classId, numberOfGroups } = req.body;
+  if (!classId || !numberOfGroups) {
+    return res
+      .status(400)
+      .json({ message: "Class ID and number of groups are required." });
+  }
+
+  try {
+    let users = await User.find({ classId }).exec();
+    if (users.length < numberOfGroups) {
+      return res
+        .status(400)
+        .json({ message: "Number of groups exceeds the number of students." });
+    }
+
+    users = users.sort(() => 0.5 - Math.random());
+    const groupSize = Math.ceil(users.length / numberOfGroups);
+    const groups = [];
+
+    for (let i = 0; i < numberOfGroups; i++) {
+      const project = await groupDAO.createEmptyProject();
+      const group = await groupDAO.createGroup({
+        name: `Group ${i + 1}`,
+        classId,
+        projectId: project._id,
+      });
+
+      for (let j = 0; j < groupSize && users.length; j++) {
+        await groupDAO.addUserToGroup(users.pop()._id, group._id);
+      }
+
+      groups.push(group);
+    }
+
+    res.status(201).json(groups);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
 export default {
   groupDetail,
   getGroupById,
   getGroupsByClass,
+  createRandomGroups,
 };
