@@ -16,7 +16,8 @@ import routes from "routes";
 const GroupDetail = () => {
   const dispatch = useDispatch();
   const jwt = localStorage.getItem("jwt");
-  const { userLogin, active_popup } = useSelector((state) => state.user);
+  const { userLogin } = useSelector((state) => state.user);
+  const { active_popup } = useSelector((state) => state.active);
   const { _id: userId, isLeader } = userLogin || {};
 
   const pid = "65dc4b9c953a7fb8412cf81f";
@@ -70,7 +71,7 @@ const GroupDetail = () => {
       <DefaultNavbar routes={routes} />
       {active_popup && <UpdateProject />}
       <MKBox>
-        <MKButton disabled={!isLeader} onClick={() => dispatch(setActivePopup(true))}>
+        <MKButton disabled={isLeader} onClick={() => dispatch(setActivePopup(true))}>
           Cập nhật dự án
         </MKButton>
         <GroupMembers />
