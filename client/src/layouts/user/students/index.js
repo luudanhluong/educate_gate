@@ -14,6 +14,7 @@ import { setGroup } from "app/slices/groupSlice";
 import { useParams } from "react-router-dom";
 import { setCategories } from "app/slices/categorySlice";
 import { setActivePopup } from "app/slices/activeSlice";
+import MKButton from "components/MKButton";
 
 const GroupDetail = () => {
   const dispatch = useDispatch();
@@ -21,14 +22,14 @@ const GroupDetail = () => {
   const { userLogin } = useSelector((state) => state.user);
   const { group } = useSelector((state) => state.group);
   const { active_popup } = useSelector((state) => state.active);
-  const { _id: userId } = userLogin || {};
+  const { groupId } = useParams();
+  const { _id: userId, isLeader } = userLogin || {};
   const config = {
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${jwt}`,
     },
   };
-  const pid = "65db6ccb6347052204abc8ec";
 
   useEffect(() => {
     axios
@@ -88,7 +89,7 @@ const GroupDetail = () => {
       <DefaultNavbar routes={routes} />
       {active_popup && <UpdateProject />}
       <MKBox>
-        <MKButton disabled={!isLeader} onClick={() => dispatch(setActivePopup(true))}>
+        <MKButton disabled={isLeader} onClick={() => dispatch(setActivePopup(true))}>
           Cập nhật dự án
         </MKButton>
         <GroupMembers />
