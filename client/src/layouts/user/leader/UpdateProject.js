@@ -24,9 +24,9 @@ import { setProjectCategories } from "app/slices/projectSlice";
 
 const UpdateProject = () => {
   const dispatch = useDispatch();
-  const pid = "65dc4b9c953a7fb8412cf81f";
   const { userLogin } = useSelector((state) => state.user);
   const { active_popup } = useSelector((state) => state.active);
+  const { group } = useSelector((state) => state.group);
   const { data: categories } = useSelector((state) => state.category.categories);
   const { projectCategories, project } = useSelector((state) => state.project);
   const { _id: uId } = userLogin;
@@ -34,6 +34,7 @@ const UpdateProject = () => {
     name: "",
     description: "",
   });
+  console.log(group);
   const isActivePopup = () => dispatch(setActivePopup(!active_popup));
   const jwt = localStorage.getItem("jwt");
   const config = {
@@ -43,21 +44,23 @@ const UpdateProject = () => {
     },
   };
   useEffect(() => {
-    getAllProjectCategory(pid);
+    if (group.project) getAllProjectCategory(group.project[0]._id);
     setFormValues({ ...userLogin });
-  }, [userLogin]);
+  }, [userLogin, group]);
   const handleSubmit = (values) => {
-    axios
-      .patch(
-        `${BASE_URL}/project/${pid}/update_project`,
-        {
-          name: values.name,
-          description: values.description,
-        },
-        config
-      )
-      .then(() => {})
-      .catch((err) => console.log(err.message));
+    if (group.project)
+      axios
+        .patch(
+          `${BASE_URL}/project/${group.project[0]._id}/update_project`,
+          {
+            name: values.name,
+            description: values.description,
+          },
+          config
+        )
+        .then(() => {})
+        .catch((err) => console.log(err.message));
+    isActivePopup();
   };
   const validateSchema = Yup.object().shape({
     name: Yup.string().required("Vui lòng nhập họ và tên."),
@@ -189,7 +192,7 @@ const UpdateProject = () => {
                                     `${BASE_URL}/project_category/add_new`,
                                     {
                                       categoryId: catId,
-                                      projectId: pid,
+                                      projectId: group.project[0]._id,
                                     },
                                     {
                                       headers: {
@@ -198,7 +201,7 @@ const UpdateProject = () => {
                                       },
                                     }
                                   )
-                                  .then(() => getAllProjectCategory(pid))
+                                  .then(() => getAllProjectCategory(group.project[0]._id))
                                   .catch((err) => console.log(err.message));
                               }
                             }
@@ -264,7 +267,7 @@ const UpdateProject = () => {
                                             authorization: `Bearer ${jwt}`,
                                           },
                                         })
-                                        .then(() => getAllProjectCategory(pid))
+                                        .then(() => getAllProjectCategory(group.project[0]._id))
                                         .catch((err) => console.log(err.message));
                                     }}
                                     sx={{
