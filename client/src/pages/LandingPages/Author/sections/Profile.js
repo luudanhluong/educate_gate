@@ -52,13 +52,7 @@ function Profile() {
           <Grid container justifyContent="center" sx={{ position: "relative" }} py={6}>
             <Grid item xs={12} md={7} mx={{ xs: "auto", sm: 6, md: 1 }}>
               <MKBox display="flex" justifyContent="space-between" alignItems="center" mb={1}>
-                {username ? (
-                  <MKTypography variant="h3" className={"truncate"}>
-                    {username}
-                  </MKTypography>
-                ) : (
-                  ""
-                )}
+                {username ? <MKTypography variant="h3">{username}</MKTypography> : ""}
                 {phoneNumber ? (
                   <MKBox
                     size="small"
@@ -87,7 +81,6 @@ function Profile() {
                       variant="body2"
                       color="text"
                       sx={{ fontWeight: "400" }}
-                      className={"truncate"}
                     >
                       {preName}
                       {code}
@@ -107,7 +100,6 @@ function Profile() {
                       variant="body2"
                       color="text"
                       sx={{ fontWeight: "400" }}
-                      className={"truncate"}
                     >
                       {email}
                     </MKTypography>
@@ -125,7 +117,6 @@ function Profile() {
                       variant="body2"
                       color="text"
                       sx={{ fontWeight: "400" }}
-                      className={"truncate"}
                     >
                       {gender ? "Nam" : "Nữ"}
                     </MKTypography>
@@ -143,7 +134,6 @@ function Profile() {
                       variant="body2"
                       color="text"
                       sx={{ fontWeight: "400" }}
-                      className={"truncate"}
                     >
                       {getDate(Dob).split("-").reverse().join("-")}
                     </MKTypography>
@@ -161,7 +151,6 @@ function Profile() {
                       variant="body2"
                       color="text"
                       sx={{ fontWeight: "400" }}
-                      className={"truncate"}
                     >
                       {menteeCount}
                     </MKTypography>
@@ -179,7 +168,6 @@ function Profile() {
                       variant="body2"
                       color="text"
                       sx={{ fontWeight: "400" }}
-                      className={"truncate"}
                     >
                       {categories
                         .filter((c) => mentorCategories.some((mc) => mc.categoryId === c._id))
@@ -200,7 +188,6 @@ function Profile() {
                       variant="body2"
                       color="text"
                       sx={{ fontWeight: "400" }}
-                      className={"truncate"}
                     >
                       {degree}
                     </MKTypography>

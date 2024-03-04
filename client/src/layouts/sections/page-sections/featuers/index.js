@@ -12,6 +12,7 @@ import { CSSTransition } from "react-transition-group";
 import { setUserLogin } from "app/slices/userSlice";
 import { BASE_URL } from "utilities/initialValue";
 
+import TemporaryMatching from "./components/FeaturesOne/listTemporaryMaching";
 const TeachersFunction = () => {
   const dispatch = useDispatch();
   const jwt = localStorage.getItem("jwt");
@@ -63,6 +64,7 @@ const TeachersFunction = () => {
       <CSSTransition in={navbarVisible} timeout={300} s classNames="navbar" unmountOnExit>
         <DefaultNavbar routes={routes} transparent sticky />
       </CSSTransition>
+      <TemporaryMatching />
       <MKBox pt={{ xs: 12, sm: 14 }} height="100vh" display="flex" justifyContent="center">
         <Grid container width="80%" display="flex" justifyContent="center">
           <Grid

@@ -237,6 +237,7 @@ const routes = [
   {
     name: "admins",
     dropdown: true,
+    icon: <Icon>article</Icon>,
     description: "Xem tất cả",
     _collapse: [
       {
@@ -265,6 +266,7 @@ const routes = [
   {
     name: "Chức năng",
     dropdown: true,
+    icon: <Icon>article</Icon>,
     description: "Xem tất cả",
     collapse: [
       {

@@ -40,7 +40,7 @@ const Dashboard = () => {
   }, []);
   return (
     <MKBox sx={{ display: "flex", alignItems: "center", height: "100%", gap: "1.5rem" }}>
-      <DefaultNavbar light={true} />
+      <DefaultNavbar light />
       <Semester />
       <Category />
       <MKBox height="100%" width="100%">

@@ -13,21 +13,34 @@ import MKInput from "components/MKInput";
 import DataTableHeadCell from "Tables/DataTableHeadCell";
 import DataTableBodyCell from "Tables/DataTableBodyCell";
 import { useDispatch, useSelector } from "react-redux";
-import { Autocomplete, Icon } from "@mui/material";
-import { setPageNo, setSearchValue, setFilterPreName } from "app/slices/classSlice";
+import { Icon } from "@mui/material";
 import MKPagination from "components/MKPagination";
+import { setMentorChoice } from "app/slices/temporaryMatching";
+import { setPageNo } from "app/slices/temporaryMatching";
+import { setSearchValue } from "app/slices/temporaryMatching";
+import MKButton from "components/MKButton";
 import axios from "axios";
 import { BASE_URL } from "utilities/initialValue";
-import { setclasses } from "app/slices/classSlice";
 import { setActivePopup } from "app/slices/activeSlice";
 
 function DataTable({ table, isSorted, noEndBorder }) {
-  const { listPreName, total, limit } = useSelector((state) => state.class.classes);
-  const limitClass = 10;
-  let qttPage = total ? Math.ceil(total / limit) : 0;
+  const {
+    data: listTemporaryMaching,
+    count,
+    limit,
+  } = useSelector((state) => state.temporaryMatching.temporaryMatching);
+  const { pageNo, mentorChoice } = useSelector((state) => state.temporaryMatching);
+  let qttPage = count ? Math.ceil(count / limit) : 0;
   const columns = useMemo(() => table.columns, [table]);
   const data = useMemo(() => table.rows, [table]);
   const dispatch = useDispatch();
+  const jwt = localStorage.getItem("jwt");
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${jwt}`,
+    },
+  };
   const tableInstance = useTable(
     { columns, data, initialState: { pageIndex: 0 } },
     useGlobalFilter,
@@ -35,56 +48,19 @@ function DataTable({ table, isSorted, noEndBorder }) {
     usePagination
   );
   const { getTableProps, getTableBodyProps, headerGroups, prepareRow, rows, page } = tableInstance;
-  const { filterPreName, searchValue, sort, pageNo } = useSelector((state) => state.class);
-  const getClassInfo = () =>
-    axios
-      .get(
-        `${BASE_URL}/admins/list-classes?item=createdAt&order=${sort}&skip=${
-          pageNo * limitClass
-        }&limit=${limitClass}&preName=${filterPreName}&search=${searchValue}`
-      )
-      .then((response) => {
-        dispatch(setclasses(response.data));
-        return response.data;
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  const handleAddStudentInList = async () => {
-    await axios
-      .get(`${BASE_URL}/admins/add-student-in-class`)
-      .then((response) => {
-        getClassInfo();
-        return response;
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-  const handleDeleteClassEmpty = async () => {
-    await axios
-      .get(`${BASE_URL}/admins/delete-classes-empty`)
-      .then((response) => {
-        getClassInfo();
-        return response;
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-  const handleAddTeacherInClass = async () => {
-    await axios
-      .get(`${BASE_URL}/admins/add-teacher-in-class`)
-      .then((response) => {
-        getClassInfo();
-        return response;
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-  const onSearchChange = (value) => {
-    dispatch(setSearchValue(value));
+  const handleChoiceMentor = () => {
+    if (mentorChoice._id) {
+      axios
+        .post(
+          `${BASE_URL}/matched/add_new`,
+          { mentorId: mentorChoice.mentorId[0]._id, groupId: mentorChoice.groupId },
+          config
+        )
+        .then(() => {})
+        .catch((err) => console.log(err.message));
+      dispatch(setActivePopup(false));
+      dispatch(setMentorChoice({}));
+    }
   };
   return (
     <TableContainer
@@ -94,116 +70,26 @@ function DataTable({ table, isSorted, noEndBorder }) {
         display="flex"
         justifyContent="space-between"
         alignItems="center"
-        p={1}
+        p={3}
         sx={{ gap: "0.5rem" }}
       >
-        <MKBox
-          fontWeight="bold"
-          className="pointer"
-          id={"btn_add_new_list_classes"}
-          py={1}
-          width="9rem"
-          px={2}
-          sx={{
-            "&:hover": {
-              backgroundColor: "rgba(0,0,0,0.1)",
-              borderRadius: "6px",
-            },
-            textAlign: "center",
-            "&:active": {
-              backgroundColor: "rgba(0,0,0,0.2)",
-            },
-            userSelect: "none",
-          }}
-          onClick={() => dispatch(setActivePopup(true))}
-        >
-          Tạo lớp học
-        </MKBox>
-        <MKBox
-          fontWeight="bold"
-          className="pointer"
-          id={"btn_add_new_list_user"}
-          py={1}
-          width="9rem"
-          px={2}
-          sx={{
-            "&:hover": {
-              backgroundColor: "rgba(0,0,0,0.1)",
-              borderRadius: "6px",
-            },
-            textAlign: "center",
-            "&:active": {
-              backgroundColor: "rgba(0,0,0,0.2)",
-            },
-            userSelect: "none",
-          }}
-          onClick={handleAddStudentInList}
-        >
-          Thêm học sinh
-        </MKBox>
-        <MKBox
-          fontWeight="bold"
-          className="pointer"
-          id={"btn_add_new_list_user"}
-          py={1}
-          width="9rem"
-          px={2}
-          sx={{
-            "&:hover": {
-              backgroundColor: "rgba(0,0,0,0.1)",
-              borderRadius: "6px",
-            },
-            "&:active": {
-              backgroundColor: "rgba(0,0,0,0.2)",
-            },
-            textAlign: "center",
-            userSelect: "none",
-          }}
-          onClick={handleDeleteClassEmpty}
-        >
-          Xóa lớp trống
-        </MKBox>
-        <MKBox
-          fontWeight="bold"
-          className="pointer"
-          id={"btn_add_new_list_user"}
-          py={1}
-          width="10rem"
-          px={2}
-          sx={{
-            "&:hover": {
-              backgroundColor: "rgba(0,0,0,0.1)",
-              borderRadius: "6px",
-            },
-            "&:active": {
-              backgroundColor: "rgba(0,0,0,0.2)",
-            },
-            textAlign: "center",
-            userSelect: "none",
-          }}
-          onClick={handleAddTeacherInClass}
-        >
-          Thêm giao viên
-        </MKBox>
-        <MKBox display="flex" alignItems="center">
-          <Autocomplete
-            disableClearable
-            options={listPreName}
-            getOptionLabel={(option) => option}
-            onChange={(e, value) => dispatch(setFilterPreName(value))}
+        <MKBox>
+          <MKButton
+            variant="gradient"
+            color="info"
             size="small"
-            sx={{ width: "8rem" }}
-            renderInput={(params) => <MKInput {...params} label="Lọc theo tên" />}
-          />
+            disabled={!mentorChoice._id}
+            onClick={handleChoiceMentor}
+          >
+            Lưu
+          </MKButton>
         </MKBox>
         <MKBox width="16rem" ml="auto">
           <MKInput
             placeholder="Search email..."
             size="small"
             fullWidth
-            onChange={({ currentTarget }) => {
-              onSearchChange(currentTarget.value);
-            }}
+            onChange={({ currentTarget }) => dispatch(setSearchValue(currentTarget.value))}
           />
         </MKBox>
       </MKBox>
@@ -217,6 +103,7 @@ function DataTable({ table, isSorted, noEndBorder }) {
                   {...column.getHeaderProps(isSorted && column.getSortByToggleProps())}
                   width={column.width ? column.width : "auto"}
                   align={column.align ? column.align : "left"}
+                  sx={{ overflowWrap: "break-word", wordWrap: "break-word" }}
                 >
                   {column.render("Header")}
                 </DataTableHeadCell>
@@ -228,12 +115,18 @@ function DataTable({ table, isSorted, noEndBorder }) {
           {page.map((row, key) => {
             prepareRow(row);
             return (
-              <TableRow key={key} {...row.getRowProps()}>
+              <TableRow
+                onClick={() => dispatch(setMentorChoice(listTemporaryMaching[key]))}
+                key={key}
+                {...row.getRowProps()}
+                sx={{ cursor: "pointer" }}
+              >
                 {row.cells.map((cell, idx) => (
                   <DataTableBodyCell
                     key={idx}
                     noBorder={noEndBorder && rows.length - 1 === key}
                     align={cell.column.align ? cell.column.align : "left"}
+                    width={cell.column.width ? cell.column.width : "auto"}
                     {...cell.getCellProps()}
                   >
                     {cell.render("Cell")}

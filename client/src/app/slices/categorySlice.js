@@ -1,8 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 const initialValue = {
-  categories: {},
+  categories: {
+    data: [],
+  },
   category: {},
-  mentorCategories: {},
+  mentorCategories: {
+    data: [],
+  },
   cid: "",
 };
 const classSlice = createSlice({

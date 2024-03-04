@@ -15,6 +15,8 @@ import {
   projectRouter,
   groupRouter,
   mentorRouter,
+  temporaryMatchingRouter,
+  matchedRouter,
 } from "./routes/index.js";
 
 const app = express();
@@ -46,6 +48,8 @@ app.use("/category", catergoryRouter);
 app.use("/group", catergoryRouter);
 app.use("/mentor_category", mentorCategoriesRouter);
 app.use("/project_category", projectCategoryRouter);
+app.use("/temporary_matching", temporaryMatchingRouter);
+app.use("/matched", matchedRouter);
 app.use("/admins", upload.single("file"), adminsRouter);
 app.listen(port, (req, res) => {
   connectDB();

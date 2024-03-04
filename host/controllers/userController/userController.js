@@ -45,9 +45,10 @@ const userProfile = async (req, res, next) => {
 const userUpdateProfile = async (req, res, next) => {
   const token = req.headers["authorization"];
   if (!token) return res.status(401).send("Access denied");
-  const { username, gender, Dob, phoneNumber, menteeCount, degree } = req.body;
   const tokenString = token.split(" ")[1];
   try {
+    const { username, gender, Dob, phoneNumber, menteeCount, degree } =
+      req.body;
     const decoded = jwt.verify(tokenString, process.env.SECRETKEY);
     req.user = decoded;
     const { _id } = decoded;

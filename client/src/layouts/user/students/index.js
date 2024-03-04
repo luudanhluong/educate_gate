@@ -35,30 +35,28 @@ const GroupDetail = () => {
   useEffect(() => {
     if (pid) {
       axios
-        .get(`${BASE_URL}/project/${pid}`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${jwt}`,
-          },
-        })
-        .then((res) => {
-          dispatch(setProject(res.data));
-        })
+        .get(`${BASE_URL}/project/${pid}`, config)
+        .then((res) => dispatch(setProject(res.data)))
         .catch((err) => console.log(err.message));
     }
 
     if (userId) {
       axios
-        .get(`${BASE_URL}/project_category/${userId}`, {
+        .get(`${BASE_URL}/project_category/${userId}`, config)
+        .then((res) => dispatch(setProjectCategories(res.data)))
+        .catch((err) => console.log(err.message));
+
+      axios
+        .get(`${BASE_URL}/user/profile`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${jwt}`,
           },
         })
         .then((res) => {
-          dispatch(setProjectCategories(res.data));
+          dispatch(setUserLogin(res.data));
         })
-        .catch((err) => console.log(err.message));
+        .catch((err) => console.log(err));
     }
 
     dispatch(setActivePopup(false));
