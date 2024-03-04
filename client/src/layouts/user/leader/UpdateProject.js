@@ -28,7 +28,7 @@ const UpdateProject = () => {
   const { userLogin } = useSelector((state) => state.user);
   const { active_popup } = useSelector((state) => state.active);
   const { data: categories } = useSelector((state) => state.category.categories);
-  const { projectCategories } = useSelector((state) => state.project);
+  const { projectCategories, project } = useSelector((state) => state.project);
   const { _id: uId } = userLogin;
   const [formvalues, setFormValues] = useState({
     name: "",
@@ -36,6 +36,12 @@ const UpdateProject = () => {
   });
   const isActivePopup = () => dispatch(setActivePopup(!active_popup));
   const jwt = localStorage.getItem("jwt");
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${jwt}`,
+    },
+  };
   useEffect(() => {
     getAllProjectCategory(pid);
     setFormValues({ ...userLogin });
@@ -48,17 +54,10 @@ const UpdateProject = () => {
           name: values.name,
           description: values.description,
         },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            authorization: `Bearer ${jwt}`,
-          },
-        }
+        config
       )
       .then(() => {})
-      .catch((err) => {
-        console.log(err.message);
-      });
+      .catch((err) => console.log(err.message));
   };
   const validateSchema = Yup.object().shape({
     name: Yup.string().required("Vui lòng nhập họ và tên."),
@@ -66,12 +65,7 @@ const UpdateProject = () => {
   });
   const getAllProjectCategory = (id) => {
     axios
-      .get(BASE_URL + "/project_category/" + id, {
-        headers: {
-          "Content-Type": "application/json",
-          authorization: `Bearer ${jwt}`,
-        },
-      })
+      .get(BASE_URL + "/project_category/" + id, config)
       .then((res) => dispatch(setProjectCategories(res.data)))
       .catch((err) => console.log(err));
   };
@@ -133,7 +127,7 @@ const UpdateProject = () => {
               <MKBox mb={2}>
                 <Formik
                   validationSchema={validateSchema}
-                  initialValues={formvalues}
+                  initialValues={project || formvalues}
                   onSubmit={(values) => {
                     handleSubmit(values);
                   }}

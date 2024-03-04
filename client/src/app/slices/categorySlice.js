@@ -4,7 +4,9 @@ const initialValue = {
     data: [],
   },
   category: {},
-  mentorCategories: {},
+  mentorCategories: {
+    data: [],
+  },
   cid: "",
 };
 const classSlice = createSlice({

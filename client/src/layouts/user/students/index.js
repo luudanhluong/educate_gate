@@ -21,45 +21,29 @@ const GroupDetail = () => {
   const { _id: userId, isLeader } = userLogin || {};
 
   const pid = "65dc4b9c953a7fb8412cf81f";
-
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${jwt}`,
+    },
+  };
   useEffect(() => {
     if (pid) {
       axios
-        .get(`${BASE_URL}/project/${pid}`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${jwt}`,
-          },
-        })
-        .then((res) => {
-          dispatch(setProject(res.data));
-        })
+        .get(`${BASE_URL}/project/${pid}`, config)
+        .then((res) => dispatch(setProject(res.data)))
         .catch((err) => console.log(err.message));
     }
 
     if (userId) {
       axios
-        .get(`${BASE_URL}/project_category/${userId}`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${jwt}`,
-          },
-        })
-        .then((res) => {
-          dispatch(setProjectCategories(res.data));
-        })
+        .get(`${BASE_URL}/project_category/${userId}`, config)
+        .then((res) => dispatch(setProjectCategories(res.data)))
         .catch((err) => console.log(err.message));
 
       axios
-        .get(`${BASE_URL}/user/profile`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${jwt}`,
-          },
-        })
-        .then((res) => {
-          dispatch(setUserLogin(res.data));
-        })
+        .get(`${BASE_URL}/user/profile`, config)
+        .then((res) => dispatch(setUserLogin(res.data)))
         .catch((err) => console.log(err));
     }
 
@@ -71,7 +55,7 @@ const GroupDetail = () => {
       <DefaultNavbar routes={routes} />
       {active_popup && <UpdateProject />}
       <MKBox>
-        <MKButton disabled={isLeader} onClick={() => dispatch(setActivePopup(true))}>
+        <MKButton disabled={!isLeader} onClick={() => dispatch(setActivePopup(true))}>
           Cập nhật dự án
         </MKButton>
         <GroupMembers />

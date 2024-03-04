@@ -31,6 +31,8 @@ function Author() {
       })
       .then((res) => dispatch(setUserLogin(res.data)))
       .catch((err) => console.log(err));
+  }, [dispatch]);
+  useEffect(() => {
     axios
       .get(BASE_URL + "/category")
       .then((res) => dispatch(setCategories(res.data)))
@@ -46,7 +48,7 @@ function Author() {
         })
         .then((res) => dispatch(setMentorCategories(res.data)))
         .catch((err) => console.log(err.message));
-  }, [dispatch, jwt]);
+  }, [dispatch, userLogin]);
   return (
     <>
       <DefaultNavbar routes={routes} brand="Education Gate" transparent light sticky />

@@ -18,25 +18,32 @@ const updateProject = async (id, project) => {
   try {
     const result = await Project.findByIdAndUpdate(id, project);
     const group = await Group.findOne({ projectId: result._id });
-    const matched = Matched.findOne({ projectId: result._id });
-    if (!matched) {
+    const matched = await Matched.findOne({ groupId: group._id });
+    if (!matched._id) {
       const listProjectCategories = await ProjectCategory.find({
         projectId: result._id,
       });
       const listCategoryId = listProjectCategories.map((c) => c.categoryId);
+      await TemporaryMatching.deleteMany({ groupId: group._id });
       const mentorCategories = await MentorCategory.find({
         categoryId: { $in: listCategoryId },
       });
-      const user = await User.findById(mentorCategories[0].userId);
-      const matchedQtt = await Matched.countDocuments({ mentorId: user._id });
-      const temporaryMatching = mentorCategories.map((c) => ({
-        groupId: group._id,
-        mentorId: c.userId,
-      }));
-      if (user.menteeCount > matchedQtt) {
-        await TemporaryMatching.deleteMany({ groupId: group._id });
-        await TemporaryMatching.insertMany(temporaryMatching);
-      }
+      const userIds = [];
+      mentorCategories.map(async (c) => {
+        if (!userIds.includes(c.userId.toString())) {
+          userIds.push(c.userId.toString());
+          const user = await User.findById(c.userId);
+          const matchedQtt = await Matched.countDocuments({
+            mentorId: c.userId,
+          });
+          if (user.menteeCount > matchedQtt) {
+            await TemporaryMatching.create({
+              groupId: group._id,
+              mentorId: c.userId,
+            });
+          }
+        }
+      });
     }
     return result;
   } catch (error) {

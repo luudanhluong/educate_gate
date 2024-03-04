@@ -9,8 +9,8 @@ const getAllTempararyMatching = async (req, res) => {
     res.status(200).json(
       await temporaryMatching.getAllTempararyMatching(gid, {
         search,
-        skip: Number.parseInt(skip),
-        limit: Number.parseInt(limit),
+        skip: Number.parseInt(skip) || 0,
+        limit: Number.parseInt(limit) || 10,
       })
     );
   } catch (error) {
