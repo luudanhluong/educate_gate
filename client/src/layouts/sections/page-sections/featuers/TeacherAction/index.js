@@ -6,35 +6,63 @@ import MKBox from "components/MKBox";
 import ListOfClasses from "../components/FeaturesOne/listOfClass.js";
 import axios from "axios";
 import { Container, Icon, Typography } from "@mui/material";
+import { BASE_URL } from "utilities/initialValue";
+import Button from "components/MKButton";
 
 const TeacherDefaultNavbar = ({ transparent, light }) => {
   const dispatch = useDispatch();
   const [classes, setClasses] = useState([]);
+  const { userLogin } = useSelector((state) => state.user);
+  const { selectedClassId } = useSelector((state) => state.classOnerTeacher);
+  const jwt = localStorage.getItem("jwt");
 
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${jwt}`,
+    },
+  };
   useEffect(() => {
-    const jwt = localStorage.getItem("jwt");
-
-    if (jwt) {
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${jwt}`,
-        },
-      };
+    if (userLogin.role === 2) {
       axios
-        .get("http://localhost:9999/teacher/classes", config)
+        .get(`${BASE_URL}/teacher/classes`, config)
         .then((response) => {
-          console.log(response.data);
           setClasses(response.data);
         })
         .catch((error) => {
           console.error("Error fetching classes:", error);
         });
+    } else if (userLogin.role === 4) {
+      axios
+        .get(`${BASE_URL}/class/student/${userLogin.classId._id}`, config)
+        .then((response) => {
+          setClasses([response.data]);
+        })
+        .catch((error) => {
+          console.error("Error fetching classes:", error);
+        });
     }
-  }, []);
+  }, [userLogin]);
+
+  const createGroups = () => {
+    const numberOfGroups = prompt("Nhập số lượng nhóm bạn muốn tạo:");
+    if (!selectedClassId || !numberOfGroups) {
+      alert("Vui lòng chọn lớp và nhập số lượng nhóm!");
+      return;
+    }
+
+    axios
+      .post(`${BASE_URL}/group/createRandom`, { classId: selectedClassId, numberOfGroups }, config)
+      .then(() => {
+        alert("Nhóm đã được tạo thành công!");
+      })
+      .catch((error) => {
+        console.error("Error creating groups:", error);
+        alert("Có lỗi xảy ra khi tạo nhóm!");
+      });
+  };
 
   const handleSelectClass = (classId) => {
-    console.log("Selected class 1:", classId);
     dispatch(setClassId(classId));
   };
 
@@ -64,7 +92,7 @@ const TeacherDefaultNavbar = ({ transparent, light }) => {
           fontWeight="bold"
           color={"dark"}
         >
-          Teacher Action
+          {userLogin.role === 2 ? " Teacher Action" : "Student Action"}
         </MKBox>
 
         <MKBox
@@ -94,9 +122,14 @@ const TeacherDefaultNavbar = ({ transparent, light }) => {
           >
             <Icon>donut_large</Icon>
             <Typography component="span" fontSize="0.925rem">
-              List of class
+              {userLogin.role === 2 ? "List of Classes" : "Your Class"}
             </Typography>
           </MKBox>
+          {userLogin.role === 2 && (
+            <Button variant="contained" color="primary" onClick={createGroups}>
+              Tạo Nhóm
+            </Button>
+          )}
           <ListOfClasses classes={classes} onSelectClass={handleSelectClass} />
         </MKBox>
       </MKBox>

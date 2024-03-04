@@ -65,26 +65,10 @@ const userUpdateProfile = async (req, res, next) => {
     res.status(500).json({ error: error.message });
   }
 };
-const checkIsLeader = async (req, res) => {
-  const token = req.headers.authorization?.split(" ")[1];
-  if (!token) return res.status(401).send("Access denied.");
-
-  try {
-    const decoded = jwt.verify(token, process.env.SECRETKEY);
-    const userId = decoded._id;
-
-    const leaderStatus = await userRepository.isLeader(userId);
-
-    res.json({ isLeader: leaderStatus });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
 
 export default {
   addNewUser,
   getUserLogin,
   userProfile,
   userUpdateProfile,
-  checkIsLeader,
 };

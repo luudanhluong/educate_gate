@@ -10,6 +10,7 @@ import {
   Button,
   Paper,
 } from "@mui/material";
+import MKButton from "components/MKButton";
 import axios from "axios";
 import { BASE_URL } from "utilities/initialValue";
 import { useSelector } from "react-redux";
@@ -48,9 +49,17 @@ const GroupMembers = () => {
           ""
         )}
 
-        <Paper elevation={3} sx={{ padding: 2 }}>
-          <Typography variant="h6" sx={{ marginBottom: 1 }}>
-            Group Members ({groupDetails.mentorCount})
+        <Paper
+          elevation={3}
+          style={{
+            padding: "20px",
+            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+            borderRadius: "8px",
+            backgroundColor: "#fff",
+          }}
+        >
+          <Typography variant="h6" sx={{ marginBottom: 1, padding: 1 }}>
+            {groupDetails.groupName} ({groupDetails.mentorCount} Học sinh)
           </Typography>
           <List dense>
             {groupDetails.members

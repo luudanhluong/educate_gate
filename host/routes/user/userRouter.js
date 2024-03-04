@@ -7,5 +7,4 @@ user.get("/profile", userController.userProfile);
 user.patch("/profile/update", userController.userUpdateProfile);
 user.post("/login", userController.getUserLogin);
 user.post("/register", userController.addNewUser);
-user.get("/is-leader", userController.checkIsLeader);
 export default user;
