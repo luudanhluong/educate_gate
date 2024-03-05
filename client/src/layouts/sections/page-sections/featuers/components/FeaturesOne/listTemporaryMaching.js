@@ -11,10 +11,11 @@ import { BASE_URL } from "utilities/initialValue";
 const TemporaryMatching = () => {
   const dispatch = useDispatch();
   const { active_popup } = useSelector((state) => state.active);
+  const { group } = useSelector((state) => state.group);
   const isActivePopup = () => dispatch(setActivePopup(!active_popup));
   const { limit } = useSelector((state) => state.temporaryMatching.temporaryMatching);
   const { pageNo, searchValue } = useSelector((state) => state.temporaryMatching);
-  const gid = "65dc4cf5953a7fb8412cf826";
+  // const gid = "65dc4cf5953a7fb8412cf826";
   const jwt = localStorage.getItem("jwt");
   const config = {
     headers: {
@@ -25,14 +26,14 @@ const TemporaryMatching = () => {
   useEffect(() => {
     axios
       .get(
-        `${BASE_URL}/temporary_matching/${gid}/group?search=${searchValue}&limit=${limit}&skip=${
-          pageNo * limit
-        }`,
+        `${BASE_URL}/temporary_matching/${
+          group._id
+        }/group?search=${searchValue}&limit=${limit}&skip=${pageNo * limit}`,
         config
       )
       .then((res) => dispatch(setTemporaryMatching(res.data)))
       .catch((err) => console.log(err.message));
-  }, [gid, pageNo, searchValue, active_popup]);
+  }, [group._id, pageNo, searchValue, active_popup]);
   return (
     <Modal
       open={active_popup}

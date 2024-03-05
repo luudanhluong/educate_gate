@@ -6,14 +6,11 @@ import MKBox from "components/MKBox";
 import ListOfClasses from "../components/FeaturesOne/listOfClass.js";
 import axios from "axios";
 import { Container, Icon, Typography } from "@mui/material";
-import { setActivePopup } from "app/slices/activeSlice";
 import { BASE_URL } from "utilities/initialValue";
 import Button from "components/MKButton";
 
 const TeacherDefaultNavbar = ({ transparent, light }) => {
   const dispatch = useDispatch();
-  const { active_popup } = useSelector((state) => state.active);
-  const isActivePopup = () => dispatch(setActivePopup(!active_popup));
   const [classes, setClasses] = useState([]);
   const { userLogin } = useSelector((state) => state.user);
   const selectedClassId = useSelector((state) => state.classOnerTeacher.classId);
@@ -135,7 +132,6 @@ const TeacherDefaultNavbar = ({ transparent, light }) => {
           )}
           <ListOfClasses classes={classes} onSelectClass={handleSelectClass} />
         </MKBox>
-        <MKBox onClick={isActivePopup}>views</MKBox>
       </MKBox>
     </Container>
   );

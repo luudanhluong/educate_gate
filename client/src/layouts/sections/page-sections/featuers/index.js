@@ -1,20 +1,18 @@
 import React, { useState, useEffect } from "react";
 import MKBox from "components/MKBox";
 import Grid from "@mui/material/Grid";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import ListOfGroups from "./components/FeaturesOne/listOfGroup";
 import StudentOfClassesList from "./components/FeaturesOne/listOfStudent";
 import axios from "axios";
 import TeacherDefaultNavbar from "./TeacherAction";
 import DefaultNavbar from "Navbars/DefaultNavbar";
 import routes from "routes";
-import { CSSTransition } from "react-transition-group";
-import { setUserLogin } from "app/slices/userSlice";
-import { BASE_URL } from "utilities/initialValue";
+// import { CSSTransition } from "react-transition-group";
 
 import TemporaryMatching from "./components/FeaturesOne/listTemporaryMaching";
+import { BASE_URL } from "utilities/initialValue";
 const TeachersFunction = () => {
-  const dispatch = useDispatch();
   const jwt = localStorage.getItem("jwt");
   const config = {
     headers: {
@@ -25,26 +23,19 @@ const TeachersFunction = () => {
   const selectedClassId = useSelector((state) => state.classOnerTeacher.classId);
   const [students, setStudents] = useState([]);
 
-  const [lastScrollTop, setLastScrollTop] = useState(0);
-  const [navbarVisible, setNavbarVisible] = useState(true);
+  // const [lastScrollTop, setLastScrollTop] = useState(0);
+  // const [navbarVisible, setNavbarVisible] = useState(true);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const currentScrollPos = window.scrollY;
-      setNavbarVisible(lastScrollTop > currentScrollPos || currentScrollPos < 10);
-      setLastScrollTop(currentScrollPos);
-    };
+  // useEffect(() => {
+  //   const handleScroll = () => {
+  //     const currentScrollPos = window.scrollY;
+  //     setNavbarVisible(lastScrollTop > currentScrollPos || currentScrollPos < 10);
+  //     setLastScrollTop(currentScrollPos);
+  //   };
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [lastScrollTop]);
-
-  useEffect(() => {
-    axios
-      .get(BASE_URL + "/user/profile", config)
-      .then((res) => dispatch(setUserLogin(res.data)))
-      .catch((err) => console.log(err));
-  }, []);
+  //   window.addEventListener("scroll", handleScroll);
+  //   return () => window.removeEventListener("scroll", handleScroll);
+  // }, [lastScrollTop]);
 
   useEffect(() => {
     const fetchStudents = async () => {
@@ -61,9 +52,9 @@ const TeachersFunction = () => {
 
   return (
     <>
-      <CSSTransition in={navbarVisible} timeout={300} s classNames="navbar" unmountOnExit>
-        <DefaultNavbar routes={routes} transparent sticky />
-      </CSSTransition>
+      {/* <CSSTransition in={navbarVisible} timeout={300} s classNames="navbar" unmountOnExit> */}
+      <DefaultNavbar routes={routes} transparent />
+      {/* </CSSTransition> */}
       <TemporaryMatching />
       <MKBox pt={{ xs: 12, sm: 14 }} height="100vh" display="flex" justifyContent="center">
         <Grid container width="80%" display="flex" justifyContent="center">

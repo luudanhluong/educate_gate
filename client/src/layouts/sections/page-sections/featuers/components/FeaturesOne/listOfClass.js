@@ -28,15 +28,19 @@ const ListOfClasses = ({ classes = [] }) => {
       setSelectedClassIndex(classes[0]._id);
       axios
         .get(`${BASE_URL}/group/${classes[0]._id}/groups`, headers)
-        .then((res) => dispatch(setGroups(res.data)));
+        .then((res) => dispatch(setGroups(res.data)))
+        .catch((error) => console.log(error.message));
     }
   }, [classes]);
 
   const getClassStudent = (id) => {
-    axios.get(`${BASE_URL}/group/${id}/groups`, headers).then((res) => {
-      dispatch(setGroups(res.data));
-      dispatch(setClassId(id));
-    });
+    axios
+      .get(`${BASE_URL}/group/${id}/groups`, headers)
+      .then((res) => {
+        dispatch(setGroups(res.data));
+        dispatch(setClassId(id));
+      })
+      .catch((error) => console.log(error.message));
     axios
       .get(`${BASE_URL}/class/${id}/students`)
       .then((res) => dispatch(setClassStudent(res.data)))
@@ -45,32 +49,30 @@ const ListOfClasses = ({ classes = [] }) => {
   };
   return (
     <MKBox className="ClassListWrapper" ml={1}>
-      {Array.isArray(classes) && classes.length > 0 ? (
-        classes.map((classItem) => (
-          <Typography
-            component="span"
-            fontSize="0.725rem"
-            px={"0.5rem"}
-            key={classItem._id}
-            className={`ClassItem ${
-              selectedClassIndex === classItem._id ? "gradient-animated" : ""
-            }`}
-            onClick={() => getClassStudent(classItem._id)}
-            style={{
-              padding: selectedClassIndex === classItem._id ? "2px 2px 2px 26px" : "2px",
-              backgroundColor: selectedClassIndex === classItem._id ? "#009879" : "",
-              color: selectedClassIndex === classItem._id ? "#ffffff" : "black",
-              transform: selectedClassIndex === classItem._id ? "scale(1.05)" : "",
-            }}
-          >
-            {classItem.preName}
-            {classItem.code}
-            {classItem.suffName ? `-${classItem.suffName}` : ""}
-          </Typography>
-        ))
-      ) : (
-        <Typography>No classes found.</Typography>
-      )}
+      {classes.map((classItem) => (
+        <Typography
+          component="span"
+          fontSize="0.725rem"
+          px={"0.5rem"}
+          key={classItem._id}
+          className={`ClassItem ${selectedClassIndex === classItem._id ? "gradient-animated" : ""}`}
+          onClick={() => getClassStudent(classItem._id)}
+          style={
+            selectedClassIndex === classItem._id
+              ? {
+                  padding: "2px 2px 2px 26px",
+                  backgroundColor: "#009879",
+                  color: "#ffffff",
+                  transform: "scale(1.05)",
+                }
+              : { padding: "2px", color: "#000" }
+          }
+        >
+          {classItem.preName}
+          {classItem.code}
+          {classItem.suffName ? `-${classItem.suffName}` : ""}
+        </Typography>
+      ))}
     </MKBox>
   );
 };

@@ -17,9 +17,9 @@ const createProject = async (projectData) => {
 const updateProject = async (id, project) => {
   try {
     const result = await Project.findByIdAndUpdate(id, project);
-    const group = await Group.findOne({ projectId: result._id });
+    const group = await Group.findOne({ projectId: id });
     const matched = await Matched.findOne({ groupId: group._id });
-    if (!matched._id) {
+    if (!matched) {
       const listProjectCategories = await ProjectCategory.find({
         projectId: result._id,
       });
