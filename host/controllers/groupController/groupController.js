@@ -54,8 +54,9 @@ const createRandomGroups = async (req, res) => {
         projectId: project._id,
       });
 
-      for (let j = 0; j < groupSize && users.length; j++) {
-        await groupDAO.addUserToGroup(users.pop()._id, group._id);
+      const members = users.splice(0, groupSize);
+      for (const member of members) {
+        await groupDAO.addUserToGroup(member._id, group._id);
       }
 
       groups.push(group);

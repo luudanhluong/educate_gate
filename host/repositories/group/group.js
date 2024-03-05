@@ -104,6 +104,10 @@ const getGroupsByClassId = async (classId) => {
     throw new Error(error.message);
   }
 };
+const getMatchedByGroupId = async (groupId) => {
+  return await Matched.findOne({ groupId }).populate("mentorId").exec();
+};
+
 const createEmptyProject = async () => {
   try {
     const project = new Project({
@@ -144,4 +148,5 @@ export default {
   createEmptyProject,
   createGroup,
   addUserToGroup,
+  getMatchedByGroupId,
 };

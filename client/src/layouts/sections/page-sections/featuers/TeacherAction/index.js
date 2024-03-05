@@ -13,10 +13,9 @@ const TeacherDefaultNavbar = ({ transparent, light }) => {
   const dispatch = useDispatch();
   const [classes, setClasses] = useState([]);
   const { userLogin } = useSelector((state) => state.user);
-  const { selectedClassId } = useSelector((state) => state.classOnerTeacher);
-  console.log(userLogin);
+  const selectedClassId = useSelector((state) => state.classOnerTeacher.classId);
   const jwt = localStorage.getItem("jwt");
-
+  console.log(selectedClassId);
   const config = {
     headers: {
       "Content-Type": "application/json",
