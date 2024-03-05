@@ -23,21 +23,17 @@ const groupDetail = async (req, res) => {
     const matched = await Matched.findOne({ groupId: group._id })
       .populate("mentorId")
       .exec();
-    if (!matched) {
-      return res
-        .status(404)
-        .json({ message: "Matched mentor not found for this group" });
-    }
 
-    const mentor = matched.mentorId
-      ? {
-          name: matched.mentorId.username,
-          email: matched.mentorId.email,
-          image: matched.mentorId.image,
-          phoneNumber: matched.mentorId.phoneNumber,
-          degree: matched.mentorId.degree,
-        }
-      : null;
+    const mentor =
+      matched && matched.mentorId
+        ? {
+            name: matched.mentorId.username,
+            email: matched.mentorId.email,
+            image: matched.mentorId.image,
+            phoneNumber: matched.mentorId.phoneNumber,
+            degree: matched.mentorId.degree,
+          }
+        : null;
 
     const members = await User.find({ groupId: groupId });
     const membersCount = members.length;
@@ -127,8 +123,9 @@ const createRandomGroups = async (req, res) => {
         projectId: project._id,
       });
 
-      for (let j = 0; j < groupSize && users.length; j++) {
-        await groupDAO.addUserToGroup(users.pop()._id, group._id);
+      const members = users.splice(0, groupSize);
+      for (const member of members) {
+        await groupDAO.addUserToGroup(member._id, group._id);
       }
 
       groups.push(group);

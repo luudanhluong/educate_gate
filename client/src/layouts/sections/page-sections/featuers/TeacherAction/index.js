@@ -16,9 +16,9 @@ const TeacherDefaultNavbar = ({ transparent, light }) => {
   const isActivePopup = () => dispatch(setActivePopup(!active_popup));
   const [classes, setClasses] = useState([]);
   const { userLogin } = useSelector((state) => state.user);
-  const { selectedClassId } = useSelector((state) => state.classOnerTeacher);
+  const selectedClassId = useSelector((state) => state.classOnerTeacher.classId);
   const jwt = localStorage.getItem("jwt");
-
+  console.log(selectedClassId);
   const config = {
     headers: {
       "Content-Type": "application/json",

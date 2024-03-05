@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { setClassStudent } from "../../../../../../app/slices/classOnerTeacherSlice";
+import { setClassId, setClassStudent } from "../../../../../../app/slices/classOnerTeacherSlice";
 import PropTypes from "prop-types";
 import MKBox from "components/MKBox";
 import "./studentList.css";
@@ -33,9 +33,10 @@ const ListOfClasses = ({ classes = [] }) => {
   }, [classes]);
 
   const getClassStudent = (id) => {
-    axios
-      .get(`${BASE_URL}/group/${id}/groups`, headers)
-      .then((res) => dispatch(setGroups(res.data)));
+    axios.get(`${BASE_URL}/group/${id}/groups`, headers).then((res) => {
+      dispatch(setGroups(res.data));
+      dispatch(setClassId(id));
+    });
     axios
       .get(`${BASE_URL}/class/${id}/students`)
       .then((res) => dispatch(setClassStudent(res.data)))
