@@ -21,6 +21,7 @@ const TeacherDefaultNavbar = ({ transparent, light }) => {
       Authorization: `Bearer ${jwt}`,
     },
   };
+
   useEffect(() => {
     if (userLogin.role === 2) {
       axios
@@ -64,7 +65,7 @@ const TeacherDefaultNavbar = ({ transparent, light }) => {
   const handleSelectClass = (classId) => {
     dispatch(setClassId(classId));
   };
-
+  console.log(selectedClassId);
   return (
     <Container
       width={"282px"}

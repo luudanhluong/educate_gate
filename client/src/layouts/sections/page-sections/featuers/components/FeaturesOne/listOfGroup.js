@@ -28,7 +28,6 @@ const ListOfGroups = () => {
     );
   }
 
-  console.log(groupData);
   return (
     <>
       <style>

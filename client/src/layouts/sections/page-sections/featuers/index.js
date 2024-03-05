@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import MKBox from "components/MKBox";
 import Grid from "@mui/material/Grid";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import ListOfGroups from "./components/FeaturesOne/listOfGroup";
 import StudentOfClassesList from "./components/FeaturesOne/listOfStudent";
 import axios from "axios";
@@ -11,16 +11,25 @@ import routes from "routes";
 
 import TemporaryMatching from "./components/FeaturesOne/listTemporaryMaching";
 import { BASE_URL } from "utilities/initialValue";
+import { setUserLogin } from "app/slices/userSlice";
 const TeachersFunction = () => {
+  const dispatch = useDispatch();
   const jwt = localStorage.getItem("jwt");
+  const selectedClassId = useSelector((state) => state.classOnerTeacher.classId);
+  const [students, setStudents] = useState([]);
   const config = {
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${jwt}`,
     },
   };
-  const selectedClassId = useSelector((state) => state.classOnerTeacher.classId);
-  const [students, setStudents] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get(BASE_URL + "/user/profile", config)
+      .then((res) => dispatch(setUserLogin(res.data)))
+      .catch((err) => console.log(err));
+  });
 
   useEffect(() => {
     const fetchStudents = async () => {
