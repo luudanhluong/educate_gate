@@ -29,7 +29,7 @@ const TeachersFunction = () => {
       .get(BASE_URL + "/user/profile", config)
       .then((res) => dispatch(setUserLogin(res.data)))
       .catch((err) => console.log(err));
-  });
+  }, []);
 
   useEffect(() => {
     const fetchStudents = async () => {
