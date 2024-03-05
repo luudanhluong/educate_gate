@@ -8,7 +8,6 @@ import axios from "axios";
 import TeacherDefaultNavbar from "./TeacherAction";
 import DefaultNavbar from "Navbars/DefaultNavbar";
 import routes from "routes";
-// import { CSSTransition } from "react-transition-group";
 
 import TemporaryMatching from "./components/FeaturesOne/listTemporaryMaching";
 import { BASE_URL } from "utilities/initialValue";
@@ -22,20 +21,6 @@ const TeachersFunction = () => {
   };
   const selectedClassId = useSelector((state) => state.classOnerTeacher.classId);
   const [students, setStudents] = useState([]);
-
-  // const [lastScrollTop, setLastScrollTop] = useState(0);
-  // const [navbarVisible, setNavbarVisible] = useState(true);
-
-  // useEffect(() => {
-  //   const handleScroll = () => {
-  //     const currentScrollPos = window.scrollY;
-  //     setNavbarVisible(lastScrollTop > currentScrollPos || currentScrollPos < 10);
-  //     setLastScrollTop(currentScrollPos);
-  //   };
-
-  //   window.addEventListener("scroll", handleScroll);
-  //   return () => window.removeEventListener("scroll", handleScroll);
-  // }, [lastScrollTop]);
 
   useEffect(() => {
     const fetchStudents = async () => {
@@ -52,9 +37,7 @@ const TeachersFunction = () => {
 
   return (
     <>
-      {/* <CSSTransition in={navbarVisible} timeout={300} s classNames="navbar" unmountOnExit> */}
       <DefaultNavbar routes={routes} transparent />
-      {/* </CSSTransition> */}
       <TemporaryMatching />
       <MKBox pt={{ xs: 12, sm: 14 }} height="100vh" display="flex" justifyContent="center">
         <Grid container width="80%" display="flex" justifyContent="center">

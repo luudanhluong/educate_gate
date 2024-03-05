@@ -14,6 +14,7 @@ const TeacherDefaultNavbar = ({ transparent, light }) => {
   const [classes, setClasses] = useState([]);
   const { userLogin } = useSelector((state) => state.user);
   const { selectedClassId } = useSelector((state) => state.classOnerTeacher);
+  console.log(userLogin);
   const jwt = localStorage.getItem("jwt");
 
   const config = {
