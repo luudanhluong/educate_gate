@@ -14,7 +14,8 @@ import { setGroup } from "app/slices/groupSlice";
 import { useParams } from "react-router-dom";
 import { setCategories } from "app/slices/categorySlice";
 import { setActivePopup } from "app/slices/activeSlice";
-import MKButton from "components/MKButton";
+import bgImage from "assets/images/city-profile.jpg";
+import Card from "@mui/material/Card";
 
 const GroupDetail = () => {
   const dispatch = useDispatch();
@@ -23,7 +24,7 @@ const GroupDetail = () => {
   const { group } = useSelector((state) => state.group);
   const { active_popup } = useSelector((state) => state.active);
   const { groupId } = useParams();
-  const { _id: userId, isLeader } = userLogin || {};
+  const { _id: userId } = userLogin || {};
   const config = {
     headers: {
       "Content-Type": "application/json",
@@ -88,11 +89,35 @@ const GroupDetail = () => {
     <>
       <DefaultNavbar routes={routes} />
       {active_popup && <UpdateProject />}
-      <MKBox>
-        <MKButton disabled={isLeader} onClick={() => dispatch(setActivePopup(true))}>
-          Cập nhật dự án
-        </MKButton>
-        <GroupMembers />
+      <MKBox bgColor="white">
+        <MKBox
+          minHeight="25rem"
+          width="100%"
+          sx={{
+            backgroundImage: ({ functions: { linearGradient, rgba }, palette: { gradients } }) =>
+              `${linearGradient(
+                rgba(gradients.dark.main, 0.8),
+                rgba(gradients.dark.state, 0.8)
+              )}, url(${bgImage})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            display: "grid",
+            placeItems: "center",
+          }}
+        />
+        <Card
+          sx={{
+            p: 2,
+            mx: { xs: 2, lg: 3 },
+            mt: -8,
+            mb: 4,
+            backgroundColor: ({ palette: { white }, functions: { rgba } }) => rgba(white.main, 0.8),
+            backdropFilter: "saturate(200%) blur(30px)",
+            boxShadow: ({ boxShadows: { xxl } }) => xxl,
+          }}
+        >
+          <GroupMembers />
+        </Card>
       </MKBox>
     </>
   );
