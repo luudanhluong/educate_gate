@@ -47,7 +47,7 @@ function Presentation() {
         }}
       >
         <Container>
-          <Grid container item xs={12} lg={7} justifyContent="center" mx="auto">
+          <Grid container item xs={12} lg={10} justifyContent="center" mx="auto">
             <MKTypography
               variant="h1"
               color="white"
@@ -59,7 +59,7 @@ function Presentation() {
                 },
               })}
             >
-              Material Kit 2 React{" "}
+              Education Gate{" "}
             </MKTypography>
             <MKTypography
               variant="body1"
@@ -68,8 +68,8 @@ function Presentation() {
               px={{ xs: 6, lg: 12 }}
               mt={1}
             >
-              Free & Open Source Web UI Kit built over ReactJS &amp; MUI. Join over 1.6 million
-              developers around the world.
+              Nơi truy cập mà người dùng có thể tiếp cận được những người có chuyên môn về các chủ
+              đề mà dự án bạn có hướng dẫn &amp; giúp đỡ bạn đến với thành công.
             </MKTypography>
           </Grid>
         </Container>
