@@ -5,6 +5,7 @@ const initialValue = {
   active_popup: false,
   active_popup_add_class_list: false,
   active_create_class: true,
+  active_create_group: false,
 };
 const storiesSlice = createSlice({
   name: "active",
@@ -25,6 +26,9 @@ const storiesSlice = createSlice({
     setActive: (state, action) => {
       state.active = action.payload;
     },
+    setActivePopupCreateGroup: (state, action) => {
+      state.active_create_group = action.payload;
+    },
   },
 });
 
@@ -35,5 +39,6 @@ export const {
   setActiveCreateClass,
   setActivePopup,
   setActivePopupAddClassList,
+  setActivePopupCreateGroup,
 } = actions;
 export default reducer;

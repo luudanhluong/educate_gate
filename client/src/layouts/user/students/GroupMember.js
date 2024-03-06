@@ -96,9 +96,7 @@ const GroupMembers = () => {
                     )}
                     <ListItemText
                       primary={
-                        <Typography variant="body1" style={{ fontFamily: "inherit" }}>
-                          {member.username}
-                        </Typography>
+                        <Typography style={{ fontFamily: "inherit" }}>{member.username}</Typography>
                       }
                       secondary={
                         <Typography variant="body2" style={{ color: "#666", fontStyle: "italic" }}>
@@ -115,7 +113,7 @@ const GroupMembers = () => {
       </Box>
 
       <Box marginTop={2} sx={{ width: "30%" }}>
-        {groupDetails.mentorDetails && (
+        {groupDetails.mentorDetails && groupDetails.mentorDetails.length > 0 && (
           <Box
             elevation={3}
             sx={{
@@ -126,13 +124,13 @@ const GroupMembers = () => {
             }}
           >
             <Avatar
-              src={groupDetails.mentorDetails.image}
+              src={groupDetails.mentorDetails[0].image}
               sx={{ width: 56, height: 56, marginX: "auto" }}
             />
-            <Typography variant="subtitle1">{groupDetails.mentorDetails[0]?.username}</Typography>
-            <Typography variant="body2">{groupDetails.mentorDetails[0]?.email}</Typography>
-            <Typography variant="body2">{groupDetails.mentorDetails[0]?.phoneNumber}</Typography>
-            <Typography variant="body2">{groupDetails.mentorDetails[0]?.degree}</Typography>
+            <Typography variant="subtitle1">{groupDetails.mentorDetails[0].username}</Typography>
+            <Typography variant="body2">{groupDetails.mentorDetails[0].email}</Typography>
+            <Typography variant="body2">{groupDetails.mentorDetails[0].phoneNumber}</Typography>
+            <Typography variant="body2">{groupDetails.mentorDetails[0].degree}</Typography>
           </Box>
         )}
       </Box>
