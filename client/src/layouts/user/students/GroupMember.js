@@ -48,7 +48,7 @@ const GroupMembers = () => {
             style={{
               padding: "20px",
               marginBottom: "20px",
-              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+              boxShadow: "0 0.5px 4px 1px rgba(0, 0, 0, 0.1)",
               borderRadius: "8px",
               position: "relative",
             }}
@@ -78,7 +78,7 @@ const GroupMembers = () => {
         <Box
           elevation={3}
           style={{
-            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+            boxShadow: "0 0.5px 4px 1px rgba(0, 0, 0, 0.1)",
             borderRadius: "8px",
           }}
         >
@@ -120,7 +120,7 @@ const GroupMembers = () => {
               padding: 2,
               textAlign: "center",
               marginBottom: 2,
-              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+              boxShadow: "0 0.5px 4px 1px rgba(0, 0, 0, 0.1)",
             }}
           >
             <Avatar
