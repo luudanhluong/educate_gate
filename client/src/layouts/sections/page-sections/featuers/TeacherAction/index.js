@@ -69,9 +69,11 @@ const TeacherDefaultNavbar = ({ transparent, light }) => {
     handleClose();
   };
   const handleExcelGroup = () => {};
+
   const handleOutsideClick = (event) => {
     if (anchorEl && !anchorEl.contains(event.target)) {
       setMenuOpen(false);
+      setAnchorEl(null);
     }
   };
   return (
