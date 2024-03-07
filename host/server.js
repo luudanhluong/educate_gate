@@ -2,6 +2,7 @@ import express, { json } from "express";
 import dotnv from "dotenv";
 import cors from "cors";
 import multer from "multer";
+import createError from "http-errors";
 import path from "path";
 import connectDB from "./database.js";
 import {
@@ -51,6 +52,17 @@ app.use("/project_category", projectCategoryRouter);
 app.use("/temporary_matching", temporaryMatchingRouter);
 app.use("/matched", matchedRouter);
 app.use("/admins", upload.single("file"), adminsRouter);
+app.use(async (req, res, next) => {
+  next(createError.NotFound());
+});
+app.use((err, req, res, next) => {
+  res.status(err.status || 500);
+  res.status({
+    error: err.status || 500,
+    message: err.message,
+  });
+});
+
 app.listen(port, (req, res) => {
   connectDB();
   console.log(`listening on ${port}`);

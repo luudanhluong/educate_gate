@@ -82,7 +82,7 @@ const Semester = () => {
             textAlign="center"
           >
             <MKTypography variant="h4" fontWeight="medium" color="white" my={1}>
-              Thêm học kì mới
+              Thêm học kỳ mới
             </MKTypography>
           </MKBox>
           <MKBox py={2} px={1}>

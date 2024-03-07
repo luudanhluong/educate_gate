@@ -1,4 +1,4 @@
-import { FormControl, Icon, MenuItem, Select } from "@mui/material";
+import { FormControl, Icon, MenuItem, Select, Typography } from "@mui/material";
 import DefaultNavbar from "admin/Navbar/DefaultNavbar";
 import { setCategories } from "app/slices/categorySlice";
 import axios from "axios";
@@ -48,7 +48,35 @@ const Dashboard = () => {
           <MKBox width="9rem">
             <FormControl fullWidth pb={1}>
               <Select id="select-gender" name="gender" value={" "}>
-                <MenuItem value={" "}>Thêm kỳ học</MenuItem>
+                <MenuItem
+                  value={" "}
+                  sx={{ display: "flex", gap: "0.5rem" }}
+                  onClick={() => {
+                    isActivePopup({ type: "open", payload: "category" });
+                    dispatch(setCategory({}));
+                  }}
+                >
+                  <MKBox
+                    sx={{
+                      display: "flex",
+                      justifyContent: "center",
+                      gap: "0.5rem",
+                    }}
+                  >
+                    <Typography component={"span"} fontSize={"0.825rem"}>
+                      Thêm kỳ học
+                    </Typography>
+                    <MKBox
+                      sx={{
+                        lineHeight: 1,
+                        color: "#4558ff",
+                        fontSize: "20px",
+                      }}
+                    >
+                      <Icon>add</Icon>
+                    </MKBox>
+                  </MKBox>
+                </MenuItem>
                 {semesters
                   ? semesters.map((s) => (
                       <MenuItem
@@ -63,27 +91,41 @@ const Dashboard = () => {
                       </MenuItem>
                     ))
                   : ""}
-                <MenuItem
-                  onClick={() => {
-                    isActivePopup({ type: "open", payload: "semester" });
-                    dispatch(setSemester({}));
-                  }}
-                  sx={{
-                    display: "flex",
-                    justifyContent: "center",
-                    color: "#4558ff",
-                    fontSize: "20px",
-                  }}
-                >
-                  <Icon>add</Icon>
-                </MenuItem>
               </Select>
             </FormControl>
           </MKBox>
           <MKBox width="9rem">
             <FormControl fullWidth>
               <Select id="select-gender" name="gender" value={" "}>
-                <MenuItem value={" "}>Thêm thể loại</MenuItem>
+                <MenuItem
+                  value={" "}
+                  sx={{ display: "flex", gap: "0.5rem" }}
+                  onClick={() => {
+                    isActivePopup({ type: "open", payload: "category" });
+                    dispatch(setCategory({}));
+                  }}
+                >
+                  <MKBox
+                    sx={{
+                      display: "flex",
+                      justifyContent: "center",
+                      gap: "0.5rem",
+                    }}
+                  >
+                    <Typography component={"span"} fontSize={"0.825rem"}>
+                      Thêm Thể loại
+                    </Typography>
+                    <MKBox
+                      sx={{
+                        lineHeight: 1,
+                        color: "#4558ff",
+                        fontSize: "20px",
+                      }}
+                    >
+                      <Icon>add</Icon>
+                    </MKBox>
+                  </MKBox>
+                </MenuItem>
                 {categories
                   ? categories.map((c) => (
                       <MenuItem
@@ -99,20 +141,6 @@ const Dashboard = () => {
                       </MenuItem>
                     ))
                   : ""}
-                <MenuItem
-                  onClick={() => {
-                    isActivePopup({ type: "open", payload: "category" });
-                    dispatch(setCategory({}));
-                  }}
-                  sx={{
-                    display: "flex",
-                    justifyContent: "center",
-                    color: "#4558ff",
-                    fontSize: "20px",
-                  }}
-                >
-                  <Icon>add</Icon>
-                </MenuItem>
               </Select>
             </FormControl>
           </MKBox>
