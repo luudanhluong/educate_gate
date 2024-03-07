@@ -35,14 +35,6 @@ const loginUser = async ({ email, password }) => {
     throw new Error(e.message.toString());
   }
 };
-const userProfile = async (id) => {
-  try {
-    const user = await User.findOne({ _id: id }).populate("classId").exec();
-    return user;
-  } catch (error) {
-    throw new Error(error.message);
-  }
-};
 const userUpdateProfile = async (
   id,
   { username, gender, Dob, phoneNumber, menteeCount, degree }
@@ -74,15 +66,39 @@ const findUserById = async (id) => {
     const user = await User.findOne({ _id: id }).populate("classId").exec();
     return user;
   } catch (error) {
-    console.error("Error querying database:", error);
-    throw new Error("Internal Server Error");
+    throw new Error(error.message);
   }
 };
-
+const getMentors = async () => {
+  try {
+    const result = await User.find({ role: 3 }).exec();
+    return result;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+const getTeachers = async () => {
+  try {
+    const result = await User.find({ role: 2 }).exec();
+    return result;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+const getStudents = async () => {
+  try {
+    const result = await User.find({ role: 4 }).exec();
+    return result;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
 export default {
   createNewUser,
   loginUser,
-  userProfile,
   userUpdateProfile,
   findUserById,
+  getMentors,
+  getStudents,
+  getTeachers,
 };

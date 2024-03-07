@@ -44,14 +44,14 @@ const UpdateProject = () => {
     },
   };
   useEffect(() => {
-    if (group.project) getAllProjectCategory(group.project[0]._id);
+    if (group.project) getAllProjectCategory(group.project[0]?._id);
     setFormValues({ ...userLogin });
   }, [userLogin, group]);
   const handleSubmit = (values) => {
     if (group.project)
       axios
         .patch(
-          `${BASE_URL}/project/${group.project[0]._id}/update_project`,
+          `${BASE_URL}/project/${group.project[0]?._id}/update_project`,
           {
             name: values.name,
             description: values.description,
@@ -192,7 +192,7 @@ const UpdateProject = () => {
                                     `${BASE_URL}/project_category/add_new`,
                                     {
                                       categoryId: catId,
-                                      projectId: group.project[0]._id,
+                                      projectId: group.project[0]?._id,
                                     },
                                     {
                                       headers: {
@@ -201,7 +201,7 @@ const UpdateProject = () => {
                                       },
                                     }
                                   )
-                                  .then(() => getAllProjectCategory(group.project[0]._id))
+                                  .then(() => getAllProjectCategory(group.project[0]?._id))
                                   .catch((err) => console.log(err.message));
                               }
                             }
@@ -267,7 +267,7 @@ const UpdateProject = () => {
                                             authorization: `Bearer ${jwt}`,
                                           },
                                         })
-                                        .then(() => getAllProjectCategory(group.project[0]._id))
+                                        .then(() => getAllProjectCategory(group.project[0]?._id))
                                         .catch((err) => console.log(err.message));
                                     }}
                                     sx={{

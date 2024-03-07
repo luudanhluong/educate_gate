@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { List, ListItem, ListItemText, Typography, Avatar, Box } from "@mui/material";
 import axios from "axios";
@@ -10,10 +10,10 @@ import "../../sections/page-sections/featuers/components/FeaturesOne/studentList
 
 const GroupMembers = () => {
   const dispatch = useDispatch();
-  const [groupDetails, setGroupDetails] = useState({});
+  // const [groupDetails, setGroupDetails] = useState({});
+  const { group: groupDetails } = useSelector((state) => state.group);
   const { userLogin } = useSelector((state) => state.user);
   const { groupId } = useParams();
-  console.log(userLogin);
   const jwt = localStorage.getItem("jwt");
   const config = {
     headers: {
@@ -24,8 +24,8 @@ const GroupMembers = () => {
   useEffect(() => {
     axios
       .get(`${BASE_URL}/group/${groupId}`, config)
-      .then((res) => {
-        setGroupDetails(res.data[0]);
+      .then(() => {
+        // setGroupDetails(res.data[0]);
       })
       .catch((err) => console.log(err));
   }, []);

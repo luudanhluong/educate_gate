@@ -1,4 +1,4 @@
-import userRepository from "../../repositories/user/index.js";
+import userDAO from "../../repositories/user/index.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotnv from "dotenv";
@@ -9,7 +9,7 @@ const addNewUser = async (req, res, next) => {
     const { username, password, email, role } = req.body;
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
-    const result = await userRepository.createNewUser({
+    const result = await userDAO.createNewUser({
       username,
       email,
       password: hashedPassword,
@@ -23,7 +23,7 @@ const addNewUser = async (req, res, next) => {
 const getUserLogin = async (req, res, next) => {
   try {
     const { email, password } = req.body;
-    const result = await userRepository.loginUser({ email, password });
+    const result = await userDAO.loginUser({ email, password });
     res.status(201).json(result);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -36,7 +36,7 @@ const userProfile = async (req, res, next) => {
   try {
     const decoded = jwt.verify(tokenString, process.env.SECRETKEY);
     req.user = decoded;
-    const result = await userRepository.userProfile(decoded._id);
+    const result = await userDAO.findUserById(decoded._id);
     res.status(201).json(result);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -52,7 +52,7 @@ const userUpdateProfile = async (req, res, next) => {
     const decoded = jwt.verify(tokenString, process.env.SECRETKEY);
     req.user = decoded;
     const { _id } = decoded;
-    const result = await userRepository.userUpdateProfile(_id, {
+    const result = await userDAO.userUpdateProfile(_id, {
       username,
       gender,
       Dob,
@@ -66,9 +66,40 @@ const userUpdateProfile = async (req, res, next) => {
   }
 };
 
+const getMentors = async (req, res, next) => {
+  const token = req.headers["authorization"];
+  if (!token) return res.status(401).send("Access denied");
+  try {
+    res.send(await userDAO.getMentors());
+  } catch (error) {
+    next(error);
+  }
+};
+const getStudents = async (req, res, next) => {
+  const token = req.headers["authorization"];
+  if (!token) return res.status(401).send("Access denied");
+  try {
+    res.send(await userDAO.getStudents());
+  } catch (error) {
+    next(error);
+  }
+};
+const getTeachers = async (req, res, next) => {
+  const token = req.headers["authorization"];
+  if (!token) return res.status(401).send("Access denied");
+  try {
+    res.send(await userDAO.getTeachers());
+  } catch (error) {
+    next(error);
+  }
+};
+
 export default {
   addNewUser,
   getUserLogin,
   userProfile,
   userUpdateProfile,
+  getMentors,
+  getTeachers,
+  getStudents,
 };

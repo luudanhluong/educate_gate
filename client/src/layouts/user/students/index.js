@@ -34,17 +34,11 @@ const GroupDetail = () => {
 
   useEffect(() => {
     axios
-      .get(BASE_URL + "/user/profile", config)
-      .then((res) => dispatch(setUserLogin(res.data)))
-      .catch((err) => console.log(err));
-  }, []);
-  useEffect(() => {
-    axios
       .get(`${BASE_URL}/group/${groupId}`, config)
-      .then((res) => setGroup(res.data[0]))
+      .then((res) => dispatch(setGroup(res.data[0])))
       .catch((err) => console.log(err));
     // dispatch(setProjectCategories([]));
-  }, [groupId]);
+  }, [groupId, dispatch]);
   useEffect(() => {
     axios
       .get(`${BASE_URL}/user/profile`, config)
@@ -54,18 +48,22 @@ const GroupDetail = () => {
       .get(`${BASE_URL}/category`, config)
       .then((res) => dispatch(setCategories(res.data)))
       .catch((err) => console.log(err));
+    axios
+      .get(BASE_URL + "/user/profile", config)
+      .then((res) => dispatch(setUserLogin(res.data)))
+      .catch((err) => console.log(err));
   }, [dispatch]);
   useEffect(() => {
     if (group.project) {
       axios
-        .get(`${BASE_URL}/project/${group.project[0]._id}`, config)
+        .get(`${BASE_URL}/project/${group.project[0]?._id}`, config)
         .then((res) => {
           console.log(res.data);
           dispatch(setProject(res.data));
         })
         .catch((err) => console.log(err.message));
       axios
-        .get(`${BASE_URL}/project_category/${group.project[0]._id}`, config)
+        .get(`${BASE_URL}/project_category/${group.project[0]?._id}`, config)
         .then((res) => dispatch(setProjectCategories(res.data)))
         .catch((err) => console.log(err.message));
 

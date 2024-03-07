@@ -1,0 +1,11 @@
+GET http://localhost:9999/user/students
+Authorization: Bearse eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWJlNjkyYmFmZTc5ODk0MmU5NzdjMzMiLCJpYXQiOjE3MDk2MjIxODYsImV4cCI6MTcwOTY2NTM4Nn0.cbyum603HXE9yXgFHv4pB3bJmFlxqgULC82UeCO11Pw
+###
+GET http://localhost:9999/user/mentors
+Authorization: Bearse eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWJlNjkyYmFmZTc5ODk0MmU5NzdjMzMiLCJpYXQiOjE3MDk2MjIxODYsImV4cCI6MTcwOTY2NTM4Nn0.cbyum603HXE9yXgFHv4pB3bJmFlxqgULC82UeCO11Pw
+###
+GET http://localhost:9999/user/teachers
+Authorization: Bearse eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWJlNjkyYmFmZTc5ODk0MmU5NzdjMzMiLCJpYXQiOjE3MDk2MjIxODYsImV4cCI6MTcwOTY2NTM4Nn0.cbyum603HXE9yXgFHv4pB3bJmFlxqgULC82UeCO11Pw
+
+###
+GET http://localhost:9999/category
