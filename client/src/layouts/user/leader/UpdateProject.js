@@ -34,7 +34,6 @@ const UpdateProject = () => {
     name: "",
     description: "",
   });
-  console.log(group);
   const isActivePopup = () => dispatch(setActivePopup(!active_popup));
   const jwt = localStorage.getItem("jwt");
   const config = {

@@ -57,10 +57,7 @@ const GroupDetail = () => {
     if (group.project) {
       axios
         .get(`${BASE_URL}/project/${group.project[0]?._id}`, config)
-        .then((res) => {
-          console.log(res.data);
-          dispatch(setProject(res.data));
-        })
+        .then((res) => dispatch(setProject(res.data)))
         .catch((err) => console.log(err.message));
       axios
         .get(`${BASE_URL}/project_category/${group.project[0]?._id}`, config)
@@ -68,18 +65,10 @@ const GroupDetail = () => {
         .catch((err) => console.log(err.message));
 
       axios
-        .get(`${BASE_URL}/user/profile`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${jwt}`,
-          },
-        })
-        .then((res) => {
-          dispatch(setUserLogin(res.data));
-        })
+        .get(`${BASE_URL}/user/profile`, config)
+        .then((res) => dispatch(setUserLogin(res.data)))
         .catch((err) => console.log(err));
     }
-
     dispatch(setActivePopup(false));
   }, [dispatch, jwt, userId, group, groupId]);
 
