@@ -7,14 +7,19 @@ import ListOfClasses from "../components/FeaturesOne/listOfClass.js";
 import axios from "axios";
 import { Container, Icon, Typography } from "@mui/material";
 import { BASE_URL } from "utilities/initialValue";
-import Button from "components/MKButton";
+import { setActivePopupCreateGroup } from "app/slices/activeSlice";
+import CreateGroupModal from "../components/FeaturesOne/CreateGroupModal ";
+import { Menu, MenuItem } from "@mui/material";
 
 const TeacherDefaultNavbar = ({ transparent, light }) => {
   const dispatch = useDispatch();
+  const { active_create_group } = useSelector((state) => state.active);
   const [classes, setClasses] = useState([]);
   const { userLogin } = useSelector((state) => state.user);
-  const selectedClassId = useSelector((state) => state.classOnerTeacher.classId);
   const jwt = localStorage.getItem("jwt");
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [menuOpen, setMenuOpen] = useState(false);
+  console.log(active_create_group);
   const config = {
     headers: {
       "Content-Type": "application/json",
@@ -42,30 +47,33 @@ const TeacherDefaultNavbar = ({ transparent, light }) => {
           console.error("Error fetching classes:", error);
         });
     }
+    window.addEventListener("click", handleOutsideClick);
+    return () => {
+      window.removeEventListener("click", handleOutsideClick);
+    };
   }, [userLogin]);
-
-  const createGroups = () => {
-    const numberOfGroups = prompt("Nhập số lượng nhóm bạn muốn tạo:");
-    if (!selectedClassId || !numberOfGroups) {
-      alert("Vui lòng chọn lớp và nhập số lượng nhóm!");
-      return;
-    }
-
-    axios
-      .post(`${BASE_URL}/group/createRandom`, { classId: selectedClassId, numberOfGroups }, config)
-      .then(() => {
-        alert("Nhóm đã được tạo thành công!");
-      })
-      .catch((error) => {
-        console.error("Error creating groups:", error);
-        alert("Có lỗi xảy ra khi tạo nhóm!");
-      });
-  };
 
   const handleSelectClass = (classId) => {
     dispatch(setClassId(classId));
   };
-  console.log(selectedClassId);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+    setMenuOpen(true);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+    setMenuOpen(false);
+  };
+  const handleRandomGroup = () => {
+    dispatch(setActivePopupCreateGroup(true));
+    handleClose();
+  };
+  const handleExcelGroup = () => {};
+  const handleOutsideClick = (event) => {
+    if (anchorEl && !anchorEl.contains(event.target)) {
+      setMenuOpen(false);
+    }
+  };
   return (
     <Container
       width={"282px"}
@@ -122,15 +130,41 @@ const TeacherDefaultNavbar = ({ transparent, light }) => {
           >
             <Icon>donut_large</Icon>
             <Typography component="span" fontSize="0.925rem">
-              {userLogin.role === 2 ? "List of Classes" : "Your Class"}
+              {userLogin.role === 2 ? "Danh sách lớp" : "Lớp của bạn"}
             </Typography>
           </MKBox>
-          {userLogin.role === 2 && (
-            <Button variant="contained" color="primary" onClick={createGroups}>
-              Tạo Nhóm
-            </Button>
-          )}
           <ListOfClasses classes={classes} onSelectClass={handleSelectClass} />
+          {userLogin.role === 2 && (
+            <MKBox
+              onClick={handleClick}
+              sx={{
+                transform: "scale(1)",
+                transition: "transform 0.2s",
+                display: "flex",
+                gap: "3px",
+                alignItems: "center",
+                "&:hover": {
+                  cursor: "pointer",
+                  transform: "scale(1.05)",
+                },
+              }}
+              light={light}
+            >
+              <Icon>group</Icon>
+
+              <MKBox>
+                <Typography component="span" fontSize="0.925rem">
+                  {userLogin.role === 2 ? "Tạo nhóm" : ""}
+                </Typography>
+                {active_create_group && <CreateGroupModal />}
+              </MKBox>
+
+              <Menu anchorEl={anchorEl} open={menuOpen} onClose={handleClose}>
+                <MenuItem onClick={handleRandomGroup}>Tạo nhóm ngẫu nhiên</MenuItem>
+                <MenuItem onClick={handleExcelGroup}>Tạo nhóm bằng Excel</MenuItem>
+              </Menu>
+            </MKBox>
+          )}
         </MKBox>
       </MKBox>
     </Container>
