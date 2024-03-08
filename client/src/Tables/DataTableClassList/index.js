@@ -43,45 +43,25 @@ function DataTable({ table, isSorted, noEndBorder }) {
           pageNo * limitClass
         }&limit=${limitClass}&preName=${filterPreName}&search=${searchValue}`
       )
-      .then((response) => {
-        dispatch(setclasses(response.data));
-        return response.data;
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+      .then((response) => dispatch(setclasses(response.data)))
+      .catch((error) => console.log(error));
   const handleAddStudentInList = async () => {
     await axios
       .get(`${BASE_URL}/admins/add-student-in-class`)
-      .then((response) => {
-        getClassInfo();
-        return response;
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+      .then(() => getClassInfo())
+      .catch((error) => console.log(error));
   };
   const handleDeleteClassEmpty = async () => {
     await axios
       .get(`${BASE_URL}/admins/delete-classes-empty`)
-      .then((response) => {
-        getClassInfo();
-        return response;
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+      .then(() => getClassInfo())
+      .catch((error) => console.log(error));
   };
   const handleAddTeacherInClass = async () => {
     await axios
       .get(`${BASE_URL}/admins/add-teacher-in-class`)
-      .then((response) => {
-        getClassInfo();
-        return response;
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+      .then(() => getClassInfo())
+      .catch((error) => console.log(error));
   };
   const onSearchChange = (value) => {
     dispatch(setSearchValue(value));

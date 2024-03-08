@@ -171,6 +171,7 @@ a {
 .register_area::-webkit-scrollbar {
   width: 0;
 }
+#add_list_in_semester::-webkit-scrollbar,
 #list-temparary-matching::-webkit-scrollbar {
   width: 8px;
 }
@@ -183,6 +184,7 @@ a {
   width: 4px;
 }
 
+#add_list_in_semester::-webkit-scrollbar-thumb,
 #dfa-navbar::-webkit-scrollbar-thumb,
 #list-temparary-matching::-webkit-scrollbar-thumb,
 #card-table-user::-webkit-scrollbar-thumb,
@@ -194,6 +196,7 @@ a {
   border-radius: 6px;
 }
 
+#add_list_in_semester::-webkit-scrollbar-track,
 #list-temparary-matching::-webkit-scrollbar-track,
 #card-table-user::-webkit-scrollbar-track {
   background-color: transparent;
@@ -206,6 +209,7 @@ a {
   background-color: #f1f1f1;
 }
 
+#add_list_in_semester::-webkit-scrollbar-corner,
 #list-temparary-matching::-webkit-scrollbar-corner,
 #card-table-user::-webkit-scrollbar-corner,
 .rg_form-register::-webkit-scrollbar-corner,
@@ -291,6 +295,7 @@ a {
 .pop-up {
   animation: top_to_center 1.2s ease-in-out;
 }
+#select-semster-add,
 #select-gender,
 #select-category,
 #select-category-action,

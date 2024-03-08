@@ -7,6 +7,19 @@ const initialValue = {
   searchValue: "",
   sort: -1,
   pageNo: 0,
+  mentor: {
+    data: [],
+    count: 0,
+  },
+  student: {
+    data: [],
+    count: 0,
+  },
+  teacher: {
+    data: [],
+    count: 0,
+  },
+  selectUser: [],
 };
 const storiesSlice = createSlice({
   name: "user",
@@ -33,6 +46,18 @@ const storiesSlice = createSlice({
     setPageNo: (state, action) => {
       state.pageNo = action.payload;
     },
+    setTeacher: (state, action) => {
+      state.teacher = action.payload;
+    },
+    setMentor: (state, action) => {
+      state.mentor = action.payload;
+    },
+    setStudent: (state, action) => {
+      state.student = action.payload;
+    },
+    setSelectUser: (state, action) => {
+      state.selectUser = action.payload;
+    },
   },
 });
 
@@ -45,5 +70,9 @@ export const {
   setSearchValue,
   setSort,
   setPageNo,
+  setTeacher,
+  setMentor,
+  setStudent,
+  setSelectUser,
 } = actions;
 export default reducer;

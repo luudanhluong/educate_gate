@@ -69,26 +69,50 @@ const findUserById = async (id) => {
     throw new Error(error.message);
   }
 };
-const getMentors = async () => {
+const getMentors = async (skip) => {
   try {
-    const result = await User.find({ role: 3 }).exec();
-    return result;
+    const result = await User.aggregate([
+      { $match: { role: 3 } },
+      {
+        $lookup: {
+          from: "mentorcategories",
+          localField: "_id",
+          foreignField: "userId",
+          as: "categories",
+        },
+      },
+      {
+        $lookup: {
+          from: "categories",
+          localField: "categories.categoryId",
+          foreignField: "_id",
+          as: "categories",
+        },
+      },
+    ])
+      .limit(10)
+      .skip(skip)
+      .exec();
+    const count = await User.countDocuments({ role: 3 });
+    return { data: result, count };
   } catch (error) {
     throw new Error(error.message);
   }
 };
-const getTeachers = async () => {
+const getTeachers = async (skip) => {
   try {
-    const result = await User.find({ role: 2 }).exec();
-    return result;
+    const result = await User.find({ role: 2 }).limit(10).skip(skip).exec();
+    const count = await User.countDocuments({ role: 2 });
+    return { data: result, count };
   } catch (error) {
     throw new Error(error.message);
   }
 };
-const getStudents = async () => {
+const getStudents = async (skip) => {
   try {
-    const result = await User.find({ role: 4 }).exec();
-    return result;
+    const result = await User.find({ role: 4 }).limit(10).skip(skip).exec();
+    const count = await User.countDocuments({ role: 4 });
+    return { data: result, count };
   } catch (error) {
     throw new Error(error.message);
   }

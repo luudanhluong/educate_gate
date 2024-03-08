@@ -18,6 +18,7 @@ import {
   mentorRouter,
   temporaryMatchingRouter,
   matchedRouter,
+  smtDetRouter,
 } from "./routes/index.js";
 
 const app = express();
@@ -40,13 +41,13 @@ app.get("/", (req, res) => {
   console.log("hello world");
 });
 app.use("/mentor", mentorRouter);
+app.use("/semester_detail", smtDetRouter);
 app.use("/project", projectRouter);
 app.use("/teacher", teacherRouter);
 app.use("/user", userRouter);
 app.use("/group", groupRouter);
 app.use("/class", classRouter);
 app.use("/category", catergoryRouter);
-// app.use("/group", catergoryRouter);
 app.use("/mentor_category", mentorCategoriesRouter);
 app.use("/project_category", projectCategoryRouter);
 app.use("/temporary_matching", temporaryMatchingRouter);
