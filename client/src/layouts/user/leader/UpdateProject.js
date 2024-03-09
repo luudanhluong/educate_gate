@@ -21,6 +21,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { BASE_URL } from "utilities/initialValue";
 import { setProjectCategories } from "app/slices/projectSlice";
+import { setGroup } from "app/slices/groupSlice";
+import { useParams } from "react-router-dom";
 
 const UpdateProject = () => {
   const dispatch = useDispatch();
@@ -30,6 +32,7 @@ const UpdateProject = () => {
   const { data: categories } = useSelector((state) => state.category.categories);
   const { projectCategories, project } = useSelector((state) => state.project);
   const { _id: uId } = userLogin;
+  const { groupId } = useParams();
   const [formvalues, setFormValues] = useState({
     name: "",
     description: "",
@@ -57,10 +60,16 @@ const UpdateProject = () => {
           },
           config
         )
-        .then(() => {})
+        .then(() =>
+          axios
+            .get(`${BASE_URL}/group/${groupId}`, config)
+            .then((res) => dispatch(setGroup(res.data[0])))
+            .catch((err) => console.log(err))
+        )
         .catch((err) => console.log(err.message));
     isActivePopup();
   };
+
   const validateSchema = Yup.object().shape({
     name: Yup.string().required("Vui lòng nhập họ và tên."),
     description: Yup.string(),

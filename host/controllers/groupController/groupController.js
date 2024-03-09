@@ -42,35 +42,29 @@ const checkGroupsExistController = async (req, res) => {
 const createRandomGroups = async (req, res) => {
   const { classId, numberOfGroups } = req.body;
   try {
-    const groupExists = await groupDAO.checkGroupsExist(classId);
-    if (groupExists) {
-      return res
-        .status(400)
-        .json({ message: "Groups already exist for this class." });
-    }
-
     let users = await User.find({ classId }).exec();
-    if (users.length < numberOfGroups) {
-      return res
-        .status(400)
-        .json({ message: "Number of groups exceeds the number of students." });
-    }
-
     users = users.sort(() => 0.5 - Math.random());
-    const groupSize = Math.ceil(users.length / numberOfGroups);
+
+    const baseGroupSize = Math.floor(users.length / numberOfGroups);
+    const numLargerGroups = users.length % numberOfGroups;
     const groups = [];
 
-    for (let i = 0; i < numberOfGroups; i++) {
-      const project = await groupDAO.createEmptyProject();
+    for (let i = 0, userIndex = 0; i < numberOfGroups; i++) {
+      const project = await groupDAO.createEmptyProject(i + 1);
+      const groupSize = i < numLargerGroups ? baseGroupSize + 1 : baseGroupSize;
       const group = await groupDAO.createGroup({
-        name: `Group ${i + 1}`,
+        name: `Nhóm ${i + 1}`,
         classId,
         projectId: project._id,
       });
 
-      const members = users.splice(0, groupSize);
-      for (const member of members) {
-        await groupDAO.addUserToGroup(member._id, group._id);
+      const members = users.slice(userIndex, userIndex + groupSize);
+      userIndex += groupSize;
+
+      for (let j = 0; j < members.length; j++) {
+        const member = members[j];
+        const isLeader = j === 0;
+        await groupDAO.addUserToGroup(member._id, group._id, isLeader);
       }
 
       groups.push(group);
@@ -92,7 +86,6 @@ const createGroupsFromExcel = async (req, res) => {
     const sheetName = workbook.SheetNames[0];
     const userData = xlsx.utils.sheet_to_json(workbook.Sheets[sheetName]);
 
-    // Giả định userData có các trường 'Tên Học Sinh', 'Email', và 'Tên Nhóm'
     const groups = {};
 
     for (const user of userData) {
@@ -109,7 +102,7 @@ const createGroupsFromExcel = async (req, res) => {
       });
     }
 
-    const createdGroups = await groupRepository.createGroups(groups);
+    const createdGroups = await groupDAO.createGroup(groups);
     res.status(201).json(createdGroups);
   } catch (error) {
     res.status(500).json({ error: error.message });

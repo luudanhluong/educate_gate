@@ -147,7 +147,7 @@ const TeacherDefaultNavbar = ({ transparent, light }) => {
               light={light}
             >
               <MKBox>
-                <Typography component="span" fontSize="0.925rem">
+                <Typography component="span" fontSize="0.925rem" mb={"7px"}>
                   <Icon sx={{ marginRight: "4px" }}>group</Icon>
                   {userLogin.role === 2 ? "Tạo nhóm " : ""}
                   {arrowOpen ? (
@@ -169,7 +169,7 @@ const TeacherDefaultNavbar = ({ transparent, light }) => {
                           variant="body1"
                           sx={{
                             marginBottom: "-5px",
-                            marginTop: "-2px",
+                            marginTop: "-5px",
                             marginLeft: "10px",
                             fontSize: "0.85rem",
                           }}

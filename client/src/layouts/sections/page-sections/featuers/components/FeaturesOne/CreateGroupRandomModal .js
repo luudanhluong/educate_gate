@@ -9,6 +9,7 @@ import {
   MenuItem,
   Select,
   Slide,
+  Alert,
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
@@ -18,7 +19,10 @@ import MKButton from "components/MKButton";
 import MKTypography from "components/MKTypography";
 import { Form, Formik } from "formik";
 import { setActivePopupCreateGroup } from "app/slices/activeSlice";
-import Alert from "@mui/material/Alert";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { setGroups } from "app/slices/groupSlice";
+import { setClassStudent } from "app/slices/classOnerTeacherSlice";
 
 const CreateGroupModal = () => {
   const dispatch = useDispatch();
@@ -49,26 +53,32 @@ const CreateGroupModal = () => {
 
   const handleClosePopup = () => {
     dispatch(setActivePopupCreateGroup(false));
-    if (!groupExists) {
-      window.location.reload();
-    }
   };
 
   const handleSubmit = () => {
     if (!selectedClassId || !numberOfGroups) {
-      alert("Vui lòng chọn lớp và nhập số lượng nhóm!");
+      toast.error("Vui lòng chọn lớp và nhập số lượng nhóm!");
       return;
     }
 
     axios
       .post(`${BASE_URL}/group/createRandom`, { classId: selectedClassId, numberOfGroups }, config)
       .then(() => {
-        alert("Nhóm đã được tạo thành công!");
+        axios
+          .get(`${BASE_URL}/group/${selectedClassId}/groups`, config)
+          .then((res) => dispatch(setGroups(res.data)))
+          .catch((error) => console.log(error.message));
+        axios
+          .get(`${BASE_URL}/class/${selectedClassId}/students`)
+          .then((res) => dispatch(setClassStudent(res.data)))
+          .catch((error) => console.log(error.message));
+
+        toast.success("Tạo nhóm thành công");
         handleClosePopup();
       })
       .catch((error) => {
         console.error("Error creating groups:", error);
-        alert("Có lỗi xảy ra khi tạo nhóm!");
+        toast.error("Có lỗi xảy ra khi tạo nhóm!");
       });
   };
 

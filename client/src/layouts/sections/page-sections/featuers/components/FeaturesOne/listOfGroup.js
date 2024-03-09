@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import MKBox from "components/MKBox";
 import { setActivePopup } from "app/slices/activeSlice";
 import { setGroup } from "app/slices/groupSlice";
+import "./studentList.css";
 
 const ListOfGroups = () => {
   const dispatch = useDispatch();
@@ -20,36 +21,9 @@ const ListOfGroups = () => {
   useEffect(() => {
     setGroupData(groups);
   }, [groups]);
-  if (groupData.length === 0) {
-    return (
-      <Typography textAlign={"center"} mb={"10px"}>
-        No groups found in this class.
-      </Typography>
-    );
-  }
 
   return (
     <>
-      <style>
-        {`
-          @keyframes gradientBg {
-            0% {
-              background-position: 0% 50%;
-            }
-            50% {
-              background-position: 100% 50%;
-            }
-            100% {
-              background-position: 0% 50%;
-            }
-          }
-          .gradient-animated {
-            background: linear-gradient(-45deg, #005241, #23d5ab,#00524f,#008d87);
-            background-size: 400% 400%;
-            animation: gradientBg 15s ease infinite;
-          }
-        `}
-      </style>
       <Box
         sx={{
           marginLeft: "16px",
@@ -86,11 +60,11 @@ const ListOfGroups = () => {
               }}
             >
               <Typography variant="subtitle1" fontWeight="bold" fontSize={"0.925rem"}>
-                {group.name}
+                Nhóm: {group.name}
               </Typography>
               {group.project.length > 0 ? (
                 <Typography variant="body2" sx={{ fontSize: "0.8rem" }}>
-                  Project: {group.project[0]?.name}
+                  Dự án: {group.project[0]?.name}
                 </Typography>
               ) : (
                 <MKBox
@@ -199,7 +173,7 @@ const ListOfGroups = () => {
               }}
             >
               <Typography fontSize={"0.825rem"} variant="body2">
-                {group.userCount} Members
+                {group.userCount} Thành viên
               </Typography>
               <Typography
                 variant="body2"
@@ -207,7 +181,7 @@ const ListOfGroups = () => {
                 sx={{ cursor: "pointer", textDecoration: "underline" }}
                 onClick={() => handleGroupDetailClick(group._id)}
               >
-                <em>Group Detail</em>
+                <em>Chi tiết nhóm</em>
               </Typography>
             </Box>
           </Box>

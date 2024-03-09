@@ -11,6 +11,7 @@ import routes from "routes";
 import "./App.css";
 import Dashboard from "admin/Dashboard";
 import GroupDetail from "layouts/user/students/index";
+import { ToastContainer } from "react-toastify";
 
 export default function App() {
   const { pathname } = useLocation();
@@ -32,6 +33,7 @@ export default function App() {
 
   return (
     <ThemeProvider theme={theme}>
+      <ToastContainer />
       {/* <CssBaseline /> */}
       <Routes>
         {getRoutes(routes)}
