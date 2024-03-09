@@ -84,6 +84,15 @@ const getMentors = async (skip) => {
       },
       {
         $lookup: {
+          from: "semesterdetails",
+          localField: "_id",
+          foreignField: "userId",
+          as: "semesterdetail",
+        },
+      },
+      { $match: { semesterdetail: [] } },
+      {
+        $lookup: {
           from: "categories",
           localField: "categories.categoryId",
           foreignField: "_id",
@@ -91,59 +100,141 @@ const getMentors = async (skip) => {
         },
       },
     ])
-      .limit(10)
       .skip(skip)
-      .exec();
-    const count = await User.countDocuments({ role: 3 });
-    return { data: result, count };
+      .limit(10);
+    const count = await User.aggregate([
+      { $match: { role: 3 } },
+      {
+        $lookup: {
+          from: "semesterdetails",
+          localField: "_id",
+          foreignField: "userId",
+          as: "semesterdetail",
+        },
+      },
+      { $match: { semesterdetail: [] } },
+    ]).count("countMentor");
+    return { data: result, count: count[0]?.countMentor };
   } catch (error) {
     throw new Error(error.message);
   }
 };
 const getTeachers = async (skip) => {
   try {
-    const result = await User.find({ role: 2 }).limit(10).skip(skip).exec();
-    const count = await User.countDocuments({ role: 2 });
-    return { data: result, count };
+    const result = await User.aggregate([
+      { $match: { role: 2 } },
+      {
+        $lookup: {
+          from: "semesterdetails",
+          localField: "_id",
+          foreignField: "userId",
+          as: "semesterdetail",
+        },
+      },
+      { $match: { semesterdetail: [] } },
+    ])
+      .skip(skip)
+      .limit(10);
+    const count = await User.aggregate([
+      { $match: { role: 2 } },
+      {
+        $lookup: {
+          from: "semesterdetails",
+          localField: "_id",
+          foreignField: "userId",
+          as: "semesterdetail",
+        },
+      },
+      { $match: { semesterdetail: [] } },
+    ]).count("countTeacher");
+    return { data: result, count: count[0]?.countTeacher };
   } catch (error) {
     throw new Error(error.message);
   }
 };
 const getStudents = async (skip) => {
   try {
-    const result = await User.find({ role: 4 }).limit(10).skip(skip).exec();
-    const count = await User.countDocuments({ role: 4 });
-    return { data: result, count };
+    const result = await User.aggregate([
+      { $match: { role: 4 } },
+      {
+        $lookup: {
+          from: "semesterdetails",
+          localField: "_id",
+          foreignField: "userId",
+          as: "semesterdetail",
+        },
+      },
+      { $match: { semesterdetail: [] } },
+    ])
+      .skip(skip)
+      .limit(10);
+    const count = await User.aggregate([
+      { $match: { role: 4 } },
+      {
+        $lookup: {
+          from: "semesterdetails",
+          localField: "_id",
+          foreignField: "userId",
+          as: "semesterdetail",
+        },
+      },
+      { $match: { semesterdetail: [] } },
+    ]).count("countStudent");
+    return { data: result, count: count[0]?.countStudent };
   } catch (error) {
     throw new Error(error.message);
   }
 };
 const pmtUser = async () => {
-  const oneYearAgo = moment().subtract(1, "year");
-  const usersByMonth = [];
+  try {
+    const oneYearAgo = moment().subtract(1, "year");
+    const usersByMonth = [];
 
-  for (let month = 0; month < 12; month++) {
-    const startDate = moment(oneYearAgo).add(month, "months").startOf("month");
-    const endDate = moment(startDate).endOf("month");
+    for (let month = 0; month < 12; month++) {
+      const startDate = moment(oneYearAgo)
+        .add(month, "months")
+        .startOf("month");
+      const endDate = moment(startDate).endOf("month");
 
-    const userCount = await User.countDocuments({
-      createdAt: { $gte: startDate.toDate(), $lte: endDate.toDate() },
-    });
+      const userCount = await User.countDocuments({
+        createdAt: { $gte: startDate.toDate(), $lte: endDate.toDate() },
+      });
 
-    const monthLabel = startDate.format("MMMM");
-    usersByMonth.push({ month: monthLabel, userCount });
+      const monthLabel = startDate.format("MMMM");
+      usersByMonth.push({ month: monthLabel, userCount });
+    }
+    const countStudent = await User.countDocuments({ role: 4 }).exec();
+    const countTeacher = await User.countDocuments({ role: 2 }).exec();
+    const countMentor = await User.countDocuments({ role: 3 }).exec();
+    const countAdmin = await User.countDocuments({ role: 1 }).exec();
+    return {
+      usersByMonth: usersByMonth,
+      student: countStudent,
+      mentor: countMentor,
+      admin: countAdmin,
+      teacher: countTeacher,
+    };
+  } catch (error) {
+    throw new Error(error.message);
   }
-  const countStudent = await User.countDocuments({ role: 4 }).exec();
-  const countTeacher = await User.countDocuments({ role: 2 }).exec();
-  const countMentor = await User.countDocuments({ role: 3 }).exec();
-  const countAdmin = await User.countDocuments({ role: 1 }).exec();
-  return {
-    usersByMonth: usersByMonth,
-    student: countStudent,
-    mentor: countMentor,
-    admin: countAdmin,
-    teacher: countTeacher,
-  };
+};
+const getUserByRole = async (role) => {
+  try {
+    return await User.aggregate([
+      { $match: { role: role } },
+      {
+        $lookup: {
+          from: "semesterdetails",
+          localField: "_id",
+          foreignField: "userId",
+          as: "semesterdetail",
+        },
+      },
+      { $match: { semesterdetail: [] } },
+    ]);
+  } catch (error) {
+    throw new Error(error.message);
+  }
 };
 export default {
   createNewUser,
@@ -154,4 +245,5 @@ export default {
   getStudents,
   getTeachers,
   pmtUser,
+  getUserByRole,
 };

@@ -9,10 +9,11 @@ import MKAvatar from "components/MKAvatar";
 import { useDispatch, useSelector } from "react-redux";
 import { Checkbox } from "@mui/material";
 import { setSelectUser } from "app/slices/userSlice";
+import { setSelectAll } from "app/slices/userSlice";
 
 export default function data() {
   const { data } = useSelector((state) => state.user.student);
-  const { selectUser } = useSelector((state) => state.user);
+  const { selectUser, selectAll } = useSelector((state) => state.user);
   const User = ({ image, name, email }) => (
     <MKBox display="flex" alignItems="center" lineHeight={1}>
       <MKAvatar src={image} name={name} size="md" />
@@ -45,9 +46,13 @@ export default function data() {
   );
   const AllChoices = () => {
     const dispatch = useDispatch();
+    const handleAllChoices = () => {
+      dispatch(setSelectUser(data.length === selectUser.length ? [] : data));
+      dispatch(setSelectAll({ type: 4, payload: !selectAll.payload }));
+    };
     return (
-      <MKBox onClick={() => dispatch(setSelectUser(data.length === selectUser.length ? [] : data))}>
-        <Checkbox checked={data.length === selectUser.length} />
+      <MKBox onClick={handleAllChoices}>
+        <Checkbox checked={selectAll.payload} />
       </MKBox>
     );
   };

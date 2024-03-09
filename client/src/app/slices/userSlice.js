@@ -27,6 +27,10 @@ const initialValue = {
     countAdmin: 0,
     countTeacher: 0,
   },
+  selectAll: {
+    type: 0,
+    payload: false,
+  },
 };
 const storiesSlice = createSlice({
   name: "user",
@@ -68,6 +72,9 @@ const storiesSlice = createSlice({
     setPmtUser: (state, action) => {
       state.pmtUser = action.payload;
     },
+    setSelectAll: (state, action) => {
+      state.selectAll = action.payload;
+    },
   },
 });
 
@@ -85,5 +92,6 @@ export const {
   setStudent,
   setSelectUser,
   setPmtUser,
+  setSelectAll,
 } = actions;
 export default reducer;

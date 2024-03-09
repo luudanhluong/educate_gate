@@ -22,9 +22,9 @@ function signAccessToken(userId) {
 }
 
 function verifyAccessToken(req, res, next) {
-  if (!req.headers["authorization"]) return next(createError.Unauthorized());
-
   const authHeader = req.headers["authorization"];
+  if (!authHeader) return next(createError.Unauthorized());
+
   const token = authHeader.split(" ")[1];
 
   jwt.verify(token, process.env.SECRETKEY, (err, payload) => {

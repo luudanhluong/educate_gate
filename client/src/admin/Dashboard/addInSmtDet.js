@@ -23,6 +23,10 @@ import { BASE_URL } from "utilities/initialValue";
 import { setSemester } from "app/slices/semesterSlice";
 import { setSelectUser } from "app/slices/userSlice";
 import { setPageNo } from "app/slices/userSlice";
+import { setSelectAll } from "app/slices/userSlice";
+import { setMentor } from "app/slices/userSlice";
+import { setStudent } from "app/slices/userSlice";
+import { setTeacher } from "app/slices/userSlice";
 
 const AddInSmtDet = () => {
   const dispatch = useDispatch();
@@ -30,10 +34,7 @@ const AddInSmtDet = () => {
   const { active_popup } = useSelector((state) => state.active);
   const { semester } = useSelector((state) => state.semester);
   const { data: semesters } = useSelector((state) => state.semester.semesters);
-  const { selectUser } = useSelector((state) => state.user);
-  const { data: listStudent } = useSelector((state) => state.user.student);
-  const { data: listTeacher } = useSelector((state) => state.user.teacher);
-  const { data: listMentor } = useSelector((state) => state.user.mentor);
+  const { selectUser, selectAll } = useSelector((state) => state.user);
   const isActivePopup = (actions) => dispatch(setActivePopup(actions));
   const smtId = semester?._id || (semesters && semesters[0]?._id);
   const jwt = localStorage.getItem("jwt");
@@ -47,21 +48,45 @@ const AddInSmtDet = () => {
     dispatch(setPageNo(0));
     dispatch(setActive(newValue));
     dispatch(setSelectUser([]));
+    dispatch(
+      setSelectAll({
+        type: 0,
+        payload: false,
+      })
+    );
   };
   const handleAddInSmtDet = () => {
     const formAddValue = selectUser.map((user) => user._id);
-    let formDelValue = [];
-    if (active === 0) formDelValue = listStudent.map((u) => u._id);
-    else if (active === 1) formDelValue = listTeacher.map((u) => u._id);
-    else if (active === 2) formDelValue = listMentor.map((u) => u._id);
     axios
       .post(
         `${BASE_URL}/semester_detail/${smtId}/semester`,
-        { listUserAdd: formAddValue, listUserDel: formDelValue },
+        { formvalue: formAddValue, actions: selectAll },
         config
       )
-      .then((res) => console.log(res.data))
+      .then(() => {
+        if (active === 2)
+          axios
+            .get(`${BASE_URL}/user/mentors?skip=0`, config)
+            .then((res) => dispatch(setMentor(res.data)))
+            .catch((err) => console.log(err));
+        if (active === 0)
+          axios
+            .get(`${BASE_URL}/user/students?skip=0`, config)
+            .then((res) => dispatch(setStudent(res.data)))
+            .catch((err) => console.log(err));
+        if (active === 1)
+          axios
+            .get(`${BASE_URL}/user/teachers?skip=0`, config)
+            .then((res) => dispatch(setTeacher(res.data)))
+            .catch((err) => console.log(err));
+      })
       .catch((err) => console.log(err.message));
+    dispatch(
+      setSelectAll({
+        type: 0,
+        payload: false,
+      })
+    );
   };
 
   return (

@@ -123,8 +123,8 @@ const Category = () => {
                         onChange={handleChange}
                         label="Trạng thái thể loại"
                       >
-                        <MenuItem value="active">Hoạt động</MenuItem>
-                        <MenuItem value="inactive">Không hoạt động</MenuItem>
+                        <MenuItem value="Active">Hoạt động</MenuItem>
+                        <MenuItem value="Inactive">Không hoạt động</MenuItem>
                       </Select>
                     </FormControl>
                   ) : (

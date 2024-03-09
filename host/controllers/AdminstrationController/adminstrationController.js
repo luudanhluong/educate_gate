@@ -139,7 +139,6 @@ const addNewCategory = async (req, res) => {
   if (!token) return res.status(401).send("Access denied");
   try {
     const { name } = req.body;
-    console.log(name);
     res.status(200).json(await adminsRepository.addNewCategory(name));
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -150,7 +149,6 @@ const createNewSemester = async (req, res) => {
   if (!token) return res.status(401).send("Access denied");
   try {
     const { name } = req.body;
-    console.log(name);
     res.status(200).json(await adminsRepository.createNewSemester(name));
   } catch (error) {
     res.status(500).json({ error: error.message });

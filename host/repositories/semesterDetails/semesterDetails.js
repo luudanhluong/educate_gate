@@ -8,11 +8,11 @@ const getSmtDetailsBySmtId = async (smtId) => {
   }
 };
 
-const addSmtDetails = async (listSmtDet, listUserDel) => {
+const addSmtDetails = async (listSmtDet) => {
   try {
-    await SemesterDetail.deleteMany({
-      userId: { $in: listUserDel },
-    });
+    // await SemesterDetail.deleteMany({
+    //   userId: { $in: listUserDel },
+    // });
     return await SemesterDetail.insertMany(listSmtDet);
   } catch (error) {
     throw new Error(error.message);

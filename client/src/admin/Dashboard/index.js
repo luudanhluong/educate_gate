@@ -42,8 +42,10 @@ const Dashboard = () => {
         let smtDet = [];
         const data = res.data;
         if (active === 0) smtDet = listStudent.filter((u) => data.some((d) => d.userId === u._id));
-        if (active === 1) smtDet = listTeacher.filter((u) => data.some((d) => d.userId === u._id));
-        if (active === 2) smtDet = listMentor.filter((u) => data.some((d) => d.userId === u._id));
+        else if (active === 1)
+          smtDet = listTeacher.filter((u) => data.some((d) => d.userId === u._id));
+        else if (active === 2)
+          smtDet = listMentor.filter((u) => data.some((d) => d.userId === u._id));
         dispatch(setSelectUser(smtDet));
       })
       .catch((err) => console.log(err.message));
@@ -94,8 +96,8 @@ const Dashboard = () => {
                   value={" "}
                   sx={{ display: "flex", gap: "0.5rem" }}
                   onClick={() => {
-                    isActivePopup({ type: "open", payload: "category" });
-                    dispatch(setCategory({}));
+                    isActivePopup({ type: "open", payload: "semester" });
+                    dispatch(setSemester({}));
                   }}
                 >
                   <MKBox

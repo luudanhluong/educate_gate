@@ -44,7 +44,8 @@ const Semester = () => {
             .get(`${BASE_URL}/admins/all_semesters`, headers)
             .then((res) => dispatch(setSemesters(res.data)))
         )
-        .catch(() => navigate("/pages/authentication/sign-in"));
+        .catch((err) => console.log(err));
+    console.log(values);
     isActivePopup({ type: "close", payload: "" });
   };
   const deleteSemester = (id) => {

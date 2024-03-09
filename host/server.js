@@ -59,7 +59,7 @@ app.use(async (req, res, next) => {
 });
 app.use((err, req, res, next) => {
   res.status(err.status || 500);
-  res.status({
+  res.json({
     error: err.status || 500,
     message: err.message,
   });
