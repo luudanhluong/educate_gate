@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import Group from "../../models/groupModel.js";
 import User from "../../models/userModel.js";
 import Project from "../../models/projectModel.js";
+import xlsx from "xlsx";
 const getGroupById = async (id) => {
   try {
     const group = await Group.aggregate([
@@ -131,6 +132,11 @@ const createGroup = async (groupData) => {
   }
 };
 
+const checkGroupsExist = async (classId) => {
+  const groups = await Group.find({ classId: classId });
+  return groups.length > 0;
+};
+
 const addUserToGroup = async (userId, groupId) => {
   try {
     const user = await User.findById(userId);
@@ -141,6 +147,23 @@ const addUserToGroup = async (userId, groupId) => {
     throw new Error(error.message);
   }
 };
+const createGroupsFromExcel = async (filePath, classId) => {
+  const workbook = xlsx.readFile(filePath);
+  const sheetName = workbook.SheetNames[0];
+  const xlData = xlsx.utils.sheet_to_json(workbook.Sheets[sheetName]);
+
+  const groupsMap = {};
+
+  for (const data of xlData) {
+    const groupName = `Group ${data["Tên Nhóm"]}`;
+    if (!groupsMap[groupName]) {
+      const group = await createGroup(groupName, classId);
+      groupsMap[groupName] = group._id;
+    }
+  }
+
+  return Object.values(groupsMap).map((groupId) => ({ groupId }));
+};
 export default {
   getGroupById,
   getGroupMembers,
@@ -149,4 +172,6 @@ export default {
   createGroup,
   addUserToGroup,
   getMatchedByGroupId,
+  checkGroupsExist,
+  createGroupsFromExcel,
 };

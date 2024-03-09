@@ -6,6 +6,7 @@ const initialValue = {
   active_popup_add_class_list: false,
   active_create_class: true,
   active_create_group: false,
+  active_create_group_excel: false,
 };
 const storiesSlice = createSlice({
   name: "active",
@@ -29,6 +30,9 @@ const storiesSlice = createSlice({
     setActivePopupCreateGroup: (state, action) => {
       state.active_create_group = action.payload;
     },
+    setActivePopupCreateGroupFromExcel: (state, action) => {
+      state.active_create_group_excel = action.payload;
+    },
   },
 });
 
@@ -40,5 +44,6 @@ export const {
   setActivePopup,
   setActivePopupAddClassList,
   setActivePopupCreateGroup,
+  setActivePopupCreateGroupFromExcel,
 } = actions;
 export default reducer;

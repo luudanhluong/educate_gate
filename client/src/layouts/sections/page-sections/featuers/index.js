@@ -15,6 +15,7 @@ import { setUserLogin } from "app/slices/userSlice";
 const TeachersFunction = () => {
   const dispatch = useDispatch();
   const jwt = localStorage.getItem("jwt");
+  const groups = useSelector((state) => state.group.groups);
   const selectedClassId = useSelector((state) => state.classOnerTeacher.classId);
   const [students, setStudents] = useState([]);
   const config = {
@@ -66,7 +67,7 @@ const TeachersFunction = () => {
           </Grid>
           <Grid item xs={12} md={10}>
             <MKBox p={0} display="flex" flexDirection="column">
-              <ListOfGroups />
+              <ListOfGroups groups={groups} />
               <StudentOfClassesList classId={students} />
             </MKBox>
           </Grid>

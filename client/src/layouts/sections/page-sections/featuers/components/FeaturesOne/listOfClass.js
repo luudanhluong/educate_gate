@@ -11,7 +11,7 @@ import { setGroups } from "app/slices/groupSlice";
 
 const ListOfClasses = ({ classes = [] }) => {
   const dispatch = useDispatch();
-  const [selectedClassIndex, setSelectedClassIndex] = useState(0);
+  const [selectedClassIndex, setSelectedClassIndex] = useState(null);
   const jwt = localStorage.getItem("jwt");
   const headers = {
     headers: {
@@ -19,19 +19,26 @@ const ListOfClasses = ({ classes = [] }) => {
       Authorization: `Bearer ${jwt}`,
     },
   };
+
   useEffect(() => {
     if (classes.length > 0) {
+      const firstClassId = classes[0]._id;
+      setSelectedClassIndex(firstClassId);
+
       axios
-        .get(`${BASE_URL}/class/${classes[0]._id}/students`)
-        .then((res) => dispatch(setClassStudent(res.data)))
+        .get(`${BASE_URL}/class/${firstClassId}/students`)
+        .then((res) => {
+          dispatch(setClassId(firstClassId));
+          dispatch(setClassStudent(res.data));
+        })
         .catch((error) => console.log(error.message));
-      setSelectedClassIndex(classes[0]._id);
+
       axios
-        .get(`${BASE_URL}/group/${classes[0]._id}/groups`, headers)
+        .get(`${BASE_URL}/group/${firstClassId}/groups`, headers)
         .then((res) => dispatch(setGroups(res.data)))
         .catch((error) => console.log(error.message));
     }
-  }, [classes]);
+  }, [classes, dispatch]);
 
   const getClassStudent = (id) => {
     axios
@@ -41,12 +48,15 @@ const ListOfClasses = ({ classes = [] }) => {
         dispatch(setClassId(id));
       })
       .catch((error) => console.log(error.message));
+
     axios
       .get(`${BASE_URL}/class/${id}/students`)
       .then((res) => dispatch(setClassStudent(res.data)))
       .catch((error) => console.log(error.message));
+
     setSelectedClassIndex(id);
   };
+
   return (
     <MKBox className="ClassListWrapper" ml={1}>
       {classes.map((classItem) => (

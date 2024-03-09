@@ -5,20 +5,32 @@ import PropTypes from "prop-types";
 import MKBox from "components/MKBox";
 import ListOfClasses from "../components/FeaturesOne/listOfClass.js";
 import axios from "axios";
-import { Container, Icon, Typography } from "@mui/material";
+import {
+  Container,
+  Icon,
+  Typography,
+  List,
+  ListItemButton,
+  ListItemText,
+  Collapse,
+} from "@mui/material";
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { BASE_URL } from "utilities/initialValue";
 import { setActivePopupCreateGroup } from "app/slices/activeSlice";
-import CreateGroupModal from "../components/FeaturesOne/CreateGroupModal ";
-import { Menu, MenuItem } from "@mui/material";
+import CreateGroupModal from "../components/FeaturesOne/CreateGroupRandomModal ";
+import { setActivePopupCreateGroupFromExcel } from "app/slices/activeSlice";
+import CreateGroupFromExcelPopup from "../components/CreateGroupUpFileModal";
 
 const TeacherDefaultNavbar = ({ transparent, light }) => {
   const dispatch = useDispatch();
   const { active_create_group } = useSelector((state) => state.active);
+  const { active_create_group_excel } = useSelector((state) => state.active);
   const [classes, setClasses] = useState([]);
   const { userLogin } = useSelector((state) => state.user);
   const jwt = localStorage.getItem("jwt");
-  const [anchorEl, setAnchorEl] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [arrowOpen, setArrowOpen] = useState(false);
   console.log(active_create_group);
   const config = {
     headers: {
@@ -47,35 +59,24 @@ const TeacherDefaultNavbar = ({ transparent, light }) => {
           console.error("Error fetching classes:", error);
         });
     }
-    window.addEventListener("click", handleOutsideClick);
-    return () => {
-      window.removeEventListener("click", handleOutsideClick);
-    };
   }, [userLogin]);
 
   const handleSelectClass = (classId) => {
     dispatch(setClassId(classId));
   };
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-    setMenuOpen(true);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-    setMenuOpen(false);
+  const handleClick = () => {
+    setMenuOpen(!menuOpen);
+    setArrowOpen(!arrowOpen);
   };
   const handleRandomGroup = () => {
     dispatch(setActivePopupCreateGroup(true));
-    handleClose();
+    setMenuOpen(false);
   };
-  const handleExcelGroup = () => {};
+  const handleExcelGroup = () => {
+    dispatch(setActivePopupCreateGroupFromExcel(true));
+    setMenuOpen(false);
+  };
 
-  const handleOutsideClick = (event) => {
-    if (anchorEl && !anchorEl.contains(event.target)) {
-      setMenuOpen(false);
-      setAnchorEl(null);
-    }
-  };
   return (
     <Container
       width={"282px"}
@@ -140,31 +141,43 @@ const TeacherDefaultNavbar = ({ transparent, light }) => {
             <MKBox
               onClick={handleClick}
               sx={{
-                transform: "scale(1)",
-                transition: "transform 0.2s",
-                display: "flex",
                 gap: "3px",
                 alignItems: "center",
-                "&:hover": {
-                  cursor: "pointer",
-                  transform: "scale(1.05)",
-                },
               }}
               light={light}
             >
-              <Icon>group</Icon>
-
               <MKBox>
                 <Typography component="span" fontSize="0.925rem">
-                  {userLogin.role === 2 ? "Tạo nhóm" : ""}
+                  <Icon sx={{ marginRight: "4px" }}>group</Icon>
+                  {userLogin.role === 2 ? "Tạo nhóm " : ""}
+                  {arrowOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
                 </Typography>
                 {active_create_group && <CreateGroupModal />}
+                {active_create_group_excel && <CreateGroupFromExcelPopup />}
               </MKBox>
 
-              <Menu anchorEl={anchorEl} open={menuOpen} onClose={handleClose}>
-                <MenuItem onClick={handleRandomGroup}>Tạo nhóm ngẫu nhiên</MenuItem>
-                <MenuItem onClick={handleExcelGroup}>Tạo nhóm bằng Excel</MenuItem>
-              </Menu>
+              <Collapse in={menuOpen} timeout="auto" unmountOnExit>
+                <List>
+                  <ListItemButton href="#random-group" onClick={handleRandomGroup}>
+                    <ListItemText
+                      primary={
+                        <Typography variant="body1" sx={{ fontSize: "0.85rem" }}>
+                          Tạo nhóm ngẫu nhiên
+                        </Typography>
+                      }
+                    />
+                  </ListItemButton>
+                  <ListItemButton href="#excel-group" onClick={handleExcelGroup}>
+                    <ListItemText
+                      primary={
+                        <Typography variant="body1" sx={{ fontSize: "0.85rem" }}>
+                          Tạo nhóm bằng Excel
+                        </Typography>
+                      }
+                    />
+                  </ListItemButton>
+                </List>
+              </Collapse>
             </MKBox>
           )}
         </MKBox>

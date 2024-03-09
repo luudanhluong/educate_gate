@@ -1,4 +1,7 @@
+import Group from "../../models/groupModel.js";
+import User from "../../models/userModel.js";
 import groupDAO from "../../repositories/group/index.js";
+import xlsx from "xlsx";
 
 const getGroupById = async (req, res) => {
   try {
@@ -26,15 +29,26 @@ const getGroupsByClass = async (req, res) => {
   }
 };
 
+const checkGroupsExistController = async (req, res) => {
+  const classId = req.params.classId;
+  try {
+    const groupsExist = await groupDAO.checkGroupsExist(classId);
+    res.status(200).json({ exists: groupsExist });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
 const createRandomGroups = async (req, res) => {
   const { classId, numberOfGroups } = req.body;
-  if (!classId || !numberOfGroups) {
-    return res
-      .status(400)
-      .json({ message: "Class ID and number of groups are required." });
-  }
-
   try {
+    const groupExists = await groupDAO.checkGroupsExist(classId);
+    if (groupExists) {
+      return res
+        .status(400)
+        .json({ message: "Groups already exist for this class." });
+    }
+
     let users = await User.find({ classId }).exec();
     if (users.length < numberOfGroups) {
       return res
@@ -68,9 +82,45 @@ const createRandomGroups = async (req, res) => {
   }
 };
 
+const createGroupsFromExcel = async (req, res) => {
+  const token = req.headers["authorization"];
+  if (!token) return res.status(401).send("Access denied");
+
+  try {
+    const excelFilePath = req.file.path;
+    const workbook = xlsx.readFile(excelFilePath);
+    const sheetName = workbook.SheetNames[0];
+    const userData = xlsx.utils.sheet_to_json(workbook.Sheets[sheetName]);
+
+    // Giả định userData có các trường 'Tên Học Sinh', 'Email', và 'Tên Nhóm'
+    const groups = {};
+
+    for (const user of userData) {
+      const groupName = user["Tên Nhóm"];
+      if (!groups[groupName]) {
+        groups[groupName] = {
+          name: groupName,
+          students: [],
+        };
+      }
+      groups[groupName].students.push({
+        name: user["Tên Học Sinh"],
+        email: user["Email"],
+      });
+    }
+
+    const createdGroups = await groupRepository.createGroups(groups);
+    res.status(201).json(createdGroups);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 export default {
   // groupDetail,
   getGroupById,
   getGroupsByClass,
   createRandomGroups,
+  createGroupsFromExcel,
+  checkGroupsExistController,
 };
