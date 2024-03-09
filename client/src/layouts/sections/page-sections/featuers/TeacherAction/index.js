@@ -150,7 +150,11 @@ const TeacherDefaultNavbar = ({ transparent, light }) => {
                 <Typography component="span" fontSize="0.925rem">
                   <Icon sx={{ marginRight: "4px" }}>group</Icon>
                   {userLogin.role === 2 ? "Tạo nhóm " : ""}
-                  {arrowOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                  {arrowOpen ? (
+                    <ExpandLessIcon sx={{ marginLeft: "10px" }} />
+                  ) : (
+                    <ExpandMoreIcon sx={{ marginLeft: "10px" }} />
+                  )}
                 </Typography>
                 {active_create_group && <CreateGroupModal />}
                 {active_create_group_excel && <CreateGroupFromExcelPopup />}
@@ -161,8 +165,16 @@ const TeacherDefaultNavbar = ({ transparent, light }) => {
                   <ListItemButton href="#random-group" onClick={handleRandomGroup}>
                     <ListItemText
                       primary={
-                        <Typography variant="body1" sx={{ fontSize: "0.85rem" }}>
-                          Tạo nhóm ngẫu nhiên
+                        <Typography
+                          variant="body1"
+                          sx={{
+                            marginBottom: "-5px",
+                            marginTop: "-2px",
+                            marginLeft: "10px",
+                            fontSize: "0.85rem",
+                          }}
+                        >
+                          Ngẫu nhiên
                         </Typography>
                       }
                     />
@@ -170,8 +182,16 @@ const TeacherDefaultNavbar = ({ transparent, light }) => {
                   <ListItemButton href="#excel-group" onClick={handleExcelGroup}>
                     <ListItemText
                       primary={
-                        <Typography variant="body1" sx={{ fontSize: "0.85rem" }}>
-                          Tạo nhóm bằng Excel
+                        <Typography
+                          variant="body1"
+                          sx={{
+                            marginBottom: "-5px",
+                            marginTop: "-5px",
+                            marginLeft: "10px",
+                            fontSize: "0.85rem",
+                          }}
+                        >
+                          Bằng Excel
                         </Typography>
                       }
                     />
