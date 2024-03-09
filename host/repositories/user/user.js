@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
+import moment from "moment";
 import dotnv from "dotenv";
 import User from "../../models/userModel.js";
 dotnv.config();
@@ -35,14 +36,6 @@ const loginUser = async ({ email, password }) => {
     throw new Error(e.message.toString());
   }
 };
-const userProfile = async (id) => {
-  try {
-    const user = await User.findOne({ _id: id }).populate("classId").exec();
-    return user;
-  } catch (error) {
-    throw new Error(error.message);
-  }
-};
 const userUpdateProfile = async (
   id,
   { username, gender, Dob, phoneNumber, menteeCount, degree }
@@ -74,15 +67,91 @@ const findUserById = async (id) => {
     const user = await User.findOne({ _id: id }).populate("classId").exec();
     return user;
   } catch (error) {
-    console.error("Error querying database:", error);
-    throw new Error("Internal Server Error");
+    throw new Error(error.message);
   }
 };
+const getMentors = async (skip) => {
+  try {
+    const result = await User.aggregate([
+      { $match: { role: 3 } },
+      {
+        $lookup: {
+          from: "mentorcategories",
+          localField: "_id",
+          foreignField: "userId",
+          as: "categories",
+        },
+      },
+      {
+        $lookup: {
+          from: "categories",
+          localField: "categories.categoryId",
+          foreignField: "_id",
+          as: "categories",
+        },
+      },
+    ])
+      .limit(10)
+      .skip(skip)
+      .exec();
+    const count = await User.countDocuments({ role: 3 });
+    return { data: result, count };
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+const getTeachers = async (skip) => {
+  try {
+    const result = await User.find({ role: 2 }).limit(10).skip(skip).exec();
+    const count = await User.countDocuments({ role: 2 });
+    return { data: result, count };
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+const getStudents = async (skip) => {
+  try {
+    const result = await User.find({ role: 4 }).limit(10).skip(skip).exec();
+    const count = await User.countDocuments({ role: 4 });
+    return { data: result, count };
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+const pmtUser = async () => {
+  const oneYearAgo = moment().subtract(1, "year");
+  const usersByMonth = [];
 
+  for (let month = 0; month < 12; month++) {
+    const startDate = moment(oneYearAgo).add(month, "months").startOf("month");
+    const endDate = moment(startDate).endOf("month");
+
+    const userCount = await User.countDocuments({
+      createdAt: { $gte: startDate.toDate(), $lte: endDate.toDate() },
+    });
+
+    const monthLabel = startDate.format("MMMM");
+    usersByMonth.push({ month: monthLabel, userCount });
+  }
+  const countStudent = await User.countDocuments({ role: 4 }).exec();
+  const countTeacher = await User.countDocuments({ role: 2 }).exec();
+  const countMentor = await User.countDocuments({ role: 3 }).exec();
+  const countAdmin = await User.countDocuments({ role: 1 }).exec();
+  return {
+    usersByMonth: usersByMonth,
+    student: countStudent,
+    mentor: countMentor,
+    admin: countAdmin,
+    teacher: countTeacher,
+  };
+};
 export default {
   createNewUser,
   loginUser,
-  userProfile,
   userUpdateProfile,
   findUserById,
+  getMentors,
+  getStudents,
+  getTeachers,
+  pmtUser,
 };

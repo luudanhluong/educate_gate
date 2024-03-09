@@ -48,7 +48,6 @@ const Category = () => {
     isActivePopup({ type: "close", payload: "" });
   };
   const deleteSemester = (id) => {
-    console.log(id);
     axios
       .delete(`${BASE_URL}/admins/delete_category/${id}`, headers)
       .then(() =>

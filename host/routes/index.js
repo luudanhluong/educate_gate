@@ -10,6 +10,7 @@ import groupRouter from "./groupRouter/groupRouter.js";
 import temporaryMatchingRouter from "./temporaryMatchingRouter/temporaryMatchingRouter.js";
 import matchedRouter from "./matchedRouter/matchedRouter.js";
 import mentorRouter from "./mentorRouter/mentorRouter.js";
+import smtDetRouter from "./semesterDetailRouter/semesteDetailRouter.js";
 export {
   userRouter,
   classRouter,
@@ -23,4 +24,5 @@ export {
   mentorRouter,
   temporaryMatchingRouter,
   matchedRouter,
+  smtDetRouter,
 };
