@@ -109,10 +109,10 @@ const getMatchedByGroupId = async (groupId) => {
   return await Matched.findOne({ groupId }).populate("mentorId").exec();
 };
 
-const createEmptyProject = async () => {
+const createEmptyProject = async (index) => {
   try {
     const project = new Project({
-      name: "",
+      name: `Nhóm ${index}`,
       description: "",
     });
     await project.save();
@@ -132,20 +132,21 @@ const createGroup = async (groupData) => {
   }
 };
 
-const checkGroupsExist = async (classId) => {
-  const groups = await Group.find({ classId: classId });
-  return groups.length > 0;
-};
-
-const addUserToGroup = async (userId, groupId) => {
+const addUserToGroup = async (userId, groupId, isLeader = false) => {
   try {
     const user = await User.findById(userId);
     user.groupId = groupId;
+    user.isLeader = isLeader;
     await user.save();
     return user;
   } catch (error) {
     throw new Error(error.message);
   }
+};
+
+const checkGroupsExist = async (classId) => {
+  const groups = await Group.find({ classId: classId });
+  return groups.length > 0;
 };
 const createGroupsFromExcel = async (filePath, classId) => {
   const workbook = xlsx.readFile(filePath);

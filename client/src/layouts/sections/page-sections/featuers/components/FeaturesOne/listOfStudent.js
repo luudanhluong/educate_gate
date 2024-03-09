@@ -5,6 +5,7 @@ import "./studentList.css";
 import { Icon } from "@mui/material";
 const StudentsList = () => {
   const { classStudent } = useSelector((state) => state.classOnerTeacher);
+  console.log(classStudent);
   return (
     <MKBox pl={"25px"} pr={"5px"}>
       <Grid container>
@@ -13,10 +14,10 @@ const StudentsList = () => {
             <table className="styled-table">
               <thead>
                 <tr className="gradient-animated">
-                  <th>Username</th>
+                  <th>Họ tên</th>
                   <th>Email</th>
-                  <th>Leader</th>
-                  <th>Group Name</th>
+                  <th>Nhóm trưởng</th>
+                  <th>Tên nhóm</th>
                 </tr>
               </thead>
               <tbody>
@@ -30,6 +31,7 @@ const StudentsList = () => {
                           <Icon sx={{ marginLeft: "8px", fontSize: "20px !important" }}>star</Icon>
                         ) : null}
                       </td>
+                      <td>{student.groupName}</td>
                     </tr>
                   ))}
               </tbody>

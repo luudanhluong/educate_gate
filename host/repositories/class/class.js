@@ -48,14 +48,32 @@ const getClasses = async ({ item, order, limit, skip }) => {
 };
 const getStudentsInClass = async (classId) => {
   try {
-    const students = await User.find({ classId: classId })
-      .populate("classId")
+    let students = await User.find({ classId: classId })
+      .populate({
+        path: "groupId",
+        model: "Group",
+        select: "name",
+      })
       .exec();
-    return students;
+
+    students.sort((a, b) => {
+      let groupA = a.groupId
+        ? parseInt(a.groupId.name.replace("Nhóm ", ""))
+        : Infinity;
+      let groupB = b.groupId
+        ? parseInt(b.groupId.name.replace("Nhóm ", ""))
+        : Infinity;
+      return groupA - groupB;
+    });
+    return students.map((student) => ({
+      ...student.toObject(),
+      groupName: student.groupId ? student.groupId.name : "Chưa có nhóm",
+    }));
   } catch (error) {
     throw new Error(error.message);
   }
 };
+
 const findClassById = async (classId) => {
   try {
     const result = await Class.findOne({ _id: classId });
