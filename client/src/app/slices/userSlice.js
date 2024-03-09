@@ -20,6 +20,13 @@ const initialValue = {
     count: 0,
   },
   selectUser: [],
+  pmtUser: {
+    usersByMonth: [],
+    countStudent: 0,
+    countMentor: 0,
+    countAdmin: 0,
+    countTeacher: 0,
+  },
 };
 const storiesSlice = createSlice({
   name: "user",
@@ -58,6 +65,9 @@ const storiesSlice = createSlice({
     setSelectUser: (state, action) => {
       state.selectUser = action.payload;
     },
+    setPmtUser: (state, action) => {
+      state.pmtUser = action.payload;
+    },
   },
 });
 
@@ -74,5 +84,6 @@ export const {
   setMentor,
   setStudent,
   setSelectUser,
+  setPmtUser,
 } = actions;
 export default reducer;

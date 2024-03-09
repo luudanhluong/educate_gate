@@ -34,7 +34,7 @@ const AddInSmtDet = () => {
   const { data: listStudent } = useSelector((state) => state.user.student);
   const { data: listTeacher } = useSelector((state) => state.user.teacher);
   const { data: listMentor } = useSelector((state) => state.user.mentor);
-  const isActivePopup = () => dispatch(setActivePopup(!active_popup));
+  const isActivePopup = (actions) => dispatch(setActivePopup(actions));
   const smtId = semester?._id || (semesters && semesters[0]?._id);
   const jwt = localStorage.getItem("jwt");
   const config = {
@@ -66,11 +66,11 @@ const AddInSmtDet = () => {
 
   return (
     <Modal
-      open={active_popup}
-      onClose={() => isActivePopup()}
+      open={active_popup.payload === "smtDet"}
+      onClose={() => isActivePopup({ type: "close", payload: "" })}
       sx={{ display: "grid", placeItems: "center", overflow: "auto" }}
     >
-      <Slide direction="down" in={active_popup} timeout={500}>
+      <Slide direction="down" in={active_popup.payload === "smtDet"} timeout={500}>
         <Card
           id={"add_list_in_semester"}
           className="pop-up"

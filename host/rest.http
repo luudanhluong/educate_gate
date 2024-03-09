@@ -13,3 +13,7 @@ GET http://localhost:9999/category
 ###
 http://localhost:9999/semester_detail/65dfe8d62499d66d73df02b5/semester
 Authorization: Bearse eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWJlNjkyYmFmZTc5ODk0MmU5NzdjMzQiLCJpYXQiOjE3MDk5MDg0MjAsImV4cCI6MTcwOTk1MTYyMH0.TkEygUWeeod9t8ZiTLgUIWq81TuNorDkLZvd4qNc-1g
+
+###
+http://localhost:9999/user/parameter
+Authorization: Bearse eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWJlNjkyYmFmZTc5ODk0MmU5NzdjMzQiLCJpYXQiOjE3MDk5MjUxNDUsImV4cCI6MTcwOTk2ODM0NX0.KxvO1aF1ohiQd0rAu0hR1hVMhbRNXhhnpqaIQgvtB58

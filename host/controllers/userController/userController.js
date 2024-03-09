@@ -96,6 +96,13 @@ const getTeachers = async (req, res, next) => {
     next(error);
   }
 };
+const pmtUser = async (req, res, next) => {
+  try {
+    res.send(await userDAO.pmtUser());
+  } catch (error) {
+    next(error);
+  }
+};
 
 export default {
   addNewUser,
@@ -105,4 +112,5 @@ export default {
   getMentors,
   getTeachers,
   getStudents,
+  pmtUser,
 };

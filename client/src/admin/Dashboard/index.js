@@ -1,4 +1,4 @@
-import { FormControl, Icon, MenuItem, Select, Typography } from "@mui/material";
+import { FormControl, Grid, Icon, MenuItem, Select, Typography } from "@mui/material";
 import DefaultNavbar from "admin/Navbar/DefaultNavbar";
 import { setCategories, setCategory } from "app/slices/categorySlice";
 import axios from "axios";
@@ -9,14 +9,14 @@ import { BASE_URL } from "utilities/initialValue";
 import { setActivePopup } from "app/slices/activeSlice";
 import Semester from "./semester";
 import Category from "./category";
-import { useNavigate } from "react-router-dom";
 import { setSemesters, setSemester } from "app/slices/semesterSlice";
-import { setMentor, setStudent, setTeacher } from "app/slices/userSlice";
+import { setMentor, setStudent, setTeacher, setSelectUser, setPmtUser } from "app/slices/userSlice";
 import AddInSmtDet from "./addInSmtDet";
-import { setSelectUser } from "app/slices/userSlice";
+import ChartLineUser from "./chartLineUser";
+import ChartPieUser from "./chartPieUser";
+import MKButton from "components/MKButton";
 
 const Dashboard = () => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const isActivePopup = (actions) => dispatch(setActivePopup(actions));
   const { data: categories } = useSelector((state) => state.category.categories);
@@ -52,28 +52,32 @@ const Dashboard = () => {
     axios
       .get(`${BASE_URL}/admins/all_categories`, config)
       .then((res) => dispatch(setCategories(res.data)))
-      .catch(() => navigate("/pages/authentication/sign-in"));
+      .catch((err) => console.log(err));
     axios
       .get(`${BASE_URL}/admins/all_semesters`, config)
       .then((res) => dispatch(setSemesters(res.data)))
-      .catch(() => navigate("/pages/authentication/sign-in"));
+      .catch((err) => console.log(err));
+    axios
+      .get(`${BASE_URL}/user/parameter`, config)
+      .then((res) => dispatch(setPmtUser(res.data)))
+      .catch((err) => console.log(err));
   }, [dispatch]);
   useEffect(() => {
     if (active === 2)
       axios
         .get(`${BASE_URL}/user/mentors?skip=${pageNo * 10}`, config)
         .then((res) => dispatch(setMentor(res.data)))
-        .catch(() => navigate("/pages/authentication/sign-in"));
+        .catch((err) => console.log(err));
     if (active === 0)
       axios
         .get(`${BASE_URL}/user/students?skip=${pageNo * 10}`, config)
         .then((res) => dispatch(setStudent(res.data)))
-        .catch(() => navigate("/pages/authentication/sign-in"));
+        .catch((err) => console.log(err));
     if (active === 1)
       axios
         .get(`${BASE_URL}/user/teachers?skip=${pageNo * 10}`, config)
         .then((res) => dispatch(setTeacher(res.data)))
-        .catch(() => navigate("/pages/authentication/sign-in"));
+        .catch((err) => console.log(err));
   }, [pageNo, dispatch, active]);
   return (
     <MKBox sx={{ display: "flex", alignItems: "center", height: "100%", gap: "1.5rem" }}>
@@ -81,8 +85,8 @@ const Dashboard = () => {
       <Semester />
       <Category />
       <AddInSmtDet />
-      <MKBox height="100%" width="100%">
-        <MKBox display="flex">
+      <MKBox display={"flex"} flexDirection="column" gap="3rem" height="100%" width="100%">
+        <MKBox display="flex" flexDirection="row" gap="1.5rem">
           <MKBox width="9rem">
             <FormControl fullWidth pb={1}>
               <Select id="select-gender" name="gender" value={" "}>
@@ -132,7 +136,9 @@ const Dashboard = () => {
               </Select>
             </FormControl>
           </MKBox>
-          <MKBox onClick={() => dispatch(setActivePopup(true))}>Thêm vào kì học</MKBox>
+          <MKBox onClick={() => isActivePopup({ type: "add", payload: "smtDet" })}>
+            <MKButton>Thêm vào kì học</MKButton>
+          </MKBox>
           <MKBox width="9rem">
             <FormControl fullWidth>
               <Select id="select-gender" name="gender" value={" "}>
@@ -184,6 +190,14 @@ const Dashboard = () => {
             </FormControl>
           </MKBox>
         </MKBox>
+        <Grid item container>
+          <Grid item xs={9}>
+            <ChartLineUser />
+          </Grid>
+          <Grid item xs={3}>
+            <ChartPieUser />
+          </Grid>
+        </Grid>
       </MKBox>
     </MKBox>
   );

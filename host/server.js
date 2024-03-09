@@ -55,6 +55,7 @@ app.use("/matched", matchedRouter);
 app.use("/admins", upload.single("file"), adminsRouter);
 app.use(async (req, res, next) => {
   next(createError.NotFound());
+  res.status(404).send("URL không hợp lệ");
 });
 app.use((err, req, res, next) => {
   res.status(err.status || 500);
