@@ -39,7 +39,7 @@ const TeacherDefaultNavbar = ({ transparent, light }) => {
   };
 
   useEffect(() => {
-    if (userLogin.role === 2) {
+    if (userLogin?.role === 2) {
       axios
         .get(`${BASE_URL}/teacher/classes`, config)
         .then((response) => {
@@ -48,9 +48,9 @@ const TeacherDefaultNavbar = ({ transparent, light }) => {
         .catch((error) => {
           console.error("Error fetching classes:", error);
         });
-    } else if (userLogin.role === 4) {
+    } else if (userLogin?.role === 4) {
       axios
-        .get(`${BASE_URL}/class/student/${userLogin.classId._id}`, config)
+        .get(`${BASE_URL}/class/student/${userLogin?.classId._id}`, config)
         .then((response) => {
           setClasses([response.data]);
         })
@@ -102,7 +102,7 @@ const TeacherDefaultNavbar = ({ transparent, light }) => {
           fontWeight="bold"
           color={"dark"}
         >
-          {userLogin.role === 2 ? " Teacher Action" : "Student Action"}
+          {userLogin?.role === 2 ? " Teacher Action" : "Student Action"}
         </MKBox>
 
         <MKBox
@@ -132,11 +132,11 @@ const TeacherDefaultNavbar = ({ transparent, light }) => {
           >
             <Icon>donut_large</Icon>
             <Typography component="span" fontSize="0.925rem">
-              {userLogin.role === 2 ? "Danh sách lớp" : "Lớp của bạn"}
+              {userLogin?.role === 2 ? "Danh sách lớp" : "Lớp của bạn"}
             </Typography>
           </MKBox>
           <ListOfClasses classes={classes} onSelectClass={handleSelectClass} />
-          {userLogin.role === 2 && (
+          {userLogin?.role === 2 && (
             <MKBox
               onClick={handleClick}
               sx={{
@@ -148,7 +148,7 @@ const TeacherDefaultNavbar = ({ transparent, light }) => {
               <MKBox>
                 <Typography component="span" fontSize="0.925rem" mb={"7px"}>
                   <Icon sx={{ marginRight: "4px" }}>group</Icon>
-                  {userLogin.role === 2 ? "Tạo nhóm " : ""}
+                  {userLogin?.role === 2 ? "Tạo nhóm " : ""}
                   {arrowOpen ? (
                     <ExpandLessIcon sx={{ marginLeft: "10px" }} />
                   ) : (

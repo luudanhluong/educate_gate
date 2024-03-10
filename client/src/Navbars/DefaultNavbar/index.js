@@ -80,9 +80,9 @@ function DefaultNavbar({ brand, routes, transparent, light, action, sticky, rela
     />
   );
   const renderNavbarItems = routes.map(({ name, icon, href, route, collapse }) => {
-    if (userLogin.role === "1") {
+    if (userLogin?.role === "1") {
       return defautNav({ name, icon, href, route, collapse });
-    } else if (userLogin.role !== "1" && name !== "admins") {
+    } else if (userLogin?.role !== "1") {
       return defautNav({ name, icon, href, route, collapse });
     }
   });

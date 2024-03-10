@@ -3,6 +3,7 @@ import teacherController from "../../controllers/teacherController/teacherContro
 
 const teacherRouter = express.Router();
 
+teacherRouter.get("/", teacherController.suggestMatching);
 teacherRouter.get("/classes", teacherController.getClassListByTeacher);
 
 export default teacherRouter;

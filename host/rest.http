@@ -19,3 +19,7 @@ Authorization: Bearse eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWJlNjkyY
 ###
 http://localhost:9999/user/parameter
 Authorization: Bearse eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWJlNjkyYmFmZTc5ODk0MmU5NzdjMzQiLCJpYXQiOjE3MDk5MjUxNDUsImV4cCI6MTcwOTk2ODM0NX0.KxvO1aF1ohiQd0rAu0hR1hVMhbRNXhhnpqaIQgvtB58
+
+
+### 
+http://localhost:9999/teacher 
