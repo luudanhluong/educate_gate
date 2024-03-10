@@ -12,6 +12,11 @@ const temporaryMatchingSchema = new Schema(
       require: true,
       ref: "User",
     },
+    teacherId: {
+      type: mongoose.Schema.Types.ObjectId,
+      require: true,
+      ref: "Class",
+    },
     status: { type: String },
   },
   {

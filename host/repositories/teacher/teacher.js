@@ -2,6 +2,9 @@ import mongoose from "mongoose";
 import Class from "../../models/classModel.js";
 import Group from "../../models/groupModel.js";
 import User from "../../models/userModel.js";
+import shuffleArray from "../../utilities/shuffleArray.js";
+import Matched from "../../models/matchedModel.js";
+import TemporaryMatching from "../../models/temporaryMatching.js";
 
 const getClassByTeacherId = async (teacherId) => {
   try {
@@ -14,6 +17,7 @@ const getClassByTeacherId = async (teacherId) => {
 };
 const suggestMatching = async (teacherId) => {
   try {
+    await TemporaryMatching.deleteMany({ teacherId: teacherId });
     const listGroups = await Class.aggregate([
       { $match: { teacherId: new mongoose.Types.ObjectId(teacherId) } },
       {
@@ -71,19 +75,52 @@ const suggestMatching = async (teacherId) => {
           as: "mentorcategories",
         },
       },
+      {
+        $lookup: {
+          from: "matcheds",
+          localField: "_id",
+          foreignField: "mentorId",
+          as: "matcheds",
+        },
+      },
+      {
+        $addFields: {
+          matcheds: { $size: "$matcheds" },
+        },
+      },
+      {
+        $match: {
+          $expr: { $lt: ["$matcheds", "$menteeCount"] },
+        },
+      },
     ]);
+    shuffleArray(listGroups);
+    shuffleArray(listMentors);
     let temporaryMatching = [];
-    listGroups.forEach((g) => {
+    for (const g of listGroups) {
       const { projectcategories, group, teacherId } = g;
-      listMentors.forEach((m) => {
+      for (const m of listMentors) {
         const { mentorcategories, menteeCount, _id: mid } = m;
-        const matching = mentorcategories.filter((m) =>
-          projectcategories.some((p) => m._id === p._id)
+        const countMatched = await Matched.countDocuments({ mentorId: mid });
+        if (countMatched === menteeCount) break;
+        const matching = projectcategories.filter((p) =>
+          mentorcategories.some((m) => m._id.toString() === p._id.toString())
         );
-        temporaryMatching.push(matching);
-      });
-    });
-    return temporaryMatching;
+        const count = temporaryMatching.filter(
+          (m) => m.mentorId === mid
+        ).length;
+        if (matching.length > 0 && count < menteeCount - countMatched) {
+          temporaryMatching.push({
+            mentorId: mid,
+            groupId: group._id,
+            teacherId: teacherId,
+          });
+          break;
+        }
+      }
+    }
+    const result = await TemporaryMatching.insertMany(temporaryMatching);
+    if (result) return "Đã thêm vào ghép tạm thời";
   } catch (error) {
     console.log(error.message);
   }
