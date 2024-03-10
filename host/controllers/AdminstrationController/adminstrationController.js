@@ -23,22 +23,15 @@ const insertListUsers = async (req, res, next) => {
   const token = req.headers["authorization"];
   if (!token) return res.status(401).send("Access denied");
   try {
-    const password = "Aa@123";
     const saltRounds = 12;
-    const excelFilePath = req.file.path;
-    const workbook = xlsx.readFile(excelFilePath);
-    const sheetName = workbook.SheetNames[0];
-    const userData = xlsx.utils.sheet_to_json(workbook.Sheets[sheetName]);
-    const newData = [];
-    for (const user of userData) {
-      try {
+    const { file } = req.body;
+    const newData = await Promise.all(
+      file.map(async (user) => {
         const salt = await bcrypt.genSalt(saltRounds);
-        const hashedPassword = await bcrypt.hash(password, salt);
-        newData.push({ ...user, password: hashedPassword });
-      } catch (error) {
-        console.error("Error hashing password:", error);
-      }
-    }
+        const hashedPassword = await bcrypt.hash(user.password, salt);
+        return { ...user, password: hashedPassword };
+      })
+    );
     const result = await adminsRepository.createListUsers(newData);
     res.status(201).json(result);
   } catch (error) {

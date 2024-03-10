@@ -23,6 +23,13 @@ import { setActivePopup } from "app/slices/activeSlice";
 
 function DataTable({ table, isSorted, noEndBorder }) {
   const { listPreName, total, limit } = useSelector((state) => state.class.classes);
+  const jwt = localStorage.getItem("jwt");
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      authorization: `Bearer ${jwt}`,
+    },
+  };
   const limitClass = 10;
   let qttPage = total ? Math.ceil(total / limit) : 0;
   const columns = useMemo(() => table.columns, [table]);
@@ -41,25 +48,26 @@ function DataTable({ table, isSorted, noEndBorder }) {
       .get(
         `${BASE_URL}/admins/list-classes?item=createdAt&order=${sort}&skip=${
           pageNo * limitClass
-        }&limit=${limitClass}&preName=${filterPreName}&search=${searchValue}`
+        }&limit=${limitClass}&preName=${filterPreName}&search=${searchValue}`,
+        config
       )
       .then((response) => dispatch(setclasses(response.data)))
       .catch((error) => console.log(error));
   const handleAddStudentInList = async () => {
     await axios
-      .get(`${BASE_URL}/admins/add-student-in-class`)
+      .get(`${BASE_URL}/admins/add-student-in-class`, config)
       .then(() => getClassInfo())
       .catch((error) => console.log(error));
   };
   const handleDeleteClassEmpty = async () => {
     await axios
-      .get(`${BASE_URL}/admins/delete-classes-empty`)
+      .get(`${BASE_URL}/admins/delete-classes-empty`, config)
       .then(() => getClassInfo())
       .catch((error) => console.log(error));
   };
   const handleAddTeacherInClass = async () => {
     await axios
-      .get(`${BASE_URL}/admins/add-teacher-in-class`)
+      .get(`${BASE_URL}/admins/add-teacher-in-class`, config)
       .then(() => getClassInfo())
       .catch((error) => console.log(error));
   };
@@ -95,7 +103,10 @@ function DataTable({ table, isSorted, noEndBorder }) {
             },
             userSelect: "none",
           }}
-          onClick={() => dispatch(setActivePopup(true))}
+          onClick={() => {
+            dispatch(setActivePopup(true));
+            dispatch(setFilterPreName(""));
+          }}
         >
           Tạo lớp học
         </MKBox>
@@ -163,7 +174,7 @@ function DataTable({ table, isSorted, noEndBorder }) {
           }}
           onClick={handleAddTeacherInClass}
         >
-          Thêm giao viên
+          Thêm giáo viên
         </MKBox>
         <MKBox display="flex" alignItems="center">
           <Autocomplete

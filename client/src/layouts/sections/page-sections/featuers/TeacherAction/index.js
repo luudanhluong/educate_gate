@@ -31,7 +31,6 @@ const TeacherDefaultNavbar = ({ transparent, light }) => {
   const jwt = localStorage.getItem("jwt");
   const [menuOpen, setMenuOpen] = useState(false);
   const [arrowOpen, setArrowOpen] = useState(false);
-  console.log(active_create_group);
   const config = {
     headers: {
       "Content-Type": "application/json",

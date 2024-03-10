@@ -35,6 +35,10 @@ adminsRouter.patch(
   "/update_semester/:id",
   adminstrationController.updateSemester
 );
+adminsRouter.patch(
+  "/update_category/:id",
+  adminstrationController.updateCategory
+);
 adminsRouter.post(
   "/insert-list-users",
   adminstrationController.insertListUsers

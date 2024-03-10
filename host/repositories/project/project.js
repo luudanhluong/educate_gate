@@ -36,7 +36,7 @@ const updateProject = async (id, project) => {
           const matchedQtt = await Matched.countDocuments({
             mentorId: c.userId,
           });
-          if (user.menteeCount > matchedQtt) {
+          if (user?.menteeCount > matchedQtt) {
             await TemporaryMatching.create({
               groupId: group._id,
               mentorId: c.userId,

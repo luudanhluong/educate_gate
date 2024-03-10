@@ -4,6 +4,7 @@ import Card from "@mui/material/Card";
 // Material Kit 2 React components
 import MKBox from "components/MKBox";
 import MKTypography from "components/MKTypography";
+import * as XLSX from "xlsx/xlsx.mjs";
 
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup";
@@ -30,19 +31,17 @@ function AddListAccount() {
   const isActivePopup = () => dispatch(setActivePopup(!active_popup));
   const { filterRole, searchValue, sort, pageNo } = useSelector((state) => state.user);
   const jwt = localStorage.getItem("jwt");
-  const headers = {
+  const config = {
     headers: {
       "Content-Type": "application/json",
       authorization: `Bearer ${jwt}`,
     },
   };
   const limitUser = 10;
-  const handleSubmit = async () => {
-    const formData = new FormData();
-    formData.append("file", fileName);
-    await axios
-      .post(`${BASE_URL}/admins/insert-list-users`, formData, headers)
-      .then(() =>
+  const handleSubmit = () => {
+    axios
+      .post(`${BASE_URL}/admins/insert-list-users`, { file: fileName }, config)
+      .then(() => {
         axios
           .get(
             `${BASE_URL}/admins/users?item=createdAt&order=${sort}&skip=${
@@ -50,9 +49,10 @@ function AddListAccount() {
             }&limit=${limitUser}&role=${filterRole}&search=${searchValue}`
           )
           .then((res) => dispatch(setUsers(res.data)))
-          .catch((err) => console.log(err))
-      )
-      .catch((error) => console.error("Error:", error));
+          .catch((err) => console.log(err));
+        isActivePopup();
+      })
+      .catch((error) => console.log(error));
   };
   return (
     <Modal
@@ -126,7 +126,18 @@ function AddListAccount() {
                         onChange={(event) => {
                           setFieldValue("file", event.currentTarget.files[0]);
                           handleChange(event);
-                          setFileName(event.currentTarget.files[0]);
+                          const file = event.currentTarget.files[0];
+                          const reader = new FileReader();
+
+                          reader.onload = (e) => {
+                            const data = new Uint8Array(e.target.result);
+                            const workbook = XLSX.read(data, { type: "array" });
+                            const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+                            const excelData = XLSX.utils.sheet_to_json(worksheet);
+                            setFileName(excelData);
+                          };
+
+                          reader.readAsArrayBuffer(new Blob([file]));
                         }}
                       />
                       <ErrorMessage name="file" component="div" className="lg_error_message" />

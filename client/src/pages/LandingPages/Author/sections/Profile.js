@@ -52,8 +52,8 @@ function Profile() {
           <Grid container justifyContent="center" sx={{ position: "relative" }} py={6}>
             <Grid item xs={12} md={7} mx={{ xs: "auto", sm: 6, md: 1 }}>
               <MKBox display="flex" justifyContent="space-between" alignItems="center" mb={1}>
-                {username ? <MKTypography variant="h3">{username}</MKTypography> : ""}
-                {phoneNumber ? (
+                {username && <MKTypography variant="h3">{username}</MKTypography>}
+                {phoneNumber && (
                   <MKBox
                     size="small"
                     sx={{
@@ -66,12 +66,10 @@ function Profile() {
                   >
                     {phoneNumber}
                   </MKBox>
-                ) : (
-                  ""
                 )}
               </MKBox>
               <Grid container display={"flex"} flexDirection={"column"} gap={"1rem"} py={2}>
-                {classId ? (
+                {classId && (
                   <MKBox>
                     <MKTypography component="span" variant="body2" fontWeight="bold">
                       Lớp:&nbsp;
@@ -87,10 +85,8 @@ function Profile() {
                       {suffName ? "-" + suffName : ""}
                     </MKTypography>
                   </MKBox>
-                ) : (
-                  ""
                 )}
-                {email ? (
+                {email && (
                   <MKBox>
                     <MKTypography component="span" variant="body2" fontWeight="bold">
                       Email:&nbsp;
@@ -104,10 +100,8 @@ function Profile() {
                       {email}
                     </MKTypography>
                   </MKBox>
-                ) : (
-                  ""
                 )}
-                {gender ? (
+                {gender && (
                   <MKBox>
                     <MKTypography component="span" variant="body2" fontWeight="bold">
                       Giới tính:&nbsp;
@@ -121,10 +115,8 @@ function Profile() {
                       {gender ? "Nam" : "Nữ"}
                     </MKTypography>
                   </MKBox>
-                ) : (
-                  ""
                 )}
-                {Dob ? (
+                {Dob && (
                   <MKBox>
                     <MKTypography component="span" variant="body2" fontWeight="bold">
                       Ngày sinh:&nbsp;
@@ -138,10 +130,8 @@ function Profile() {
                       {getDate(Dob).split("-").reverse().join("-")}
                     </MKTypography>
                   </MKBox>
-                ) : (
-                  ""
                 )}
-                {menteeCount ? (
+                {menteeCount && (
                   <MKBox>
                     <MKTypography component="span" variant="body2" fontWeight="bold">
                       Số lượng nhóm hướng dẫn:&nbsp;
@@ -155,10 +145,8 @@ function Profile() {
                       {menteeCount}
                     </MKTypography>
                   </MKBox>
-                ) : (
-                  ""
                 )}
-                {mentorCategories && mentorCategories.length > 0 ? (
+                {mentorCategories && mentorCategories.length > 0 && (
                   <MKBox>
                     <MKTypography component="span" variant="body2" fontWeight="bold">
                       Thể loại:&nbsp;
@@ -175,10 +163,8 @@ function Profile() {
                         .join(", ")}
                     </MKTypography>
                   </MKBox>
-                ) : (
-                  ""
                 )}
-                {degree ? (
+                {degree && (
                   <MKBox>
                     <MKTypography component="span" variant="body2" fontWeight="bold">
                       Mô tả sự nghiệp:&nbsp;
@@ -192,8 +178,6 @@ function Profile() {
                       {degree}
                     </MKTypography>
                   </MKBox>
-                ) : (
-                  ""
                 )}
               </Grid>
             </Grid>

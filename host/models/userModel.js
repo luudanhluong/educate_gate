@@ -1,6 +1,5 @@
 import mongoose, { Schema } from "mongoose";
 import Classes from "./classModel.js";
-import MentorCategory from "./mentorCategory.js";
 import Group from "./groupModel.js";
 
 const userSchema = new Schema(
@@ -12,7 +11,6 @@ const userSchema = new Schema(
     email: {
       type: String,
       required: [true, "Email không được để trống"],
-      unique: [true, "Email này đã tồn tại trong hệ thống"],
     },
     password: {
       type: String,

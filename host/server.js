@@ -27,7 +27,9 @@ app.use(cors());
 app.use(json());
 const port = process.env.PORT || 8080;
 const storage = multer.diskStorage({
-  destination: "./uploads/",
+  destination: (req, file, cb) => {
+    cb(null, "./uploads/");
+  },
   filename: (req, file, cb) => {
     cb(
       null,
@@ -52,10 +54,10 @@ app.use("/mentor_category", mentorCategoriesRouter);
 app.use("/project_category", projectCategoryRouter);
 app.use("/temporary_matching", temporaryMatchingRouter);
 app.use("/matched", matchedRouter);
-app.use("/admins", upload.single("file"), adminsRouter);
+app.use("/admins", adminsRouter);
+
 app.use(async (req, res, next) => {
   next(createError.NotFound());
-  res.status(404).send("URL không hợp lệ");
 });
 app.use((err, req, res, next) => {
   res.status(err.status || 500);
@@ -64,7 +66,6 @@ app.use((err, req, res, next) => {
     message: err.message,
   });
 });
-
 app.listen(port, (req, res) => {
   connectDB();
   console.log(`listening on ${port}`);

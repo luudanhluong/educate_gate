@@ -73,7 +73,10 @@ function DataTable({ table, isSorted, noEndBorder }) {
             disableClearable
             options={userType}
             getOptionLabel={(option) => option.name}
-            onChange={(e, value) => dispatch(setFilterRole(value.role))}
+            onChange={(e, value) => {
+              dispatch(setFilterRole(value.role));
+              dispatch(setPageNo(0));
+            }}
             size="small"
             isOptionEqualToValue={(option, value) => option.role === value.role}
             sx={{ width: "12rem" }}

@@ -41,20 +41,8 @@ const getUsers = async ({ item, order, skip, limit, role, search }) => {
 };
 const createListUsers = async (listData) => {
   try {
-    const emailList = listData.map((user) => user.email);
-    const userList = await User.find({
-      email: { $in: emailList },
-    })
-      .select("email username")
-      .exec();
-    if (userList.length === 0) {
-      const user = await User.insertMany(listData);
-      return user._doc;
-    }
-    return {
-      data: userList,
-      message: "Email đã tồn tại trong hệ thống",
-    };
+    const user = await User.insertMany(listData);
+    return user._doc;
   } catch (e) {
     throw new Error(e.message.toString());
   }
@@ -178,8 +166,8 @@ const addStudentInClasses = async () => {
       if (user.role === studentsRole) {
         bulkUpdateOps.push({
           updateOne: {
-            filter: { _id: user._id },
-            update: { $set: { classId: classes[classIndex]._id } },
+            filter: { _id: user?._id },
+            update: { $set: { classId: classes[classIndex]?._id } },
           },
         });
         studentCount++;
@@ -238,14 +226,14 @@ const addTeacherInClass = async () => {
     });
     shuffleArray(teacher);
     shuffleArray(classes);
-    const classWithTeacher = classes.map((c, index) => ({
-      updateOne: {
-        filter: { _id: c._id },
-        update: { $set: { teacherId: teacher[index]._id || null } },
-      },
-    }));
-    const result = await Class.bulkWrite(classWithTeacher);
-    return result;
+    classes.map(
+      async (c, index) =>
+        await Class.findByIdAndUpdate(c._id, {
+          $set: { teacherId: teacher[index]?._id },
+        })
+    );
+
+    return "Thêm thành công";
   } catch (error) {
     throw new Error(error.message);
   }

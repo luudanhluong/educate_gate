@@ -23,7 +23,7 @@ const TemporaryMatching = () => {
     },
   };
   useEffect(() => {
-    if (group)
+    if (group?._id)
       axios
         .get(
           `${BASE_URL}/temporary_matching/${
@@ -33,7 +33,7 @@ const TemporaryMatching = () => {
         )
         .then((res) => dispatch(setTemporaryMatching(res.data)))
         .catch((err) => console.log(err.message));
-  }, [group._id, pageNo, searchValue, active_popup]);
+  }, [group, pageNo, searchValue, active_popup]);
   return (
     <Modal
       open={active_popup}

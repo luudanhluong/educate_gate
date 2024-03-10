@@ -27,6 +27,13 @@ function AddClassList() {
   const { active_popup } = useSelector((state) => state.active);
   const isActivePopup = () => dispatch(setActivePopup(!active_popup));
   const handleTabType = (event, newValue) => dispatch(setActive(newValue));
+  const jwt = localStorage.getItem("jwt");
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      authorization: `Bearer ${jwt}`,
+    },
+  };
   useEffect(() => {
     dispatch(setActive(0));
   }, []);
@@ -62,7 +69,8 @@ function AddClassList() {
       .get(
         `${BASE_URL}/admins/list-classes?item=createdAt&order=${sort}&skip=${
           pageNo * limitClass
-        }&limit=${limitClass}&preName=${filterPreName}&search=${searchValue}`
+        }&limit=${limitClass}&preName=${filterPreName}&search=${searchValue}`,
+        config
       )
       .then((response) => dispatch(setclasses(response.data)))
       .catch((error) => console.log(error));
@@ -73,7 +81,8 @@ function AddClassList() {
     axios
       .post(
         BASE_URL + "/admins/create-new-classes",
-        active === 0 ? { preName, suffName, limmitStudent, quantity } : formData_1
+        active === 0 ? { preName, suffName, limmitStudent, quantity } : formData_1,
+        config
       )
       .then(() => getClassInfo())
       .catch((error) => console.error(error.message));

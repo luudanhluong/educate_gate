@@ -15,13 +15,12 @@ import DataTableBodyCell from "Tables/DataTableBodyCell";
 import { useDispatch, useSelector } from "react-redux";
 import { Icon } from "@mui/material";
 import MKPagination from "components/MKPagination";
-import { setMentorChoice } from "app/slices/temporaryMatching";
-import { setPageNo } from "app/slices/temporaryMatching";
-import { setSearchValue } from "app/slices/temporaryMatching";
+import { setPageNo, setMentorChoice, setSearchValue } from "app/slices/temporaryMatching";
 import MKButton from "components/MKButton";
 import axios from "axios";
 import { BASE_URL } from "utilities/initialValue";
 import { setActivePopup } from "app/slices/activeSlice";
+import { setGroups } from "app/slices/groupSlice";
 
 function DataTable({ table, isSorted, noEndBorder }) {
   const {
@@ -30,6 +29,7 @@ function DataTable({ table, isSorted, noEndBorder }) {
     limit,
   } = useSelector((state) => state.temporaryMatching.temporaryMatching);
   const { pageNo, mentorChoice } = useSelector((state) => state.temporaryMatching);
+  const { classId } = useSelector((state) => state.classOnerTeacher);
   let qttPage = count ? Math.ceil(count / limit) : 0;
   const columns = useMemo(() => table.columns, [table]);
   const data = useMemo(() => table.rows, [table]);
@@ -53,11 +53,17 @@ function DataTable({ table, isSorted, noEndBorder }) {
       axios
         .post(
           `${BASE_URL}/matched/add_new`,
-          { mentorId: mentorChoice.mentorId[0]._id, groupId: mentorChoice.groupId },
+          { mentorId: mentorChoice.mentorId[0]?._id, groupId: mentorChoice?.groupId },
           config
         )
-        .then(() => {})
+        .then(() =>
+          axios
+            .get(`${BASE_URL}/group/${classId}/groups`, config)
+            .then((res) => dispatch(setGroups(res.data)))
+            .catch((error) => console.log(error.message))
+        )
         .catch((err) => console.log(err.message));
+
       dispatch(setActivePopup(false));
       dispatch(setMentorChoice({}));
     }

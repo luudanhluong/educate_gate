@@ -18,17 +18,18 @@ import EditProfile from "./sections/EditProfile";
 function Author() {
   const dispatch = useDispatch();
   const jwt = localStorage.getItem("jwt");
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${jwt}`,
+    },
+  };
   const { userLogin } = useSelector((state) => state.user);
   const { active_popup } = useSelector((state) => state.active);
   const { _id: id } = userLogin || {};
   useEffect(() => {
     axios
-      .get(BASE_URL + "/user/profile", {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${jwt}`,
-        },
-      })
+      .get(BASE_URL + "/user/profile", config)
       .then((res) => dispatch(setUserLogin(res.data)))
       .catch((err) => console.log(err));
   }, [dispatch]);
@@ -40,12 +41,7 @@ function Author() {
     dispatch(setActivePopup(false));
     if (id)
       axios
-        .get(BASE_URL + "/mentor_category/" + id, {
-          headers: {
-            "Content-Type": "application/json",
-            authorization: `Bearer ${jwt}`,
-          },
-        })
+        .get(BASE_URL + "/mentor_category/" + id, config)
         .then((res) => dispatch(setMentorCategories(res.data)))
         .catch((err) => console.log(err.message));
   }, [dispatch, userLogin]);

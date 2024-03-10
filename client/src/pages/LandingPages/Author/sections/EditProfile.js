@@ -262,7 +262,7 @@ const EditProfile = () => {
                             />
                             <ErrorMessage name="Dob" component="div" className="lg_error_message" />
                           </MKBox>
-                          {role === 3 ? (
+                          {role && role === 3 && (
                             <MKBox sx={{ flex: 1 }}>
                               <Field
                                 name="menteeCount"
@@ -282,11 +282,9 @@ const EditProfile = () => {
                                 className="lg_error_message"
                               />
                             </MKBox>
-                          ) : (
-                            ""
                           )}
                         </MKBox>
-                        {role === 3 ? (
+                        {role && role === 3 && (
                           <FormControl>
                             <InputLabel id="select-gender-label">
                               Chọn thể loại hướng dẫn{" "}
@@ -412,8 +410,6 @@ const EditProfile = () => {
                                 : ""}
                             </MKBox>
                           </FormControl>
-                        ) : (
-                          ""
                         )}
                         <MKBox>
                           <Field

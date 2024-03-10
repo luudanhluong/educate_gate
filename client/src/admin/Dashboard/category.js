@@ -9,12 +9,10 @@ import { ErrorMessage, Field, Form, Formik } from "formik";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { BASE_URL } from "utilities/initialValue";
-import { useNavigate } from "react-router-dom";
 import { setCategories } from "app/slices/categorySlice";
 
 const Category = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const { active_popup } = useSelector((state) => state.active);
   const { category } = useSelector((state) => state.category);
   const isActivePopup = (actions) => dispatch(setActivePopup(actions));
@@ -26,6 +24,7 @@ const Category = () => {
     },
   };
   const handleSubmit = (values) => {
+    console.log(values);
     if (active_popup.type === "update")
       axios
         .patch(`${BASE_URL}/admins/update_category/${category._id}`, values, headers)
@@ -33,9 +32,9 @@ const Category = () => {
           axios
             .get(`${BASE_URL}/admins/all_categories`, headers)
             .then((res) => dispatch(setCategories(res.data)))
-            .catch(() => navigate("/pages/authentication/sign-in"))
+            .catch((err) => console.log(err.message))
         )
-        .catch(() => navigate("/pages/authentication/sign-in"));
+        .catch((err) => console.log(err.message));
     else
       axios
         .post(`${BASE_URL}/admins/create_new_category`, values, headers)
@@ -44,7 +43,7 @@ const Category = () => {
             .get(`${BASE_URL}/admins/all_categories`, headers)
             .then((res) => dispatch(setCategories(res.data)))
         )
-        .catch(() => navigate("/pages/authentication/sign-in"));
+        .catch((err) => console.log(err.message));
     isActivePopup({ type: "close", payload: "" });
   };
   const deleteSemester = (id) => {
@@ -55,7 +54,7 @@ const Category = () => {
           .get(`${BASE_URL}/admins/all_categories`, headers)
           .then((res) => dispatch(setCategories(res.data)))
       );
-    // .catch(() => navigate("/pages/authentication/sign-in"));
+    // .catch((err) => console.log(err.message));
     isActivePopup({ type: "close", payload: "" });
   };
   const initialValues = Yup.object().shape({
@@ -118,13 +117,13 @@ const Category = () => {
                       <Select
                         labelId="select-category-label"
                         id="select-category-action"
-                        name="category"
+                        name="status"
                         value={values.status}
                         onChange={handleChange}
                         label="Trạng thái thể loại"
                       >
-                        <MenuItem value="Active">Hoạt động</MenuItem>
-                        <MenuItem value="Inactive">Không hoạt động</MenuItem>
+                        <MenuItem value={"Active"}>Hoạt động</MenuItem>
+                        <MenuItem value={"Inactive"}>Không hoạt động</MenuItem>
                       </Select>
                     </FormControl>
                   ) : (

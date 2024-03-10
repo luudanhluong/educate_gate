@@ -5,7 +5,6 @@ import "./studentList.css";
 import { Icon } from "@mui/material";
 const StudentsList = () => {
   const { classStudent } = useSelector((state) => state.classOnerTeacher);
-  console.log(classStudent);
   return (
     <MKBox pl={"25px"} pr={"5px"}>
       <Grid container>
