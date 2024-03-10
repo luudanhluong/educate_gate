@@ -12,9 +12,11 @@ import "./App.css";
 import Dashboard from "admin/Dashboard";
 import GroupDetail from "layouts/user/students/index";
 import { ToastContainer } from "react-toastify";
+import { useSelector } from "react-redux";
 
 export default function App() {
   const { pathname } = useLocation();
+  const { userLogin } = useSelector((state) => state.user);
 
   useEffect(() => {
     document.documentElement.scrollTop = 0;
@@ -40,7 +42,12 @@ export default function App() {
         <Route path="/group/:groupId/members" element={<GroupDetail />} />
         <Route path="/admin/dashboard" element={<Dashboard />} />
         <Route path="/presentation" element={<Presentation />} />
-        <Route path="*" element={<Navigate to="/presentation" />} />
+        <Route
+          path="*"
+          element={
+            <Navigate to={`${userLogin.role === 1 ? "/admin/dashboard" : "/presentation"}`} />
+          }
+        />
       </Routes>
     </ThemeProvider>
   );
