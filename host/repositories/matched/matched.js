@@ -1,13 +1,22 @@
 import Matched from "../../models/matchedModel.js";
 import TemporaryMatching from "../../models/temporaryMatching.js";
 
-const addMatched = async (values) => {
+const addMatched = async (groupId, userId) => {
   try {
-    await TemporaryMatching.deleteMany({ groupId: values.groupId });
-    return await Matched.create(values);
+    await TemporaryMatching.deleteOne({ groupId: groupId });
+    return await Matched.create({ groupId: groupId, mentorId: userId });
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+const addAllMatching = async (teacherId) => {
+  try {
+    const listMatched = await TemporaryMatching.find({ teacherId: teacherId });
+    await TemporaryMatching.deleteMany({ teacherId: teacherId });
+    return await Matched.insertMany(listMatched);
   } catch (error) {
     throw new Error(error.message);
   }
 };
 
-export default { addMatched };
+export default { addMatched, addAllMatching };

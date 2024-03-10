@@ -84,7 +84,7 @@ const ListOfGroups = () => {
               </MKBox>
             )}
           </Box>
-          {group.mentorDetails.length > 0 ? (
+          {group.mentorDetails?.length > 0 ? (
             <Box
               sx={{
                 p: 1.3,

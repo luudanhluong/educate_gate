@@ -22,4 +22,8 @@ Authorization: Bearse eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWJlNjkyY
 
 
 ### 
-http://localhost:9999/teacher 
+http://localhost:9999/teacher/65ede0edb11fb5bd145a39fd/suggest
+Authorization: Bearse eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWVkZTBlZGIxMWZiNWJkMTQ1YTM5ZmQiLCJpYXQiOjE3MTAwOTE5MjEsImV4cCI6MTcxMDEzNTEyMX0.kCENblfh8KoD4Fr-VOTuPElT5aucJU7IhbJMrPpZIDI
+### 
+http://localhost:9999/teacher/65ede0edb11fb5bd145a39fd 
+Authorization: Bearse eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWVkZTBlZGIxMWZiNWJkMTQ1YTM5ZmQiLCJpYXQiOjE3MTAwOTE5MjEsImV4cCI6MTcxMDEzNTEyMX0.kCENblfh8KoD4Fr-VOTuPElT5aucJU7IhbJMrPpZIDI

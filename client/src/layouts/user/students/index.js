@@ -33,6 +33,7 @@ const GroupDetail = () => {
   };
 
   useEffect(() => {
+    console.log(`${BASE_URL}/group/${groupId}`);
     axios
       .get(`${BASE_URL}/group/${groupId}`, config)
       .then((res) => dispatch(setGroup(res.data[0])))

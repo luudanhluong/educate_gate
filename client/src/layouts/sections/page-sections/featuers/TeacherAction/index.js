@@ -18,7 +18,7 @@ import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { BASE_URL } from "utilities/initialValue";
 import { setActivePopupCreateGroup } from "app/slices/activeSlice";
-import CreateGroupModal from "../components/FeaturesOne/CreateGroupRandomModal ";
+import CreateGroupModal from "../components/FeaturesOne/CreateGroupRandomModal";
 import { setActivePopupCreateGroupFromExcel } from "app/slices/activeSlice";
 import CreateGroupFromExcelPopup from "../components/CreateGroupUpFileModal";
 

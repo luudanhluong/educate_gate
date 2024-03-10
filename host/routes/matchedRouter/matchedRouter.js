@@ -3,6 +3,7 @@ import matchedController from "../../controllers/matchedController/index.js";
 
 const matchedRouter = express.Router();
 
-matchedRouter.post("/add_new", matchedController.addMatched);
+matchedRouter.post("/", matchedController.addMatched);
+matchedRouter.get("/:teacherId/teacher", matchedController.addAllMatching);
 
 export default matchedRouter;

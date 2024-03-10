@@ -12,13 +12,6 @@ const getGroupById = async (req, res) => {
   }
 };
 
-// const groupDetail = async (req, res) => {
-//   try {
-//     const { groupId } = req.params;
-//   } catch (error) {
-//     res.status(500).json({ message: error.message });
-//   }
-// };
 const getGroupsByClass = async (req, res) => {
   try {
     const { classId } = req.params;
