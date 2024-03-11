@@ -40,7 +40,7 @@ const ListOfGroups = () => {
           sx={{
             display: "flex",
             flexDirection: "column",
-            width: `calc(100%/3 - 18px)`,
+            width: "calc(100%/3 - 18px)",
             height: 166,
             borderRadius: "16px",
             boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
