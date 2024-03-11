@@ -54,6 +54,7 @@ const createNewListClassesFromFile = async (listData) => {
         { preName: item.preName },
         { code: item.code },
         { suffName: item.suffName },
+        { limtStudent: item.limtStudent },
       ],
     }));
 
@@ -74,7 +75,7 @@ const createNewListClass = async ({
   suffName,
   preName,
   quantity,
-  limmitStudent,
+  limitStudent,
 }) => {
   try {
     const listExistWithPreName = await Class.countDocuments({
@@ -86,7 +87,7 @@ const createNewListClass = async ({
         suffName,
         preName,
         code: index + listExistWithPreName,
-        limmitStudent,
+        limitStudent,
       });
     }
     const result = await Class.create(data);
@@ -139,8 +140,7 @@ const getClasses = async ({ item, order, limit, skip, preName, search }) => {
     ])
       .sort({ [item]: order })
       .skip(skip)
-      .limit(limit)
-      .exec();
+      .limit(limit);
     const listPreName = await Class.distinct("preName").exec();
     const total = await Class.countDocuments(query).exec();
     return { data: result, total, skip, limit, listPreName };
@@ -151,35 +151,45 @@ const getClasses = async ({ item, order, limit, skip, preName, search }) => {
 const addStudentInClasses = async () => {
   try {
     const studentsRole = 4;
-    let studentCount = 0;
-    let classIndex = 0;
-    const bulkUpdateOps = [];
-    const targetStudentsPerClass = 30;
     const users = await User.find({
       $or: [{ classId: { $exists: false } }, { classId: { $eq: null } }],
       role: studentsRole,
     });
-    const classes = await Class.find({
-      $or: [{ status: { $exists: false } }, { status: "empty" }],
-    });
-    for (const user of users) {
-      if (user.role === studentsRole) {
-        bulkUpdateOps.push({
-          updateOne: {
-            filter: { _id: user?._id },
-            update: { $set: { classId: classes[classIndex]?._id } },
-          },
-        });
-        studentCount++;
-        if (studentCount === targetStudentsPerClass) {
-          classIndex++;
-          studentCount = 0;
+    const classes = await Class.aggregate([
+      {
+        $lookup: {
+          from: "users",
+          localField: "_id",
+          foreignField: "classId",
+          as: "students",
+        },
+      },
+      {
+        $addFields: {
+          students: { $size: "$students" },
+        },
+      },
+      {
+        $match: {
+          $expr: { $lt: ["$students", "$limitStudent"] },
+        },
+      },
+    ]);
+    for (const cls of classes) {
+      const { _id: classId, limitStudent, students } = cls;
+      for (let i = 0; i < limitStudent - students; i++) {
+        if (users.length === 0) {
+          break;
         }
+        const user = users.shift();
+        await User.updateOne({ _id: user._id }, { $set: { classId: classId } });
+      }
+
+      if (users.length === 0) {
+        break;
       }
     }
-    if (bulkUpdateOps.length > 0) {
-      return await User.bulkWrite(bulkUpdateOps, { ordered: false });
-    }
+    return "Thêm thành công";
   } catch (error) {
     throw new Error(error.message);
   }

@@ -5,7 +5,7 @@ const createNewListClass = async ({
   suffName,
   preName,
   quantity,
-  limmitStudent,
+  limitStudent,
 }) => {
   try {
     const listExistWithPreName = await Class.countDocuments({
@@ -17,7 +17,7 @@ const createNewListClass = async ({
         suffName,
         preName,
         code: index + listExistWithPreName,
-        limmitStudent,
+        limitStudent,
       });
     }
     const result = await Class.create(data);

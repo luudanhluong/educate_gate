@@ -23,7 +23,7 @@ const GroupMembers = () => {
       }}
     >
       <Box sx={{ width: "65%", marginRight: 2, marginTop: 1 }}>
-        {groupDetails.project ? (
+        {groupDetails?.project ? (
           <Box
             elevation={3}
             style={{
@@ -38,7 +38,7 @@ const GroupMembers = () => {
               {groupDetails.project[0]?.name}
             </Typography>
             <Typography variant="body2">{groupDetails.project[0]?.description}</Typography>
-            {userLogin.isLeader && userLogin.groupId === groupId && (
+            {userLogin?.isLeader && userLogin?.groupId === groupId && (
               <MKButton
                 onClick={() => dispatch(setActivePopup(true))}
                 sx={{
@@ -64,11 +64,11 @@ const GroupMembers = () => {
           }}
         >
           <Typography variant="h6" sx={{ marginBottom: 1, pt: 2, pl: 2 }}>
-            {groupDetails.name} ({groupDetails.userCount} Học sinh)
+            {groupDetails?.name} ({groupDetails?.userCount} Học sinh)
           </Typography>
           <List dense sx={{ padding: "20px" }}>
-            {groupDetails.members
-              ? groupDetails.members.map((member) => (
+            {groupDetails?.members
+              ? groupDetails?.members.map((member) => (
                   <ListItem key={member.username}>
                     {member.avatar ? (
                       <Avatar alt={member.username} src={member.avatar} />

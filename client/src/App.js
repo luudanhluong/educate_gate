@@ -12,12 +12,29 @@ import "./App.css";
 import Dashboard from "admin/Dashboard";
 import GroupDetail from "layouts/user/students/index";
 import { ToastContainer } from "react-toastify";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setUserLogin } from "app/slices/userSlice";
+import { BASE_URL } from "utilities/initialValue";
+import axios from "axios";
 
 export default function App() {
+  const dispatch = useDispatch();
   const { pathname } = useLocation();
   const { userLogin } = useSelector((state) => state.user);
 
+  const jwt = localStorage.getItem("jwt");
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${jwt}`,
+    },
+  };
+  useEffect(() => {
+    axios
+      .get(BASE_URL + "/user/profile", config)
+      .then((res) => dispatch(setUserLogin(res.data)))
+      .catch((err) => console.log(err));
+  }, [dispatch]);
   useEffect(() => {
     document.documentElement.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;
@@ -45,7 +62,7 @@ export default function App() {
         <Route
           path="*"
           element={
-            <Navigate to={`${userLogin.role === 1 ? "/admin/dashboard" : "/presentation"}`} />
+            <Navigate to={`${userLogin?.role === 1 ? "/admin/dashboard" : "/presentation"}`} />
           }
         />
       </Routes>

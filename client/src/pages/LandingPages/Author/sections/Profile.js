@@ -101,21 +101,19 @@ function Profile() {
                     </MKTypography>
                   </MKBox>
                 )}
-                {gender && (
-                  <MKBox>
-                    <MKTypography component="span" variant="body2" fontWeight="bold">
-                      Giới tính:&nbsp;
-                    </MKTypography>
-                    <MKTypography
-                      component="span"
-                      variant="body2"
-                      color="text"
-                      sx={{ fontWeight: "400" }}
-                    >
-                      {gender ? "Nam" : "Nữ"}
-                    </MKTypography>
-                  </MKBox>
-                )}
+                <MKBox>
+                  <MKTypography component="span" variant="body2" fontWeight="bold">
+                    Giới tính:&nbsp;
+                  </MKTypography>
+                  <MKTypography
+                    component="span"
+                    variant="body2"
+                    color="text"
+                    sx={{ fontWeight: "400" }}
+                  >
+                    {gender ? "Nam" : "Nữ"}
+                  </MKTypography>
+                </MKBox>
                 {Dob && (
                   <MKBox>
                     <MKTypography component="span" variant="body2" fontWeight="bold">

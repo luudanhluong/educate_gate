@@ -43,7 +43,7 @@ const createNewListClass = async (req, res) => {
   const token = req.headers["authorization"];
   if (!token) return res.status(401).send("Access denied");
   try {
-    const { suffName, preName, quantity, limmitStudent } = req.body;
+    const { suffName, preName, quantity, limitStudent } = req.body;
     let result;
     if (!preName) {
       const excelFilePath = req.file.path;
@@ -56,7 +56,7 @@ const createNewListClass = async (req, res) => {
       suffName,
       preName,
       quantity,
-      limmitStudent,
+      limitStudent,
     });
     res.status(201).json(result);
   } catch (error) {
@@ -68,9 +68,9 @@ const getClasses = async (req, res, next) => {
     const { item, order, limit, skip, preName, search } = req.query;
     const result = await adminsRepository.getClasses({
       item,
-      order: Number(order),
-      limit: Number(limit),
-      skip: Number(skip),
+      order: Number(order || 1),
+      limit: Number(limit || 10),
+      skip: Number(skip || 0),
       preName,
       search: search,
     });

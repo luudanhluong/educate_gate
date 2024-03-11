@@ -5,6 +5,7 @@ const classSchema = new mongoose.Schema(
     preName: { type: String, required: true },
     suffName: { type: String },
     code: { type: Number, required: true },
+    limitStudent: { type: Number, required: true },
     teacherId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",

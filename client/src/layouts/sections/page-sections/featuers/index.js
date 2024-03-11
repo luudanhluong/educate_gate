@@ -11,6 +11,7 @@ import routes from "routes";
 import TemporaryMatching from "./components/FeaturesOne/listTemporaryMaching";
 import { BASE_URL } from "utilities/initialValue";
 import { setUserLogin } from "app/slices/userSlice";
+import ViewAllGroup from "./components/FeaturesOne/viewAllGroup";
 const TeachersFunction = () => {
   const dispatch = useDispatch();
   const jwt = localStorage.getItem("jwt");
@@ -29,7 +30,7 @@ const TeachersFunction = () => {
       .get(BASE_URL + "/user/profile", config)
       .then((res) => dispatch(setUserLogin(res.data)))
       .catch((err) => console.log(err));
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     const fetchStudents = async () => {
@@ -65,9 +66,16 @@ const TeachersFunction = () => {
             <TeacherDefaultNavbar transparent />
           </Grid>
           <Grid item xs={12} md={10}>
-            <MKBox p={0} display="flex" flexDirection="column">
-              <ListOfGroups groups={groups} />
-              <StudentOfClassesList classId={students} />
+            {students.length <= 0 ? (
+              <MKBox p={0} display="flex" flexDirection="column">
+                <ListOfGroups groups={groups} />
+                <StudentOfClassesList classId={students} />
+              </MKBox>
+            ) : (
+              ""
+            )}
+            <MKBox>
+              <ViewAllGroup />
             </MKBox>
           </Grid>
         </Grid>

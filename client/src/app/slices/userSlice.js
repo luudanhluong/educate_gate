@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialValue = {
   users: {},
   userRegister: {},
-  userLogin: {},
+  userLogin: { role: 0 },
   filterRole: 0,
   searchValue: "",
   sort: -1,

@@ -26,9 +26,13 @@ import DefaultNavbarMobile from "examples/Navbars/DefaultNavbar/DefaultNavbarMob
 
 // Material Kit 2 React base styles
 import breakpoints from "assets/theme/base/breakpoints";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
+import { BASE_URL } from "utilities/initialValue";
+import { setUserLogin } from "app/slices/userSlice";
 
 function DefaultNavbar({ brand, routes, transparent, light, action, sticky, relative, center }) {
+  const dispatch = useDispatch();
   const [dropdown, setDropdown] = useState("");
   const [dropdownEl, setDropdownEl] = useState("");
   const [dropdownName, setDropdownName] = useState("");
@@ -39,8 +43,21 @@ function DefaultNavbar({ brand, routes, transparent, light, action, sticky, rela
   const [mobileNavbar, setMobileNavbar] = useState(false);
   const [mobileView, setMobileView] = useState(false);
 
-  const userLogin = useSelector((state) => state.user.userLogin);
+  const { userLogin } = useSelector((state) => state.user);
 
+  const jwt = localStorage.getItem("jwt");
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${jwt}`,
+    },
+  };
+  useEffect(() => {
+    axios
+      .get(BASE_URL + "/user/profile", config)
+      .then((res) => dispatch(setUserLogin(res.data)))
+      .catch((err) => console.log(err));
+  }, [dispatch]);
   const openMobileNavbar = () => setMobileNavbar(!mobileNavbar);
 
   useEffect(() => {
@@ -80,11 +97,12 @@ function DefaultNavbar({ brand, routes, transparent, light, action, sticky, rela
     />
   );
   const renderNavbarItems = routes.map(({ name, icon, href, route, collapse }) => {
-    if (userLogin.role === "1") {
-      return defautNav({ name, icon, href, route, collapse });
-    } else if (userLogin.role !== "1" && name !== "admins") {
-      return defautNav({ name, icon, href, route, collapse });
-    }
+    // if (userLogin?.role === 1) {
+    //   return defautNav({ name, icon, href, route, collapse });
+    // } else if (userLogin?.role !== 1) {
+    // }
+    console.log(userLogin);
+    return defautNav({ name, icon, href, route, collapse });
   });
 
   // Render the routes on the dropdown menu

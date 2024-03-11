@@ -42,7 +42,7 @@ function AddClassList() {
       ? {
           preName: "",
           suffName: "",
-          limmitStudent: 30,
+          limitStudent: 30,
           quantity: 0,
         }
       : {
@@ -53,7 +53,7 @@ function AddClassList() {
       ? {
           preName: Yup.string().required("Vui lòng nhập tiền tố của lớp học"),
           suffName: Yup.string(),
-          limmitStudent: Yup.number()
+          limitStudent: Yup.number()
             .typeError("Vui lòng nhập số")
             .required("Vui lòng nhập giới hạn sinh viên của lớp của lớp học"),
           quantity: Yup.number()
@@ -75,13 +75,13 @@ function AddClassList() {
       .then((response) => dispatch(setclasses(response.data)))
       .catch((error) => console.log(error));
   const handleSubmit = (values) => {
-    const { preName, suffName, limmitStudent, quantity } = values;
+    const { preName, suffName, limitStudent, quantity } = values;
     const formData_1 = new FormData();
     formData_1.append("file", fileName);
     axios
       .post(
         BASE_URL + "/admins/create-new-classes",
-        active === 0 ? { preName, suffName, limmitStudent, quantity } : formData_1,
+        active === 0 ? { preName, suffName, limitStudent, quantity } : formData_1,
         config
       )
       .then(() => getClassInfo())
@@ -242,15 +242,15 @@ function AddClassList() {
                             component={MKInput}
                             label="Giới hạn của sinh viên trong 1 lớp"
                             type="text"
-                            value={values.limmitStudent}
+                            value={values.limitStudent}
                             onChange={handleChange}
-                            name="limmitStudent"
+                            name="limitStudent"
                             className={`${touched.file && errors.file ? "error" : ""}`}
                             accept=".xls, .xlsx"
-                            id="limmitStudent"
+                            id="limitStudent"
                           />
                           <ErrorMessage
-                            name="limmitStudent"
+                            name="limitStudent"
                             component="div"
                             className="lg_error_message"
                           />
