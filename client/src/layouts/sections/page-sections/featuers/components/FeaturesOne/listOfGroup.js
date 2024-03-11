@@ -11,6 +11,7 @@ const ListOfGroups = () => {
   const dispatch = useDispatch();
   const [groupData, setGroupData] = useState([]);
   const groups = useSelector((state) => state.group.groups);
+  const { userLogin } = useSelector((state) => state.user);
   const { active_popup } = useSelector((state) => state.active);
   const isActivePopup = () => dispatch(setActivePopup(!active_popup));
   const navigate = useNavigate();
@@ -21,7 +22,7 @@ const ListOfGroups = () => {
   useEffect(() => {
     setGroupData(groups);
   }, [groups]);
-  console.log(groups);
+
   return (
     <Box
       sx={{
@@ -39,7 +40,7 @@ const ListOfGroups = () => {
           sx={{
             display: "flex",
             flexDirection: "column",
-            width: `calc(100%/3 - 18px)`,
+            width: "calc(100%/3 - 18px)",
             height: 166,
             borderRadius: "16px",
             boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
@@ -145,41 +146,37 @@ const ListOfGroups = () => {
                 if (userLogin?.role === 2) {
                   isActivePopup();
                   dispatch(setGroup(group));
-                }}
-              >
-                <em>Danh sách người hướng dẫn</em>
-              </MKBox>
-            )}
-            <Box
-              px={2}
-              py={1}
-              sx={{
-                bgcolor: "#F4F4F4",
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                // position: "absolute",
-                // bottom: 0,
-                // left: 0,
-                // right: 0,
+                }
               }}
             >
-              <Typography fontSize={"0.825rem"} variant="body2">
-                {group.userCount} Thành viên
-              </Typography>
-              <Typography
-                variant="body2"
-                fontSize={"0.725rem"}
-                sx={{ cursor: "pointer", textDecoration: "underline" }}
-                onClick={() => handleGroupDetailClick(group._id)}
-              >
-                <em>Chi tiết nhóm</em>
-              </Typography>
-            </Box>
+              {userLogin?.role === 2 && <em>Danh sách người hướng dẫn</em>}
+            </MKBox>
+          )}
+          <Box
+            px={2}
+            py={1}
+            sx={{
+              bgcolor: "#F4F4F4",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <Typography fontSize={"0.825rem"} variant="body2">
+              {group.userCount} Thành viên
+            </Typography>
+            <Typography
+              variant="body2"
+              fontSize={"0.725rem"}
+              sx={{ cursor: "pointer", textDecoration: "underline" }}
+              onClick={() => handleGroupDetailClick(group._id)}
+            >
+              <em>Chi tiết nhóm</em>
+            </Typography>
           </Box>
-        ))}
-      </Box>
-    </>
+        </Box>
+      ))}
+    </Box>
   );
 };
 
