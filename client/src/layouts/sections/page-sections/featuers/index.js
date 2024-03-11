@@ -16,6 +16,7 @@ const TeachersFunction = () => {
   const dispatch = useDispatch();
   const jwt = localStorage.getItem("jwt");
   const groups = useSelector((state) => state.group.groups);
+  const { active } = useSelector((state) => state.active);
   const selectedClassId = useSelector((state) => state.classOnerTeacher.classId);
   const [students, setStudents] = useState([]);
   const config = {
@@ -54,7 +55,7 @@ const TeachersFunction = () => {
           <Grid
             item
             xs={12}
-            md={2}
+            md={3}
             height="80%"
             sx={{
               overflow: "auto",
@@ -65,18 +66,17 @@ const TeachersFunction = () => {
           >
             <TeacherDefaultNavbar transparent />
           </Grid>
-          <Grid item xs={12} md={10}>
-            {students.length <= 0 ? (
+          <Grid item xs={12} md={9}>
+            {active != 2 ? (
               <MKBox p={0} display="flex" flexDirection="column">
                 <ListOfGroups groups={groups} />
                 <StudentOfClassesList classId={students} />
               </MKBox>
             ) : (
-              ""
+              <MKBox>
+                <ViewAllGroup />
+              </MKBox>
             )}
-            <MKBox>
-              <ViewAllGroup />
-            </MKBox>
           </Grid>
         </Grid>
       </MKBox>

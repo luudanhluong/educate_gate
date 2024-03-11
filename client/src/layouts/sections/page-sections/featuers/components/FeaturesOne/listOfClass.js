@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setClassId, setClassStudent } from "../../../../../../app/slices/classOnerTeacherSlice";
 import PropTypes from "prop-types";
 import MKBox from "components/MKBox";
@@ -8,10 +8,12 @@ import axios from "axios";
 import { Typography } from "@mui/material";
 import { BASE_URL } from "utilities/initialValue";
 import { setGroups } from "app/slices/groupSlice";
+import { setActive } from "app/slices/activeSlice";
 
 const ListOfClasses = ({ classes = [] }) => {
   const dispatch = useDispatch();
   const [selectedClassIndex, setSelectedClassIndex] = useState(null);
+  const { active } = useSelector((state) => state.active);
   const jwt = localStorage.getItem("jwt");
   const headers = {
     headers: {
@@ -21,7 +23,10 @@ const ListOfClasses = ({ classes = [] }) => {
   };
 
   useEffect(() => {
-    if (classes.length > 0) {
+    if (active === 2) {
+      setSelectedClassIndex("");
+    }
+    if (classes.length > 0 && active !== 2) {
       const firstClassId = classes[0]._id;
       setSelectedClassIndex(firstClassId);
 
@@ -38,9 +43,10 @@ const ListOfClasses = ({ classes = [] }) => {
         .then((res) => dispatch(setGroups(res.data)))
         .catch((error) => console.log(error.message));
     }
-  }, [classes, dispatch]);
+  }, [classes, dispatch, active]);
 
   const getClassStudent = (id) => {
+    dispatch(setActive(0));
     axios
       .get(`${BASE_URL}/group/${id}/groups`, headers)
       .then((res) => {

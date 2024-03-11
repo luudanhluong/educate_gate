@@ -21,6 +21,7 @@ import { setActivePopupCreateGroup } from "app/slices/activeSlice";
 import CreateGroupModal from "../components/FeaturesOne/CreateGroupRandomModal";
 import { setActivePopupCreateGroupFromExcel } from "app/slices/activeSlice";
 import CreateGroupFromExcelPopup from "../components/CreateGroupUpFileModal";
+import { setActive } from "app/slices/activeSlice";
 
 const TeacherDefaultNavbar = ({ transparent, light }) => {
   const dispatch = useDispatch();
@@ -78,7 +79,7 @@ const TeacherDefaultNavbar = ({ transparent, light }) => {
 
   return (
     <Container
-      width={"282px"}
+      width={"312px"}
       sx={{
         overflowY: "auto",
       }}
@@ -138,6 +139,27 @@ const TeacherDefaultNavbar = ({ transparent, light }) => {
           <ListOfClasses classes={classes} onSelectClass={handleSelectClass} />
           {userLogin?.role === 2 && (
             <MKBox
+              onClick={() => dispatch(setActive(2))}
+              sx={{
+                transform: "scale(1.05)",
+                display: "flex",
+                gap: "3px",
+                alignItems: "center",
+                "&:hover": {
+                  color: "#000",
+                  cursor: "cursor",
+                },
+              }}
+              light={light}
+            >
+              <Icon>groups</Icon>
+              <Typography component="span" fontSize="0.925rem">
+                Danh sách nhóm
+              </Typography>
+            </MKBox>
+          )}
+          {userLogin?.role === 2 && (
+            <MKBox
               onClick={handleClick}
               sx={{
                 gap: "3px",
@@ -163,6 +185,7 @@ const TeacherDefaultNavbar = ({ transparent, light }) => {
                 <List>
                   <ListItemButton href="#random-group" onClick={handleRandomGroup}>
                     <ListItemText
+                      onClick={() => dispatch(setActive(0))}
                       primary={
                         <Typography
                           variant="body1"
@@ -180,6 +203,7 @@ const TeacherDefaultNavbar = ({ transparent, light }) => {
                   </ListItemButton>
                   <ListItemButton href="#excel-group" onClick={handleExcelGroup}>
                     <ListItemText
+                      onClick={() => dispatch(setActive(0))}
                       primary={
                         <Typography
                           variant="body1"
