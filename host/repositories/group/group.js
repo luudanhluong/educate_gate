@@ -7,6 +7,9 @@ const getGroupById = async (id) => {
   try {
     const group = await Group.aggregate([
       {
+        $match: { _id: new mongoose.Types.ObjectId(id) },
+      },
+      {
         $lookup: {
           from: "projects",
           localField: "projectId",
@@ -38,18 +41,40 @@ const getGroupById = async (id) => {
           as: "mentorDetails",
         },
       },
-      { $match: { _id: new mongoose.Types.ObjectId(id) } },
       {
         $addFields: {
           userCount: { $size: "$members" },
         },
       },
+      {
+        $lookup: {
+          from: "projectcategories",
+          localField: "project._id",
+          foreignField: "projectId",
+          as: "projectCategories",
+        },
+      },
+      {
+        $lookup: {
+          from: "categories",
+          localField: "projectCategories.categoryId",
+          foreignField: "_id",
+          as: "categories",
+        },
+      },
+      {
+        $addFields: {
+          categories: "$categories.name",
+        },
+      },
     ]);
+
     return group;
   } catch (error) {
     throw new Error(error.message);
   }
 };
+
 const getGroupMembers = async (groupId) => {
   try {
     const members = await User.find({ groupId: groupId }).exec();
