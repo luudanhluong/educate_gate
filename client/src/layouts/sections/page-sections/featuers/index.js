@@ -51,11 +51,11 @@ const TeachersFunction = () => {
       <DefaultNavbar routes={routes} transparent />
       <TemporaryMatching />
       <MKBox pt={{ xs: 12, sm: 14 }} height="100vh" display="flex" justifyContent="center">
-        <Grid container width="80%" display="flex" justifyContent="center">
+        <Grid container width="100%" mx={"4rem"} display="flex" justifyContent="center">
           <Grid
             item
             xs={12}
-            md={3}
+            md={2}
             height="80%"
             sx={{
               overflow: "auto",
@@ -66,7 +66,7 @@ const TeachersFunction = () => {
           >
             <TeacherDefaultNavbar transparent />
           </Grid>
-          <Grid item xs={12} md={9}>
+          <Grid item xs={12} md={10}>
             {active != 2 ? (
               <MKBox p={0} display="flex" flexDirection="column">
                 <ListOfGroups groups={groups} />

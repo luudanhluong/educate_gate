@@ -10,12 +10,17 @@ import axios from "axios";
 import { BASE_URL } from "utilities/initialValue";
 import { setAllGroup } from "app/slices/groupSlice";
 import { setUserLogin } from "app/slices/userSlice";
+import { setActivePopup } from "app/slices/activeSlice";
+import { setGroup } from "app/slices/groupSlice";
+import { setDefaultMentor } from "app/slices/userSlice";
 
 const ViewAllGroup = () => {
   const dispatch = useDispatch();
   const { allGroups } = useSelector((state) => state.group);
   const { userLogin } = useSelector((state) => state.user);
   const navigate = useNavigate();
+  const { active_popup } = useSelector((state) => state.active);
+  const isActivePopup = () => dispatch(setActivePopup(!active_popup));
   const jwt = localStorage.getItem("jwt");
   const config = {
     headers: {
@@ -30,6 +35,12 @@ const ViewAllGroup = () => {
       .then((res) => dispatch(setUserLogin(res.data)))
       .catch((err) => console.log(err));
   }, [dispatch]);
+  useEffect(() => {
+    axios
+      .get(`${BASE_URL}/teacher/${userLogin?._id}/suggest`, config)
+      .then(() => getAllGroups())
+      .then((err) => console.log(err));
+  }, [dispatch, active_popup, userLogin]);
   const getAllGroups = () =>
     axios
       .get(`${BASE_URL}/teacher/${userLogin?._id}`, config)
@@ -63,6 +74,16 @@ const ViewAllGroup = () => {
       .then(() => getAllGroups())
       .then((err) => console.log(err));
   };
+  const handleClickViewTemporaryMatching = (group, mid) => {
+    axios
+      .post(`${BASE_URL}/temporary_matching/${group?._id}/group`)
+      .then(() => {
+        isActivePopup();
+      })
+      .catch((err) => console.log(err));
+    dispatch(setGroup(group));
+    dispatch(setDefaultMentor(mid));
+  };
   const Mentor = ({ image, username, email, mentorcategories, label }) => {
     return (
       <Box
@@ -92,6 +113,9 @@ const ViewAllGroup = () => {
               color="textSecondary"
               noWrap
             >
+              <Typography as={"span"} fontSize={"0.825rem"} fontWeight={"500"}>
+                Tên:{" "}
+              </Typography>{" "}
               {username}{" "}
               <Typography as={"span"} fontSize={"0.825rem"} sx={{ color: "#000" }}>
                 <em>{label ? `(${label})` : ""}</em>
@@ -105,6 +129,9 @@ const ViewAllGroup = () => {
               color="textSecondary"
               noWrap
             >
+              <Typography as={"span"} fontSize={"0.825rem"} fontWeight={"500"}>
+                Email:{" "}
+              </Typography>{" "}
               {email}
             </Typography>
             <Typography
@@ -113,6 +140,9 @@ const ViewAllGroup = () => {
               fontSize={"0.825rem"}
               color="textSecondary"
             >
+              <Typography as={"span"} fontSize={"0.825rem"} fontWeight={"500"}>
+                Lĩnh vực:{" "}
+              </Typography>{" "}
               {mentorcategories?.map((p) => p.name).join(", ")}
             </Typography>
           </MKBox>
@@ -192,18 +222,46 @@ const ViewAllGroup = () => {
                 Dự án: {g.project?.name}
               </Typography>
               <Typography variant="body2" sx={{ fontSize: "0.8rem" }}>
-                {g.projectcategories?.map((p) => p.name).join(", ")}
+                Lĩnh vực: {g.projectcategories?.map((p) => p.name).join(", ")}
               </Typography>
             </Box>
             {g.matching.length > 0 ? (
-              <Mentor
-                username={g.matching[0]?.username}
-                image={g.matching[0]?.image || ""}
-                email={g.matching[0]?.email}
-                mentorcategories={g.matchingMentorcategories}
-                label="Mặc định"
-              />
+              <>
+                <Mentor
+                  username={g.matching[0]?.username}
+                  image={g.matching[0]?.image || ""}
+                  email={g.matching[0]?.email}
+                  mentorcategories={g.matchingMentorcategories}
+                  label="Mặc định"
+                />
+                <Typography
+                  fontWeight={"400"}
+                  fontSize={"0.725rem"}
+                  color="textSecondary"
+                  textAlign={"end"}
+                  mx="14px"
+                  sx={{ cursor: "pointer" }}
+                  px="6px"
+                  py="2px"
+                  my="2px"
+                  onClick={() => handleClickViewTemporaryMatching(g.group, g.matching[0]?._id)}
+                >
+                  <em>Xem</em>
+                </Typography>
+              </>
             ) : (
+              <Typography
+                as={"span"}
+                fontSize={"0.725rem"}
+                display={"flex"}
+                textAlign={"center"}
+                alignItems={"center"}
+                sx={{ color: "#000" }}
+              >
+                {g.matched.length === 0 && <em>Chưa tìm thấy nhóm phù hợp</em>}
+              </Typography>
+            )}
+            {g.matched.length > 0 && (
               <Mentor
                 username={g.matched[0]?.username}
                 image={g.matched[0]?.image || ""}

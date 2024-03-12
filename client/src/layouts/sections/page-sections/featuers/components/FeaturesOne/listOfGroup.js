@@ -149,7 +149,9 @@ const ListOfGroups = () => {
                 }
               }}
             >
-              {userLogin?.role === 2 && <em>Danh sách người hướng dẫn</em>}
+              {(userLogin?.role === 2 || userLogin?.role === 1) && (
+                <em>Danh sách người hướng dẫn</em>
+              )}
             </MKBox>
           )}
           <Box

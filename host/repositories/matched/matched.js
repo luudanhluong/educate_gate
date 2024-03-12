@@ -1,10 +1,10 @@
 import Matched from "../../models/matchedModel.js";
 import TemporaryMatching from "../../models/temporaryMatching.js";
 
-const addMatched = async (groupId, userId) => {
+const addMatched = async (groupId, mentorId) => {
   try {
     await TemporaryMatching.deleteOne({ groupId: groupId });
-    return await Matched.create({ groupId: groupId, mentorId: userId });
+    return await Matched.create({ groupId: groupId, mentorId: mentorId });
   } catch (error) {
     throw new Error(error.message);
   }
