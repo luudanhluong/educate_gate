@@ -46,27 +46,6 @@ const getGroupById = async (id) => {
           userCount: { $size: "$members" },
         },
       },
-      {
-        $lookup: {
-          from: "projectcategories",
-          localField: "project._id",
-          foreignField: "projectId",
-          as: "projectCategories",
-        },
-      },
-      {
-        $lookup: {
-          from: "categories",
-          localField: "projectCategories.categoryId",
-          foreignField: "_id",
-          as: "categories",
-        },
-      },
-      {
-        $addFields: {
-          categories: "$categories.name",
-        },
-      },
     ]);
 
     return group;
