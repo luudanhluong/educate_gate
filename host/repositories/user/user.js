@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import moment from "moment";
 import dotnv from "dotenv";
 import User from "../../models/userModel.js";
+import mongoose from "mongoose";
 dotnv.config();
 
 const createNewUser = async ({ username, email, password, role }) => {
@@ -64,8 +65,50 @@ const userUpdateProfile = async (
 };
 const findUserById = async (id) => {
   try {
-    const user = await User.findOne({ _id: id }).populate("classId").exec();
-    return user;
+    const user = await User.aggregate([
+      { $match: { _id: new mongoose.Types.ObjectId(id) } },
+      {
+        $lookup: {
+          from: "classes",
+          localField: "classId",
+          foreignField: "_id",
+          as: "classId",
+        },
+      },
+      {
+        $lookup: {
+          from: "groups",
+          localField: "groupId",
+          foreignField: "_id",
+          as: "groupId",
+        },
+      },
+      {
+        $lookup: {
+          from: "projects",
+          localField: "groupId.projectId",
+          foreignField: "_id",
+          as: "project",
+        },
+      },
+      {
+        $lookup: {
+          from: "matcheds",
+          localField: "groupId.matchedId",
+          foreignField: "_id",
+          as: "matched",
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "matched.mentorId",
+          foreignField: "_id",
+          as: "mentor",
+        },
+      },
+    ]);
+    return user[0];
   } catch (error) {
     throw new Error(error.message);
   }
@@ -185,6 +228,8 @@ const getStudents = async (skip) => {
     throw new Error(error.message);
   }
 };
+
+// Thống kê người dùng theo năm
 const pmtUser = async () => {
   try {
     const oneYearAgo = moment().subtract(1, "year");
@@ -236,6 +281,26 @@ const getUserByRole = async (role) => {
     throw new Error(error.message);
   }
 };
+const getClassesByUserId = async (userId) => {
+  try {
+    return await User.aggregate([
+      { $match: { _id: new mongoose.Types.ObjectId(userId) } },
+      {
+        $lookup: {
+          from: "classes",
+          localField: "classId",
+          foreignField: "_id",
+          as: "classes",
+        },
+      },
+      {
+        $unwind: "$classes",
+      },
+    ]);
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
 export default {
   createNewUser,
   loginUser,
@@ -246,4 +311,5 @@ export default {
   getTeachers,
   pmtUser,
   getUserByRole,
+  getClassesByUserId,
 };

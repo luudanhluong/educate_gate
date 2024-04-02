@@ -37,6 +37,9 @@ const userSchema = new Schema(
     menteeCount: { type: Number },
     isLeader: { type: Boolean, default: false },
     status: { type: String },
+    rollNumber: { type: String },
+    memberCode: { type: String },
+    slotType: { type: String },
   },
   {
     timestamps: true,

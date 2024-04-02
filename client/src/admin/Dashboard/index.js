@@ -1,5 +1,4 @@
 import { FormControl, Grid, Icon, MenuItem, Select, Typography } from "@mui/material";
-import DefaultNavbar from "admin/Navbar/DefaultNavbar";
 import { setCategories, setCategory } from "app/slices/categorySlice";
 import axios from "axios";
 import MKBox from "components/MKBox";
@@ -15,6 +14,8 @@ import AddInSmtDet from "./addInSmtDet";
 import ChartLineUser from "./chartLineUser";
 import ChartPieUser from "./chartPieUser";
 import MKButton from "components/MKButton";
+import DefaultNavbar from "Navbars/DefaultNavbar";
+import routes from "routes";
 
 const Dashboard = () => {
   const dispatch = useDispatch();
@@ -82,125 +83,131 @@ const Dashboard = () => {
         .catch((err) => console.log(err));
   }, [pageNo, dispatch, active]);
   return (
-    <MKBox sx={{ display: "flex", alignItems: "center", height: "100%", gap: "1.5rem" }}>
-      <DefaultNavbar light />
-      <Semester />
-      <Category />
-      <AddInSmtDet />
-      <MKBox display={"flex"} flexDirection="column" gap="3rem" height="100%" width="100%">
-        <MKBox display="flex" flexDirection="row" gap="1.5rem">
-          <MKBox width="9rem">
-            <FormControl fullWidth pb={1}>
-              <Select id="select-gender" name="gender" value={" "}>
-                <MenuItem
-                  value={" "}
-                  sx={{ display: "flex", gap: "0.5rem" }}
-                  onClick={() => {
-                    isActivePopup({ type: "open", payload: "semester" });
-                    dispatch(setSemester({}));
-                  }}
-                >
-                  <MKBox
-                    sx={{
-                      display: "flex",
-                      justifyContent: "center",
-                      gap: "0.5rem",
-                    }}
-                  >
-                    <Typography component={"span"} fontSize={"0.825rem"}>
-                      Thêm kỳ học
-                    </Typography>
-                    <MKBox
-                      sx={{
-                        lineHeight: 1,
-                        color: "#4558ff",
-                        fontSize: "20px",
-                      }}
-                    >
-                      <Icon>add</Icon>
-                    </MKBox>
-                  </MKBox>
-                </MenuItem>
-                {semesters
-                  ? semesters.map((s) => (
+    <MKBox display="flex" flexDirection="column" sx={{ gap: "6rem" }}>
+      <DefaultNavbar routes={routes} />
+      <Grid item container>
+        <Grid item xs={10} mx="auto">
+          <MKBox sx={{ display: "flex", alignItems: "center", height: "100%", gap: "1.5rem" }}>
+            <Semester />
+            <Category />
+            <AddInSmtDet />
+            <MKBox display={"flex"} flexDirection="column" gap="3rem" height="100%" width="100%">
+              <MKBox display="flex" flexDirection="row" gap="1.5rem">
+                <MKBox width="9rem">
+                  <FormControl fullWidth pb={1}>
+                    <Select id="select-gender" name="gender" value={" "}>
                       <MenuItem
-                        key={s._id}
+                        value={" "}
+                        sx={{ display: "flex", gap: "0.5rem" }}
                         onClick={() => {
-                          isActivePopup({ type: "update", payload: "semester" });
-                          dispatch(setSemester(s));
+                          isActivePopup({ type: "open", payload: "semester" });
+                          dispatch(setSemester({}));
                         }}
-                        value={s._id}
                       >
-                        {s.name}
+                        <MKBox
+                          sx={{
+                            display: "flex",
+                            justifyContent: "center",
+                            gap: "0.5rem",
+                          }}
+                        >
+                          <Typography component={"span"} fontSize={"0.825rem"}>
+                            Thêm kỳ học
+                          </Typography>
+                          <MKBox
+                            sx={{
+                              lineHeight: 1,
+                              color: "#4558ff",
+                              fontSize: "20px",
+                            }}
+                          >
+                            <Icon>add</Icon>
+                          </MKBox>
+                        </MKBox>
                       </MenuItem>
-                    ))
-                  : ""}
-              </Select>
-            </FormControl>
-          </MKBox>
-          <MKBox onClick={() => isActivePopup({ type: "add", payload: "smtDet" })}>
-            <MKButton>Thêm vào kì học</MKButton>
-          </MKBox>
-          <MKBox width="9rem">
-            <FormControl fullWidth>
-              <Select id="select-gender" name="gender" value={" "}>
-                <MenuItem
-                  value={" "}
-                  sx={{ display: "flex", gap: "0.5rem" }}
-                  onClick={() => {
-                    isActivePopup({ type: "open", payload: "category" });
-                    dispatch(setCategory({}));
-                  }}
-                >
-                  <MKBox
-                    sx={{
-                      display: "flex",
-                      justifyContent: "center",
-                      gap: "0.5rem",
-                    }}
-                  >
-                    <Typography component={"span"} fontSize={"0.825rem"}>
-                      Thêm Thể loại
-                    </Typography>
-                    <MKBox
-                      sx={{
-                        lineHeight: 1,
-                        color: "#4558ff",
-                        fontSize: "20px",
-                      }}
-                    >
-                      <Icon>add</Icon>
-                    </MKBox>
-                  </MKBox>
-                </MenuItem>
-                {categories
-                  ? categories.map((c) => (
+                      {semesters
+                        ? semesters.map((s) => (
+                            <MenuItem
+                              key={s._id}
+                              onClick={() => {
+                                isActivePopup({ type: "update", payload: "semester" });
+                                dispatch(setSemester(s));
+                              }}
+                              value={s._id}
+                            >
+                              {s.name}
+                            </MenuItem>
+                          ))
+                        : ""}
+                    </Select>
+                  </FormControl>
+                </MKBox>
+                <MKBox onClick={() => isActivePopup({ type: "add", payload: "smtDet" })}>
+                  <MKButton>Thêm vào kì học</MKButton>
+                </MKBox>
+                <MKBox width="9rem">
+                  <FormControl fullWidth>
+                    <Select id="select-gender" name="gender" value={" "}>
                       <MenuItem
+                        value={" "}
+                        sx={{ display: "flex", gap: "0.5rem" }}
                         onClick={() => {
-                          isActivePopup({ type: "update", payload: "category" });
-                          dispatch(setCategory(c));
+                          isActivePopup({ type: "open", payload: "category" });
+                          dispatch(setCategory({}));
                         }}
-                        key={c._id}
-                        value={c._id}
-                        sx={{ fontSize: "0.825rem" }}
                       >
-                        {c.name}
+                        <MKBox
+                          sx={{
+                            display: "flex",
+                            justifyContent: "center",
+                            gap: "0.5rem",
+                          }}
+                        >
+                          <Typography component={"span"} fontSize={"0.825rem"}>
+                            Thêm Thể loại
+                          </Typography>
+                          <MKBox
+                            sx={{
+                              lineHeight: 1,
+                              color: "#4558ff",
+                              fontSize: "20px",
+                            }}
+                          >
+                            <Icon>add</Icon>
+                          </MKBox>
+                        </MKBox>
                       </MenuItem>
-                    ))
-                  : ""}
-              </Select>
-            </FormControl>
+                      {categories
+                        ? categories.map((c) => (
+                            <MenuItem
+                              onClick={() => {
+                                isActivePopup({ type: "update", payload: "category" });
+                                dispatch(setCategory(c));
+                              }}
+                              key={c._id}
+                              value={c._id}
+                              sx={{ fontSize: "0.825rem" }}
+                            >
+                              {c.name}
+                            </MenuItem>
+                          ))
+                        : ""}
+                    </Select>
+                  </FormControl>
+                </MKBox>
+              </MKBox>
+              <Grid item container>
+                <Grid item xs={9}>
+                  <ChartLineUser />
+                </Grid>
+                <Grid item xs={3}>
+                  <ChartPieUser />
+                </Grid>
+              </Grid>
+            </MKBox>
           </MKBox>
-        </MKBox>
-        <Grid item container>
-          <Grid item xs={9}>
-            <ChartLineUser />
-          </Grid>
-          <Grid item xs={3}>
-            <ChartPieUser />
-          </Grid>
         </Grid>
-      </MKBox>
+      </Grid>
     </MKBox>
   );
 };

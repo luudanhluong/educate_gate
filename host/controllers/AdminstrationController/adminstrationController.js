@@ -1,12 +1,11 @@
-import adminsRepository from "../../repositories/admins/index.js";
-import classRepository from "../../repositories/class/index.js";
+import adminsDAO from "../../repositories/admins/index.js";
 import xlsx from "xlsx";
 import bcrypt from "bcrypt";
 
 const getUsers = async (req, res) => {
   try {
     const { item, order, skip, limit, role, search } = req.query;
-    const result = await adminsRepository.getUsers({
+    const result = await adminsDAO.getUsers({
       item,
       order: Number(order),
       skip: Number(skip),
@@ -14,28 +13,27 @@ const getUsers = async (req, res) => {
       role: Number(role),
       search,
     });
-    res.status(200).json(result);
+    res.send(result);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    next(error);
   }
 };
 const insertListUsers = async (req, res, next) => {
-  const token = req.headers["authorization"];
-  if (!token) return res.status(401).send("Access denied");
   try {
     const saltRounds = 12;
     const { file } = req.body;
+    const password = "Aa@123";
+    const salt = await bcrypt.genSalt(saltRounds);
+    const hashedPassword = await bcrypt.hash(password, salt);
     const newData = await Promise.all(
       file.map(async (user) => {
-        const salt = await bcrypt.genSalt(saltRounds);
-        const hashedPassword = await bcrypt.hash(user.password, salt);
         return { ...user, password: hashedPassword };
       })
     );
-    const result = await adminsRepository.createListUsers(newData);
-    res.status(201).json(result);
+    const result = await adminsDAO.createListUsers(newData);
+    res.send(result);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    next(error);
   }
 };
 
@@ -43,16 +41,16 @@ const createNewListClass = async (req, res) => {
   const token = req.headers["authorization"];
   if (!token) return res.status(401).send("Access denied");
   try {
-    const { suffName, preName, quantity, limitStudent } = req.body;
+    const { className, limitStudent } = req.body;
     let result;
     if (!preName) {
       const excelFilePath = req.file.path;
       const workbook = xlsx.readFile(excelFilePath);
       const sheetName = workbook.SheetNames[0];
       const userData = xlsx.utils.sheet_to_json(workbook.Sheets[sheetName]);
-      result = await adminsRepository.createNewListClassesFromFile(userData);
+      result = await adminsDAO.createNewListClassesFromFile(userData);
     }
-    result = await adminsRepository.createNewListClass({
+    result = await adminsDAO.createNewListClass({
       suffName,
       preName,
       quantity,
@@ -66,7 +64,7 @@ const createNewListClass = async (req, res) => {
 const getClasses = async (req, res, next) => {
   try {
     const { item, order, limit, skip, preName, search } = req.query;
-    const result = await adminsRepository.getClasses({
+    const result = await adminsDAO.getClasses({
       item,
       order: Number(order || 1),
       limit: Number(limit || 10),
@@ -83,7 +81,7 @@ const addStuentdInClass = async (req, res) => {
   const token = req.headers["authorization"];
   if (!token) return res.status(401).send("Access denied");
   try {
-    const result = await adminsRepository.addStudentInClasses();
+    const result = await adminsDAO.addStudentInClasses();
     res.status(200).json(result);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -93,7 +91,7 @@ const deleteClassEmpty = async (req, res) => {
   const token = req.headers["authorization"];
   if (!token) return res.status(401).send("Access denied");
   try {
-    const result = await adminsRepository.deleteClassEmpty();
+    const result = await adminsDAO.deleteClassEmpty();
     res.status(200).json(result);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -103,7 +101,7 @@ const addTeacherInClass = async (req, res) => {
   const token = req.headers["authorization"];
   if (!token) return res.status(401).send("Access denied");
   try {
-    const result = await adminsRepository.addTeacherInClass();
+    const result = await adminsDAO.addTeacherInClass();
     res.status(200).json(result);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -113,7 +111,7 @@ const getAllCategories = async (req, res) => {
   const token = req.headers["authorization"];
   if (!token) return res.status(401).send("Access denied");
   try {
-    res.status(200).json(await adminsRepository.getAllCategories());
+    res.status(200).json(await adminsDAO.getAllCategories());
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -122,7 +120,7 @@ const getAllSemesters = async (req, res) => {
   const token = req.headers["authorization"];
   if (!token) return res.status(401).send("Access denied");
   try {
-    res.status(200).json(await adminsRepository.getAllSemesters());
+    res.status(200).json(await adminsDAO.getAllSemesters());
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -132,7 +130,7 @@ const addNewCategory = async (req, res) => {
   if (!token) return res.status(401).send("Access denied");
   try {
     const { name } = req.body;
-    res.status(200).json(await adminsRepository.addNewCategory(name));
+    res.status(200).json(await adminsDAO.addNewCategory(name));
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -142,7 +140,7 @@ const createNewSemester = async (req, res) => {
   if (!token) return res.status(401).send("Access denied");
   try {
     const { name } = req.body;
-    res.status(200).json(await adminsRepository.createNewSemester(name));
+    res.status(200).json(await adminsDAO.createNewSemester(name));
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -153,9 +151,7 @@ const updateCategory = async (req, res) => {
   try {
     const { status, name } = req.body;
     const { id } = req.params;
-    res
-      .status(200)
-      .json(await adminsRepository.updateCategory(id, { status, name }));
+    res.status(200).json(await adminsDAO.updateCategory(id, { status, name }));
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -166,9 +162,7 @@ const updateSemester = async (req, res) => {
   try {
     const { status, name } = req.body;
     const { id } = req.params;
-    res
-      .status(200)
-      .json(await adminsRepository.updateSemester(id, { status, name }));
+    res.status(200).json(await adminsDAO.updateSemester(id, { status, name }));
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -178,7 +172,7 @@ const deleteSemester = async (req, res) => {
   if (!token) return res.status(401).send("Access denied");
   try {
     const { id } = req.params;
-    res.status(200).json(await adminsRepository.deleteSemester(id));
+    res.status(200).json(await adminsDAO.deleteSemester(id));
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -188,7 +182,7 @@ const deleteCategory = async (req, res) => {
   if (!token) return res.status(401).send("Access denied");
   try {
     const { id } = req.params;
-    res.status(200).json(await adminsRepository.deleteCategory(id));
+    res.status(200).json(await adminsDAO.deleteCategory(id));
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

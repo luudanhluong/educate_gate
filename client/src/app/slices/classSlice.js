@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 const initialValue = {
-  classes: [],
+  classes: {},
+  classList: [],
   filterPreName: "",
   searchValue: "",
   sort: -1,
@@ -12,6 +13,9 @@ const classSlice = createSlice({
   reducers: {
     setclasses: (state, action) => {
       state.classes = action.payload;
+    },
+    setClassList: (state, action) => {
+      state.classList = action.payload;
     },
     setFilterPreName: (state, action) => {
       state.filterPreName = action.payload;
@@ -29,5 +33,6 @@ const classSlice = createSlice({
 });
 
 const { reducer, actions } = classSlice;
-export const { setclasses, setFilterPreName, setSearchValue, setSort, setPageNo } = actions;
+export const { setclasses, setFilterPreName, setSearchValue, setSort, setPageNo, setClassList } =
+  actions;
 export default reducer;

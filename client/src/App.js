@@ -16,12 +16,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { setUserLogin } from "app/slices/userSlice";
 import { BASE_URL } from "utilities/initialValue";
 import axios from "axios";
+import { CssBaseline } from "@mui/material";
+import { setClassList } from "app/slices/classSlice";
 
 export default function App() {
   const dispatch = useDispatch();
   const { pathname } = useLocation();
   const { userLogin } = useSelector((state) => state.user);
-
   const jwt = localStorage.getItem("jwt");
   const config = {
     headers: {
@@ -29,6 +30,13 @@ export default function App() {
       Authorization: `Bearer ${jwt}`,
     },
   };
+  useEffect(() => {
+    if (userLogin?._id)
+      axios
+        .get(BASE_URL + "/class/" + userLogin?._id, config)
+        .then((res) => dispatch(setClassList(res.data)))
+        .catch((err) => console.log(err));
+  }, [dispatch, userLogin]);
   useEffect(() => {
     axios
       .get(BASE_URL + "/user/profile", config)
@@ -53,18 +61,13 @@ export default function App() {
   return (
     <ThemeProvider theme={theme}>
       <ToastContainer />
-      {/* <CssBaseline /> */}
+      <CssBaseline />
       <Routes>
-        {getRoutes(routes)}
+        {getRoutes(routes())}
         <Route path="/group/:groupId/members" element={<GroupDetail />} />
         <Route path="/admin/dashboard" element={<Dashboard />} />
         <Route path="/presentation" element={<Presentation />} />
-        <Route
-          path="*"
-          element={
-            <Navigate to={`${userLogin?.role === 1 ? "/admin/dashboard" : "/presentation"}`} />
-          }
-        />
+        <Route path="*" element={<Navigate to={"/presentation"} />} />
       </Routes>
     </ThemeProvider>
   );

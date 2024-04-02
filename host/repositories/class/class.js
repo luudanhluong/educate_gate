@@ -82,9 +82,18 @@ const findClassById = async (classId) => {
     throw new Error(error.message);
   }
 };
+
+const getClassesByUserId = async (userId) => {
+  try {
+    return await Class.find({ teacherId: userId });
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
 export default {
   createNewListClass,
   getClasses,
   getStudentsInClass,
   findClassById,
+  getClassesByUserId,
 };

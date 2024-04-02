@@ -2,13 +2,24 @@ import mongoose from "mongoose";
 
 const classSchema = new mongoose.Schema(
   {
-    preName: { type: String, required: true },
-    suffName: { type: String },
-    code: { type: Number, required: true },
+    className: { type: String },
     limitStudent: { type: Number, required: true },
     teacherId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
+    },
+    status: {
+      type: String,
+      enum: [
+        "Active",
+        "InActive",
+        "Pending",
+        "Completed",
+        "Cancelled",
+        "Suspended",
+        "Scheduled",
+      ],
+      default: "InActive",
     },
   },
   { timestamps: true }

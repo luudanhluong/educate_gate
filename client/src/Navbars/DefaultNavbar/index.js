@@ -26,7 +26,6 @@ import DefaultNavbarMobile from "Navbars/DefaultNavbar/DefaultNavbarMobile";
 
 // Material Kit 2 React base styles
 import breakpoints from "assets/theme/base/breakpoints";
-import { useSelector } from "react-redux";
 
 function DefaultNavbar({ brand, routes, transparent, light, action, sticky, relative, center }) {
   const [dropdown, setDropdown] = useState("");
@@ -38,8 +37,6 @@ function DefaultNavbar({ brand, routes, transparent, light, action, sticky, rela
   const [arrowRef, setArrowRef] = useState(null);
   const [mobileNavbar, setMobileNavbar] = useState(false);
   const [mobileView, setMobileView] = useState(false);
-
-  const userLogin = useSelector((state) => state.user.userLogin);
 
   const openMobileNavbar = () => setMobileNavbar(!mobileNavbar);
 
@@ -79,16 +76,12 @@ function DefaultNavbar({ brand, routes, transparent, light, action, sticky, rela
       light={light}
     />
   );
-  const renderNavbarItems = routes.map(({ name, icon, href, route, collapse }) => {
-    if (userLogin?.role === "1") {
-      return defautNav({ name, icon, href, route, collapse });
-    } else if (userLogin?.role !== "1") {
-      return defautNav({ name, icon, href, route, collapse });
-    }
+  const renderNavbarItems = routes().map(({ name, icon, href, route, collapse }) => {
+    return defautNav({ name, icon, href, route, collapse });
   });
 
   // Render the routes on the dropdown menu
-  const renderRoutes = routes.map(({ name, collapse, columns, rowsPerColumn }) => {
+  const renderRoutes = routes().map(({ name, collapse, columns, rowsPerColumn }) => {
     let template;
     // Render the dropdown menu that should be display as columns
     if (collapse && columns && name === dropdownName) {
@@ -314,7 +307,7 @@ function DefaultNavbar({ brand, routes, transparent, light, action, sticky, rela
   );
 
   // Render routes that are nested inside the dropdown menu routes
-  const renderNestedRoutes = routes.map(({ collapse, columns }) =>
+  const renderNestedRoutes = routes().map(({ collapse, columns }) =>
     collapse && !columns
       ? collapse.map(({ name: parentName, collapse: nestedCollapse }) => {
           let template;
@@ -534,7 +527,7 @@ function DefaultNavbar({ brand, routes, transparent, light, action, sticky, rela
           borderRadius="xl"
           px={transparent ? 2 : 0}
         >
-          {mobileView && <DefaultNavbarMobile routes={routes} open={mobileNavbar} />}
+          {mobileView && <DefaultNavbarMobile routes={routes()} open={mobileNavbar} />}
         </MKBox>
       </MKBox>
       {dropdownMenu}

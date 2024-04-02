@@ -4,7 +4,14 @@ const projectSchema = new Schema(
   {
     name: { type: String, required: false },
     description: { type: String, required: false },
-    status: { type: String },
+    status: {
+      type: String,
+      status: {
+        type: String,
+        enum: ["Planning", "InProgress", "Finish", "Closed"],
+        default: "Planning",
+      },
+    },
   },
   {
     timestamps: true,

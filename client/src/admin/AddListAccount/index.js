@@ -6,7 +6,7 @@ import MKBox from "components/MKBox";
 
 // Images
 // import bgImage from "assets/images/bg-sign-in-basic.jpeg";
-import DefaultNavbar from "admin/Navbar/DefaultNavbar";
+import DefaultNavbar from "Navbars/DefaultNavbar";
 import Tables from "layouts/tables/user-list-table";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -18,6 +18,7 @@ import { setFilterRole } from "app/slices/userSlice";
 import { setSearchValue } from "app/slices/userSlice";
 import { setSort } from "app/slices/userSlice";
 import { setActivePopup } from "app/slices/activeSlice";
+import routes from "routes";
 
 function ListAccount() {
   const dispatch = useDispatch();
@@ -45,25 +46,31 @@ function ListAccount() {
   }, [dispatch]);
 
   return (
-    <MKBox sx={{ display: "flex", alignItems: "center", height: "100%", gap: "1.5rem" }}>
-      <DefaultNavbar light />
-      {active_popup ? <AddListAccount /> : ""}
-      <MKBox width="100%" height="100%" overflow="auto">
-        <MKBox px={1} width="100%" mx="auto" position="relative" zIndex={2}>
-          <Grid
-            container
-            justifyContent="center"
-            alignItems="center"
-            width={"100%"}
-            m={0}
-            height="100%"
-          >
-            <Grid item xs={12} width="100%" height="100%" p={0}>
-              <Tables />
-            </Grid>
-          </Grid>
-        </MKBox>
-      </MKBox>
+    <MKBox display="flex" flexDirection="column" sx={{ gap: "6rem" }}>
+      <DefaultNavbar routes={routes} />
+      <Grid item container>
+        <Grid item xs={10} mx="auto">
+          <MKBox sx={{ display: "flex", alignItems: "center", height: "100%", gap: "1.5rem" }}>
+            {active_popup ? <AddListAccount /> : ""}
+            <MKBox width="100%" height="100%" overflow="auto">
+              <MKBox px={1} width="100%" mx="auto" position="relative" zIndex={2}>
+                <Grid
+                  container
+                  justifyContent="center"
+                  alignItems="center"
+                  width={"100%"}
+                  m={0}
+                  height="100%"
+                >
+                  <Grid item xs={12} width="100%" height="100%" p={0}>
+                    <Tables />
+                  </Grid>
+                </Grid>
+              </MKBox>
+            </MKBox>
+          </MKBox>
+        </Grid>
+      </Grid>
     </MKBox>
   );
 }
