@@ -25,24 +25,12 @@ export default function data() {
     </MKBox>
   );
 
-  const Role = ({ title, description }) => (
-    <MKBox lineHeight={1} textAlign="left">
-      <MKTypography display="block" variant="caption" color="text" fontWeight="medium">
-        {title}
-      </MKTypography>
-      <MKTypography variant="caption">{description}</MKTypography>
-    </MKBox>
-  );
   User.propTypes = {
     image: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     email: PropTypes.string.isRequired,
   };
 
-  Role.propTypes = {
-    title: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
-  };
   const rows = data
     ? data.map((user) => ({
         user: <User image={userImg} name={user.username} email={user.email} />,
@@ -51,7 +39,6 @@ export default function data() {
             {user.gender ? "Nam" : "Nữ"}
           </MKTypography>
         ),
-        role: <Role title="Manager" description="Organization" />,
         status: (
           <MKBox ml={-1}>
             <MKBadge badgeContent="active" color="success" variant="gradient" size="sm" />
@@ -74,7 +61,6 @@ export default function data() {
     columns: [
       { Header: "người dùng", accessor: "user", width: "32%", align: "left" },
       { Header: "giới tính", accessor: "gender", align: "center" },
-      { Header: "vai trò", accessor: "role", align: "left" },
       { Header: "trạng thái", accessor: "status", align: "center" },
       { Header: "onboard", accessor: "onboard", align: "center" },
       { Header: "hành động", accessor: "action", align: "center" },

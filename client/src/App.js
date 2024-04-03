@@ -12,17 +12,15 @@ import "./App.css";
 import Dashboard from "admin/Dashboard";
 import GroupDetail from "layouts/user/students/index";
 import { ToastContainer } from "react-toastify";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setUserLogin } from "app/slices/userSlice";
 import { BASE_URL } from "utilities/initialValue";
 import axios from "axios";
 import { CssBaseline } from "@mui/material";
-import { setClassList } from "app/slices/classSlice";
 
 export default function App() {
   const dispatch = useDispatch();
   const { pathname } = useLocation();
-  const { userLogin } = useSelector((state) => state.user);
   const jwt = localStorage.getItem("jwt");
   const config = {
     headers: {
@@ -30,13 +28,6 @@ export default function App() {
       Authorization: `Bearer ${jwt}`,
     },
   };
-  useEffect(() => {
-    if (userLogin?._id)
-      axios
-        .get(BASE_URL + "/class/" + userLogin?._id, config)
-        .then((res) => dispatch(setClassList(res.data)))
-        .catch((err) => console.log(err));
-  }, [dispatch, userLogin]);
   useEffect(() => {
     axios
       .get(BASE_URL + "/user/profile", config)

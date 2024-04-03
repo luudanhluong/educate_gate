@@ -76,12 +76,12 @@ function DefaultNavbar({ brand, routes, transparent, light, action, sticky, rela
       light={light}
     />
   );
-  const renderNavbarItems = routes().map(({ name, icon, href, route, collapse }) => {
+  const renderNavbarItems = routes()?.map(({ name, icon, href, route, collapse }) => {
     return defautNav({ name, icon, href, route, collapse });
   });
 
   // Render the routes on the dropdown menu
-  const renderRoutes = routes().map(({ name, collapse, columns, rowsPerColumn }) => {
+  const renderRoutes = routes()?.map(({ name, collapse, columns, rowsPerColumn }) => {
     let template;
     // Render the dropdown menu that should be display as columns
     if (collapse && columns && name === dropdownName) {
@@ -307,7 +307,7 @@ function DefaultNavbar({ brand, routes, transparent, light, action, sticky, rela
   );
 
   // Render routes that are nested inside the dropdown menu routes
-  const renderNestedRoutes = routes().map(({ collapse, columns }) =>
+  const renderNestedRoutes = routes()?.map(({ collapse, columns }) =>
     collapse && !columns
       ? collapse.map(({ name: parentName, collapse: nestedCollapse }) => {
           let template;

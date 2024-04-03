@@ -6,11 +6,9 @@ import AboutUs from "layouts/pages/landing-pages/about-us";
 import ContactUs from "layouts/pages/landing-pages/contact-us";
 import Author from "layouts/pages/landing-pages/author";
 import SignIn from "layouts/pages/authentication/sign-in";
-// import SignUp from "layouts/pages/authentication/sign-up";
 import ListAccountBase from "layouts/admin/add-list-account";
 import AddListClassBase from "layouts/admin/add-list-class";
 import TeacherFunction from "layouts/sections/featuers";
-// import GroupDetail from "layouts/user/students";
 import DashboardAdmin from "layouts/admin/dashboard";
 import { useDispatch, useSelector } from "react-redux";
 import GroupDetail from "layouts/user/students";
@@ -20,6 +18,7 @@ import axios from "axios";
 import { BASE_URL } from "utilities/initialValue";
 import { setAllGroup } from "app/slices/groupSlice";
 import { setUserLogin } from "app/slices/userSlice";
+import { setClassList } from "app/slices/classSlice";
 
 function routes() {
   const dispatch = useDispatch();
@@ -47,6 +46,13 @@ function routes() {
         .then((res) => dispatch(setAllGroup(res.data)))
         .then((err) => console.log(err));
   }, [userLogin, dispatch]);
+  useEffect(() => {
+    if (userLogin?._id)
+      axios
+        .get(`${BASE_URL}/class/${userLogin?._id}`, config)
+        .then((res) => dispatch(setClassList(res.data)))
+        .catch((err) => console.log(err));
+  }, [dispatch, userLogin]);
   let result = [
     {
       name: "pages",
@@ -82,35 +88,7 @@ function routes() {
               route: "/pages/authentication/sign-in",
               component: <SignIn />,
             },
-            // {
-            //   name: "sign up",
-            //   route: "/pages/authentication/sign-up",
-            //   component: <SignUp />,
-            // },
           ],
-        },
-      ],
-    },
-    {
-      name: "admins",
-      dropdown: true,
-      icon: <Icon>article</Icon>,
-      description: "Xem tất cả",
-      collapse: [
-        {
-          name: "Thống Kê",
-          route: "/admin/dashboard",
-          component: <DashboardAdmin />,
-        },
-        {
-          name: "Danh Sách Người Dùng",
-          route: "/admin/create-new-list-account",
-          component: <ListAccountBase />,
-        },
-        {
-          name: "Danh Sách Lớp Học",
-          route: "/admin/create-new-class",
-          component: <AddListClassBase />,
         },
       ],
     },
@@ -136,7 +114,7 @@ function routes() {
     result.push({
       name: "Nhóm",
       dropdown: false,
-      route: `/presentation/group/${userLogin?.groupId[0]?._id}/members`,
+      route: `/presentation/group/${userLogin?.groupId?.[0]?._id}/members`,
       component: <GroupDetail />,
     });
   }
@@ -148,11 +126,31 @@ function routes() {
       component: <ViewAllGroup />,
     });
   }
+  if (userLogin?.role === 1) {
+    result.push({
+      name: "admins",
+      dropdown: true,
+      icon: <Icon>article</Icon>,
+      description: "Xem tất cả",
+      collapse: [
+        {
+          name: "Thống Kê",
+          route: "/admin/dashboard",
+          component: <DashboardAdmin />,
+        },
+        {
+          name: "Danh Sách Người Dùng",
+          route: "/admin/create-new-list-account",
+          component: <ListAccountBase />,
+        },
+        {
+          name: "Danh Sách Lớp Học",
+          route: "/admin/create-new-class",
+          component: <AddListClassBase />,
+        },
+      ],
+    });
+  }
   return result;
 }
-// {
-//   name: "Leader Function",
-//   route: "/group/details",
-//   component: <GroupDetail />,
-// },
 export default routes;

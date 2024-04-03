@@ -14,4 +14,10 @@ smtDetRouter.post(
   verifyAccessToken,
   semesterDetailController.addSmtDet
 );
+smtDetRouter.get(
+  "/:smtId/semester/:role/users",
+  verifyAccessToken,
+  semesterDetailController.getUserInSemester
+);
+
 export default smtDetRouter;

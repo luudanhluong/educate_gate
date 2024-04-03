@@ -10,6 +10,7 @@ import semesterSlice from "./slices/semesterSlice";
 import projectSlice from "./slices/projectSlice";
 import groupSlice from "./slices/groupSlice";
 import temporaryMatchingSlice from "./slices/temporaryMatching";
+import utilitiesSlice from "./slices/utilitiesSlice";
 import { applyMiddleware } from "redux";
 import * as thunk from "redux-thunk";
 
@@ -25,6 +26,7 @@ const rootReducer = {
   classOnerTeacher: classOnerTeacherSlice,
   group: groupSlice,
   temporaryMatching: temporaryMatchingSlice,
+  utilities: utilitiesSlice,
 };
 
 const store = configureStore(
