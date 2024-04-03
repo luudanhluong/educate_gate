@@ -1,9 +1,9 @@
-import classRepository from "../../repositories/class/index.js";
 import classDAO from "../../repositories/class/index.js";
+import userDAO from "../../repositories/user/index.js";
 const createNewListClass = async (req, res) => {
   try {
     const { suffName, preName, quantity, limitStudent } = req.body;
-    const result = await classRepository.createNewListClass({
+    const result = await classDAO.createNewListClass({
       suffName: suffName.toUpperCase(),
       preName: preName.toUpperCase(),
       quantity,
@@ -17,7 +17,7 @@ const createNewListClass = async (req, res) => {
 const getClasses = async (req, res, next) => {
   try {
     const { item, order, limit, skip } = req.query;
-    const result = await classRepository.getClasses({
+    const result = await classDAO.getClasses({
       item,
       order: Number(order),
       limit,
@@ -47,10 +47,24 @@ const getClassById = async (req, res) => {
     res.status(500).json(error.message);
   }
 };
-
+const getClassesByUserId = async (req, res, next) => {
+  try {
+    const { userId } = req.params;
+    let user;
+    let result = await classDAO.getClassesByUserId(userId);
+    if (result.length === 0) {
+      user = await userDAO.findUserById(userId);
+      result = user?.classId;
+    }
+    res.send(result);
+  } catch (error) {
+    next(error);
+  }
+};
 export default {
   createNewListClass,
   getClasses,
   getStudentInClass,
   getClassById,
+  getClassesByUserId,
 };

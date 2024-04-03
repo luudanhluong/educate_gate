@@ -12,7 +12,6 @@ import getDate from "utilities/getDate";
 
 export default function data() {
   const { data } = useSelector((state) => state.class.classes);
-  console.log(data);
   const User = ({ image, name, email }) => (
     <MKBox display="flex" alignItems="center" lineHeight={1}>
       <MKAvatar src={image} name={name} size="md" />

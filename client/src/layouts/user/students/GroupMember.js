@@ -3,7 +3,7 @@ import { List, ListItem, ListItemText, Typography, Avatar, Box } from "@mui/mate
 import { useDispatch, useSelector } from "react-redux";
 import { setActivePopup } from "app/slices/activeSlice";
 import MKButton from "components/MKButton";
-import "../../sections/page-sections/featuers/components/FeaturesOne/studentList.css";
+import "../../sections/featuers/components/FeaturesOne/studentList.css";
 
 const GroupMembers = () => {
   const dispatch = useDispatch();

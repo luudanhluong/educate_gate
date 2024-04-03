@@ -94,6 +94,7 @@ const getTeachers = async (req, res, next) => {
     next(error);
   }
 };
+// Thống kê người dùng theo năm
 const pmtUser = async (req, res, next) => {
   try {
     res.send(await userDAO.pmtUser());

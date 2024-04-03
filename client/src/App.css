@@ -295,6 +295,7 @@ a {
 .pop-up {
   animation: top_to_center 1.2s ease-in-out;
 }
+.select-item,
 #select-semster-add,
 #select-gender,
 #select-category,

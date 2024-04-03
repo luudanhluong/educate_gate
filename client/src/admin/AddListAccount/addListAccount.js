@@ -109,7 +109,7 @@ function AddListAccount() {
                 }}
                 validationSchema={initialValues}
               >
-                {({ errors, touched, handleChange, setFieldValue }) => (
+                {({ errors, touched, handleChange }) => (
                   <Form>
                     <MKBox>
                       <Field
@@ -124,7 +124,6 @@ function AddListAccount() {
                         id="file"
                         fullWidth
                         onChange={(event) => {
-                          setFieldValue("file", event.currentTarget.files[0]);
                           handleChange(event);
                           const file = event.currentTarget.files[0];
                           const reader = new FileReader();
@@ -136,7 +135,6 @@ function AddListAccount() {
                             const excelData = XLSX.utils.sheet_to_json(worksheet);
                             setFileName(excelData);
                           };
-
                           reader.readAsArrayBuffer(new Blob([file]));
                         }}
                       />

@@ -184,12 +184,12 @@ function DataTable({ table, isSorted, noEndBorder }) {
             onChange={(e, value) => dispatch(setFilterPreName(value))}
             size="small"
             sx={{ width: "8rem" }}
-            renderInput={(params) => <MKInput {...params} label="Lọc theo tên" />}
+            renderInput={(params) => <MKInput {...params} label="Học kỳ" />}
           />
         </MKBox>
         <MKBox width="16rem" ml="auto">
           <MKInput
-            placeholder="Search email..."
+            placeholder="Tìm tên lớp..."
             size="small"
             fullWidth
             onChange={({ currentTarget }) => {

@@ -6,281 +6,151 @@ import AboutUs from "layouts/pages/landing-pages/about-us";
 import ContactUs from "layouts/pages/landing-pages/contact-us";
 import Author from "layouts/pages/landing-pages/author";
 import SignIn from "layouts/pages/authentication/sign-in";
-import SignUp from "layouts/pages/authentication/sign-up";
-
-// Sections
-import PageHeaders from "layouts/sections/page-sections/page-headers";
-import Features from "layouts/sections/page-sections/featuers";
-import Navbars from "layouts/sections/navigation/navbars";
-import NavTabs from "layouts/sections/navigation/nav-tabs";
-import Pagination from "layouts/sections/navigation/pagination";
-import Inputs from "layouts/sections/input-areas/inputs";
-import Forms from "layouts/sections/input-areas/forms";
-import Alerts from "layouts/sections/attention-catchers/alerts";
-import Modals from "layouts/sections/attention-catchers/modals";
-import TooltipsPopovers from "layouts/sections/attention-catchers/tooltips-popovers";
-import Avatars from "layouts/sections/elements/avatars";
-import Badges from "layouts/sections/elements/badges";
-import BreadcrumbsEl from "layouts/sections/elements/breadcrumbs";
-import Buttons from "layouts/sections/elements/buttons";
-import Dropdowns from "layouts/sections/elements/dropdowns";
-import ProgressBars from "layouts/sections/elements/progress-bars";
-import Toggles from "layouts/sections/elements/toggles";
-import Typography from "layouts/sections/elements/typography";
 import ListAccountBase from "layouts/admin/add-list-account";
 import AddListClassBase from "layouts/admin/add-list-class";
-import TeacherFunction from "layouts/sections/page-sections/featuers";
-import GroupDetail from "layouts/user/students";
+import TeacherFunction from "layouts/sections/featuers";
 import DashboardAdmin from "layouts/admin/dashboard";
+import { useDispatch, useSelector } from "react-redux";
+import GroupDetail from "layouts/user/students";
+import ViewAllGroup from "layouts/sections/featuers/components/FeaturesOne/viewAllGroup";
+import { useEffect } from "react";
+import axios from "axios";
+import { BASE_URL } from "utilities/initialValue";
+import { setAllGroup } from "app/slices/groupSlice";
+import { setUserLogin } from "app/slices/userSlice";
+import { setClassList } from "app/slices/classSlice";
 
-const routes = [
-  {
-    name: "pages",
-    icon: <Icon>dashboard</Icon>,
-    columns: 1,
-    rowsPerColumn: 2,
-    collapse: [
-      {
-        name: "landing pages",
-        collapse: [
-          {
-            name: "about us",
-            route: "/pages/landing-pages/about-us",
-            component: <AboutUs />,
-          },
-          {
-            name: "contact us",
-            route: "/pages/landing-pages/contact-us",
-            component: <ContactUs />,
-          },
-          {
-            name: "author",
-            route: "/pages/landing-pages/author",
-            component: <Author />,
-          },
-        ],
-      },
-      {
-        name: "account",
-        collapse: [
-          {
-            name: "sign in",
-            route: "/pages/authentication/sign-in",
-            component: <SignIn />,
-          },
-          {
-            name: "sign up",
-            route: "/pages/authentication/sign-up",
-            component: <SignUp />,
-          },
-        ],
-      },
-    ],
-  },
-  {
-    name: "sections",
-    icon: <Icon>view_day</Icon>,
-    collapse: [
-      {
-        name: "page sections",
-        description: "See all sections",
-        dropdown: true,
-        collapse: [
-          {
-            name: "page headers",
-            route: "/sections/page-sections/page-headers",
-            component: <PageHeaders />,
-          },
-          {
-            name: "features",
-            route: "/sections/page-sections/features",
-            component: <Features />,
-          },
-        ],
-      },
-      {
-        name: "navigation",
-        description: "See all navigations",
-        dropdown: true,
-        collapse: [
-          {
-            name: "navbars",
-            route: "/sections/navigation/navbars",
-            component: <Navbars />,
-          },
-          {
-            name: "nav tabs",
-            route: "/sections/navigation/nav-tabs",
-            component: <NavTabs />,
-          },
-          {
-            name: "pagination",
-            route: "/sections/navigation/pagination",
-            component: <Pagination />,
-          },
-        ],
-      },
-      {
-        name: "input areas",
-        description: "See all input areas",
-        dropdown: true,
-        collapse: [
-          {
-            name: "inputs",
-            route: "/sections/input-areas/inputs",
-            component: <Inputs />,
-          },
-          {
-            name: "forms",
-            route: "/sections/input-areas/forms",
-            component: <Forms />,
-          },
-        ],
-      },
-      {
-        name: "attention catchers",
-        description: "See all examples",
-        dropdown: true,
-        collapse: [
-          {
-            name: "alerts",
-            route: "/sections/attention-catchers/alerts",
-            component: <Alerts />,
-          },
-          {
-            name: "modals",
-            route: "/sections/attention-catchers/modals",
-            component: <Modals />,
-          },
-          {
-            name: "tooltips & popovers",
-            route: "/sections/attention-catchers/tooltips-popovers",
-            component: <TooltipsPopovers />,
-          },
-        ],
-      },
-      {
-        name: "elements",
-        description: "See all 32 examples",
-        dropdown: true,
-        collapse: [
-          {
-            name: "avatars",
-            route: "/sections/elements/avatars",
-            component: <Avatars />,
-          },
-          {
-            name: "badges",
-            route: "/sections/elements/badges",
-            component: <Badges />,
-          },
-          {
-            name: "breadcrumbs",
-            route: "/sections/elements/breadcrumbs",
-            component: <BreadcrumbsEl />,
-          },
-          {
-            name: "buttons",
-            route: "/sections/elements/buttons",
-            component: <Buttons />,
-          },
-          {
-            name: "dropdowns",
-            route: "/sections/elements/dropdowns",
-            component: <Dropdowns />,
-          },
-          {
-            name: "progress bars",
-            route: "/sections/elements/progress-bars",
-            component: <ProgressBars />,
-          },
-          {
-            name: "toggles",
-            route: "/sections/elements/toggles",
-            component: <Toggles />,
-          },
-          {
-            name: "typography",
-            route: "/sections/elements/typography",
-            component: <Typography />,
-          },
-        ],
-      },
-    ],
-  },
-  {
-    name: "docs",
-    icon: <Icon>article</Icon>,
-    collapse: [
-      {
-        name: "getting started",
-        description: "All about overview, quick start, license and contents",
-        href: "https://www.creative-tim.com/learning-lab/react/quick-start/material-kit/",
-      },
-      {
-        name: "foundation",
-        description: "See our colors, icons and typography",
-        href: "https://www.creative-tim.com/learning-lab/react/colors/material-kit/",
-      },
-      {
-        name: "components",
-        description: "Explore our collection of fully designed components",
-        href: "https://www.creative-tim.com/learning-lab/react/alerts/material-kit/",
-      },
-      {
-        name: "plugins",
-        description: "Check how you can integrate our plugins",
-        href: "https://www.creative-tim.com/learning-lab/react/datepicker/material-kit/",
-      },
-    ],
-  },
-  {
-    name: "admins",
-    dropdown: true,
-    icon: <Icon>article</Icon>,
-    description: "Xem tất cả",
-    _collapse: [
-      {
-        name: "",
-        route: "/admin/dashboard",
-        component: <DashboardAdmin />,
-      },
-      {
-        name: "Thêm danh sách người dùng",
-        route: "/admin/create-new-list-account",
-        component: <ListAccountBase />,
-      },
-      {
-        name: "Thêm danh sách người dùng",
-        route: "/admin/create-new-class",
-        component: <AddListClassBase />,
-      },
-    ],
-    get collapse() {
-      return this._collapse;
-    },
-    set collapse(value) {
-      this._collapse = value;
-    },
-  },
-  {
-    name: "Chức năng",
-    dropdown: true,
-    icon: <Icon>article</Icon>,
-    description: "Xem tất cả",
-    collapse: [
-      {
-        name: "Danh sách lớp",
-        route: "/sections/page-sections/features",
-        component: <TeacherFunction />,
-      },
-      {
-        name: "Leader Function",
-        route: "/group/details",
-        component: <GroupDetail />,
-      },
-    ],
-  },
-];
+function routes() {
+  const dispatch = useDispatch();
+  const { classList } = useSelector((state) => state.class);
+  const { userLogin } = useSelector((state) => state.user);
+  const { allGroups } = useSelector((state) => state.group);
 
+  const jwt = localStorage.getItem("jwt");
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${jwt}`,
+    },
+  };
+  useEffect(() => {
+    axios
+      .get(BASE_URL + "/user/profile", config)
+      .then((res) => dispatch(setUserLogin(res.data)))
+      .catch((err) => console.log(err));
+  }, [dispatch]);
+  useEffect(() => {
+    if (userLogin?._id)
+      axios
+        .get(`${BASE_URL}/teacher/${userLogin?._id}`, config)
+        .then((res) => dispatch(setAllGroup(res.data)))
+        .then((err) => console.log(err));
+  }, [userLogin, dispatch]);
+  useEffect(() => {
+    if (userLogin?._id)
+      axios
+        .get(`${BASE_URL}/class/${userLogin?._id}`, config)
+        .then((res) => dispatch(setClassList(res.data)))
+        .catch((err) => console.log(err));
+  }, [dispatch, userLogin]);
+  let result = [
+    {
+      name: "pages",
+      icon: <Icon>dashboard</Icon>,
+      columns: 1,
+      rowsPerColumn: 2,
+      collapse: [
+        {
+          name: "landing pages",
+          collapse: [
+            {
+              name: "about us",
+              route: "/pages/landing-pages/about-us",
+              component: <AboutUs />,
+            },
+            {
+              name: "contact us",
+              route: "/pages/landing-pages/contact-us",
+              component: <ContactUs />,
+            },
+            {
+              name: "author",
+              route: "/pages/landing-pages/author",
+              component: <Author />,
+            },
+          ],
+        },
+        {
+          name: "account",
+          collapse: [
+            {
+              name: "sign in",
+              route: "/pages/authentication/sign-in",
+              component: <SignIn />,
+            },
+          ],
+        },
+      ],
+    },
+    {
+      name: "Lớp Học",
+      dropdown: true,
+      icon: <Icon>article</Icon>,
+      columns: 1,
+      rowsPerColumn: 2,
+      collapse: [
+        {
+          name: "Lớp của bạn",
+          collapse: classList.map((c) => ({
+            name: c.preName,
+            route: "/presentation/class/" + c._id,
+            component: <TeacherFunction />,
+          })),
+        },
+      ],
+    },
+  ];
+  if (userLogin?.groupId?.[0]?._id && userLogin?.role === 4) {
+    result.push({
+      name: "Nhóm",
+      dropdown: false,
+      route: `/presentation/group/${userLogin?.groupId?.[0]?._id}/members`,
+      component: <GroupDetail />,
+    });
+  }
+  if (userLogin?.role === 2 && allGroups.length > 0) {
+    result.push({
+      name: "Nhóm",
+      dropdown: false,
+      route: `/presentation/groups`,
+      component: <ViewAllGroup />,
+    });
+  }
+  if (userLogin?.role === 1) {
+    result.push({
+      name: "admins",
+      dropdown: true,
+      icon: <Icon>article</Icon>,
+      description: "Xem tất cả",
+      collapse: [
+        {
+          name: "Thống Kê",
+          route: "/admin/dashboard",
+          component: <DashboardAdmin />,
+        },
+        {
+          name: "Danh Sách Người Dùng",
+          route: "/admin/create-new-list-account",
+          component: <ListAccountBase />,
+        },
+        {
+          name: "Danh Sách Lớp Học",
+          route: "/admin/create-new-class",
+          component: <AddListClassBase />,
+        },
+      ],
+    });
+  }
+  return result;
+}
 export default routes;

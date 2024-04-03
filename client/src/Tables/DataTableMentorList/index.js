@@ -52,7 +52,7 @@ function DataTable({ table, isSorted, noEndBorder }) {
     if (mentorChoice._id) {
       axios
         .post(
-          `${BASE_URL}/matched/add_new`,
+          `${BASE_URL}/matched`,
           { mentorId: mentorChoice.mentorId[0]?._id, groupId: mentorChoice?.groupId },
           config
         )

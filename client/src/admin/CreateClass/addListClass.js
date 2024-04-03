@@ -2,7 +2,7 @@
 import Card from "@mui/material/Card";
 import Grid from "@mui/material/Grid";
 
-// Material Kit 2 React components
+import * as XLSX from "xlsx/xlsx.mjs";
 import MKBox from "components/MKBox";
 import MKTypography from "components/MKTypography";
 import { ErrorMessage, Field, Form, Formik } from "formik";
@@ -174,7 +174,7 @@ function AddClassList() {
                 }}
                 validationSchema={initialValues}
               >
-                {({ values, errors, touched, handleChange, setFieldValue }) => (
+                {({ values, errors, touched, handleChange }) => (
                   <Form style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
                     {active === 0 ? (
                       <>
@@ -270,9 +270,18 @@ function AddClassList() {
                           accept=".xls, .xlsx"
                           id="file"
                           onChange={(event) => {
-                            setFieldValue("file", event.currentTarget.files[0]);
                             handleChange(event);
-                            setFileName(event.currentTarget.files[0]);
+                            const file = event.currentTarget.files[0];
+                            const reader = new FileReader();
+
+                            reader.onload = (e) => {
+                              const data = new Uint8Array(e.target.result);
+                              const workbook = XLSX.read(data, { type: "array" });
+                              const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+                              const excelData = XLSX.utils.sheet_to_json(worksheet);
+                              setFileName(excelData);
+                            };
+                            reader.readAsArrayBuffer(new Blob([file]));
                           }}
                         />
                         <ErrorMessage name="file" component="div" className="lg_error_message" />

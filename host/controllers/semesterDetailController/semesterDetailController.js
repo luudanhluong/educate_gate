@@ -15,6 +15,8 @@ const addSmtDet = async (req, res, next) => {
   try {
     const { smtId } = req.params;
     const { formvalue, actions } = req.body;
+    const semester = await semesterDetails.getSmtDetailsBySmtId(smtId);
+    if (semester?.status !== "Upcoming") return;
     let listSmtDet = [];
     if (!actions.payload)
       for (const element of formvalue) {
@@ -32,7 +34,16 @@ const addSmtDet = async (req, res, next) => {
     next(error);
   }
 };
+const getUserInSemester = async (req, res, next) => {
+  try {
+    const { smtId, role } = req.params;
+    res.send(await semesterDetails.getUserInSemester(smtId, Number(role)));
+  } catch (error) {
+    next(error);
+  }
+};
 export default {
   getSmtDetBySmtId,
   addSmtDet,
+  getUserInSemester,
 };

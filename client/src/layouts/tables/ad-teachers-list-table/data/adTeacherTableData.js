@@ -37,13 +37,6 @@ export default function data() {
       </MKBox>
     );
   };
-  const Status = ({ status }) => (
-    <MKBox lineHeight={1} textAlign="left">
-      <MKTypography display="block" variant="caption" color="text">
-        {status}
-      </MKTypography>
-    </MKBox>
-  );
   const AllChoices = () => {
     const dispatch = useDispatch();
     const handleAllChoices = () => {
@@ -67,9 +60,6 @@ export default function data() {
     value: PropTypes.object.isRequired,
   };
   AllChoices.propTypes = {};
-  Status.propTypes = {
-    status: PropTypes.string.isRequired,
-  };
   const rows = data
     ? data.map((user) => ({
         choice: <Choice name="mentor_selected" value={user} />,
@@ -79,7 +69,6 @@ export default function data() {
             {user.gender ? "Nam" : "Nữ"}
           </MKTypography>
         ),
-        status: <Status status={user.status ? "" : ""} />,
       }))
     : [];
 
@@ -93,7 +82,6 @@ export default function data() {
       },
       { Header: "người dùng", accessor: "user", align: "left" },
       { Header: "giới tính", accessor: "gender", align: "center" },
-      { Header: "trạng thái", accessor: "status", align: "center" },
     ],
 
     rows: rows,

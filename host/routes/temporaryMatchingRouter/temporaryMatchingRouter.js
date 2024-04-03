@@ -7,5 +7,9 @@ temporaryMatchingRouter.get(
   "/:gid/group",
   temporaryMatchingController.getAllTempararyMatching
 );
+temporaryMatchingRouter.post(
+  "/:gid/group",
+  temporaryMatchingController.addTempararyMatchingByGid
+);
 
 export default temporaryMatchingRouter;

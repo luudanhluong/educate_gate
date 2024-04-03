@@ -17,5 +17,13 @@ const getAllTempararyMatching = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+const addTempararyMatchingByGid = async (req, res, next) => {
+  try {
+    const { gid } = req.params;
+    res.send(await temporaryMatching.addTempararyMatchingByGid(gid));
+  } catch (error) {
+    next(error);
+  }
+};
 
-export default { getAllTempararyMatching };
+export default { getAllTempararyMatching, addTempararyMatchingByGid };

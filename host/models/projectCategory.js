@@ -12,7 +12,9 @@ const projectCategorySchema = new Schema(
       ref: "Project",
       required: true,
     },
-    status: { type: String },
+    status: {
+      type: String,
+    },
   },
   {
     timestamps: true,
