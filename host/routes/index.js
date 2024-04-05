@@ -11,6 +11,7 @@ import temporaryMatchingRouter from "./temporaryMatchingRouter/temporaryMatching
 import matchedRouter from "./matchedRouter/matchedRouter.js";
 import mentorRouter from "./mentorRouter/mentorRouter.js";
 import smtDetRouter from "./semesterDetailRouter/semesteDetailRouter.js";
+import semesterRouter from "./semesterRouter/semesterRouter.js";
 export {
   userRouter,
   classRouter,
@@ -25,4 +26,5 @@ export {
   temporaryMatchingRouter,
   matchedRouter,
   smtDetRouter,
+  semesterRouter,
 };

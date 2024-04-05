@@ -13,8 +13,8 @@ Authorization: Bearse eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWJlNjkyY
 GET http://localhost:9999/category
 
 ###
-http://localhost:9999/semester_detail/65dfe8d62499d66d73df02b5/semester
-Authorization: Bearse eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWJlNjkyYmFmZTc5ODk0MmU5NzdjMzQiLCJpYXQiOjE3MDk5MDg0MjAsImV4cCI6MTcwOTk1MTYyMH0.TkEygUWeeod9t8ZiTLgUIWq81TuNorDkLZvd4qNc-1g
+POST  http://localhost:9999/semester_detail/65dfe8d62499d66d73df02b5/semester
+Authorization: Bearse eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWVkZTBlZGIxMWZiNWJkMTQ1YTM5ZmUiLCJpYXQiOjE3MTIyMTcwNTMsImV4cCI6MTcxMjI2MDI1M30.lEsH81RI0lUfQrzM1_2gBChJStNdCiMVtYW4nn59GGg
 
 ###
 http://localhost:9999/user/parameter 
@@ -38,5 +38,12 @@ GET http://localhost:9999/class/65ede0edb11fb5bd145a39f0
 Authorization: Bearse eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWVkZTBlZGIxMWZiNWJkMTQ1YTM5ZjAiLCJpYXQiOjE3MTIwNDQwMDksImV4cCI6MTcxMjA4NzIwOX0.ZC-lxRRs75WXNRlBKvprTnzPrdGPzFcdFW7hXKks_N4
  
 ###
-http://localhost:9999/semester_detail/65ecb78c6b0255d605a2abf6/semester/3/users
-Authorization: Bearse eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWVkZTBlZGIxMWZiNWJkMTQ1YTM5ZjAiLCJpYXQiOjE3MTIxMjY5NzMsImV4cCI6MTcxMjE3MDE3M30.oGWa0_DTXypN8D9rPns5AqXWDZKmlgTDZgrePVGmrm4
+GET http://localhost:9999/semester/upcoming
+
+###
+http://localhost:9999/user/without_semester/65dfe8d62499d66d73df02b5/semester?skip=0&role=4
+Authorization: Bearse eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWVkZTBlZGIxMWZiNWJkMTQ1YTM5ZmUiLCJpYXQiOjE3MTIyMTcwNTMsImV4cCI6MTcxMjI2MDI1M30.lEsH81RI0lUfQrzM1_2gBChJStNdCiMVtYW4nn59GGg
+
+###
+http://localhost:9999/semester_detail/65dfe8d62499d66d73df02b5/semester/3/users?skip=0
+Authorization: Bearse eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWVkZTBlZGIxMWZiNWJkMTQ1YTM5ZmUiLCJpYXQiOjE3MTIyMTcwNTMsImV4cCI6MTcxMjI2MDI1M30.lEsH81RI0lUfQrzM1_2gBChJStNdCiMVtYW4nn59GGg

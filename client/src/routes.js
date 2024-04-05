@@ -10,49 +10,15 @@ import ListAccountBase from "layouts/admin/add-list-account";
 import AddListClassBase from "layouts/admin/add-list-class";
 import TeacherFunction from "layouts/sections/featuers";
 import DashboardAdmin from "layouts/admin/dashboard";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import GroupDetail from "layouts/user/students";
 import ViewAllGroup from "layouts/sections/featuers/components/FeaturesOne/viewAllGroup";
-import { useEffect } from "react";
-import axios from "axios";
-import { BASE_URL } from "utilities/initialValue";
-import { setAllGroup } from "app/slices/groupSlice";
-import { setUserLogin } from "app/slices/userSlice";
-import { setClassList } from "app/slices/classSlice";
 
 function routes() {
-  const dispatch = useDispatch();
   const { classList } = useSelector((state) => state.class);
   const { userLogin } = useSelector((state) => state.user);
   const { allGroups } = useSelector((state) => state.group);
 
-  const jwt = localStorage.getItem("jwt");
-  const config = {
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${jwt}`,
-    },
-  };
-  useEffect(() => {
-    axios
-      .get(BASE_URL + "/user/profile", config)
-      .then((res) => dispatch(setUserLogin(res.data)))
-      .catch((err) => console.log(err));
-  }, [dispatch]);
-  useEffect(() => {
-    if (userLogin?._id)
-      axios
-        .get(`${BASE_URL}/teacher/${userLogin?._id}`, config)
-        .then((res) => dispatch(setAllGroup(res.data)))
-        .then((err) => console.log(err));
-  }, [userLogin, dispatch]);
-  useEffect(() => {
-    if (userLogin?._id)
-      axios
-        .get(`${BASE_URL}/class/${userLogin?._id}`, config)
-        .then((res) => dispatch(setClassList(res.data)))
-        .catch((err) => console.log(err));
-  }, [dispatch, userLogin]);
   let result = [
     {
       name: "pages",
@@ -80,19 +46,11 @@ function routes() {
             },
           ],
         },
-        {
-          name: "account",
-          collapse: [
-            {
-              name: "sign in",
-              route: "/pages/authentication/sign-in",
-              component: <SignIn />,
-            },
-          ],
-        },
       ],
     },
-    {
+  ];
+  if (classList?.length > 0) {
+    result.push({
       name: "Lớp Học",
       dropdown: true,
       icon: <Icon>article</Icon>,
@@ -101,15 +59,15 @@ function routes() {
       collapse: [
         {
           name: "Lớp của bạn",
-          collapse: classList.map((c) => ({
+          collapse: classList?.map((c) => ({
             name: c.preName,
             route: "/presentation/class/" + c._id,
             component: <TeacherFunction />,
           })),
         },
       ],
-    },
-  ];
+    });
+  }
   if (userLogin?.groupId?.[0]?._id && userLogin?.role === 4) {
     result.push({
       name: "Nhóm",
@@ -149,6 +107,13 @@ function routes() {
           component: <AddListClassBase />,
         },
       ],
+    });
+  }
+  if (localStorage.getItem("jwt")) {
+    result.push({
+      name: "Đăng nhập",
+      route: "/pages/authentication/sign-in",
+      component: <SignIn />,
     });
   }
   return result;

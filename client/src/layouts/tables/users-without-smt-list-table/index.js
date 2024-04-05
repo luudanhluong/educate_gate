@@ -1,15 +1,18 @@
 // @mui material components
-import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
-
-// Material Dashboard 2 React components
+import { Grid } from "@mui/material";
 import MKBox from "components/MKBox";
-
-import usersTableData from "layouts/tables/ad-teachers-list-table/data/adTeacherTableData";
-import DataTable from "Tables/DataTableAdTeacherList";
+import usersTableData from "layouts/tables/users-without-smt-list-table/data/tableData";
+import DataTable from "Tables/DataTable";
+import { useSelector } from "react-redux";
+import Pagination from "pagination";
 
 function Tables() {
   const { columns, rows } = usersTableData();
+  const { total } = useSelector((state) => state.user.userWithoutSemester);
+  const { pageNo, limit } = useSelector((state) => state.utilities);
+  let qttPage = total && total > 0 ? Math.ceil(total / limit) : 0;
+
   return (
     <MKBox width={"100%"} height={"100%"}>
       <Grid container spacing={6} width={"100%"} height={"100%"} m={0}>
@@ -25,6 +28,7 @@ function Tables() {
             <MKBox height={"100%"}>
               <DataTable table={{ columns, rows }} />
             </MKBox>
+            {qttPage > 1 && <Pagination pageNo={pageNo} qttPage={qttPage} />}
           </Card>
         </Grid>
       </Grid>

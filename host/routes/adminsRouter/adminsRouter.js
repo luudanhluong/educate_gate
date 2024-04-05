@@ -5,7 +5,6 @@ const adminsRouter = express.Router();
 
 adminsRouter.get("/list-classes", adminstrationController.getClasses);
 adminsRouter.get("/all_categories", adminstrationController.getAllCategories);
-adminsRouter.get("/all_semesters", adminstrationController.getAllSemesters);
 adminsRouter.get("/users", adminstrationController.getUsers);
 adminsRouter.get(
   "/delete-classes-empty",
@@ -27,14 +26,6 @@ adminsRouter.post(
   "/create_new_category",
   adminstrationController.addNewCategory
 );
-adminsRouter.post(
-  "/create_new_semester",
-  adminstrationController.createNewSemester
-);
-adminsRouter.patch(
-  "/update_semester/:id",
-  adminstrationController.updateSemester
-);
 adminsRouter.patch(
   "/update_category/:id",
   adminstrationController.updateCategory
@@ -46,10 +37,6 @@ adminsRouter.post(
 adminsRouter.delete(
   "/delete_category/:id",
   adminstrationController.deleteCategory
-);
-adminsRouter.delete(
-  "/delete_semester/:id",
-  adminstrationController.deleteSemester
 );
 
 export default adminsRouter;

@@ -7,7 +7,6 @@ const semesterDetailSchema = new Schema(
       ref: "Semester",
     },
     userId: {
-      unique: true,
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },

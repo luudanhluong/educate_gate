@@ -116,15 +116,7 @@ const getAllCategories = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-const getAllSemesters = async (req, res) => {
-  const token = req.headers["authorization"];
-  if (!token) return res.status(401).send("Access denied");
-  try {
-    res.status(200).json(await adminsDAO.getAllSemesters());
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
+
 const addNewCategory = async (req, res) => {
   const token = req.headers["authorization"];
   if (!token) return res.status(401).send("Access denied");
@@ -135,16 +127,7 @@ const addNewCategory = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-const createNewSemester = async (req, res) => {
-  const token = req.headers["authorization"];
-  if (!token) return res.status(401).send("Access denied");
-  try {
-    const { name } = req.body;
-    res.status(200).json(await adminsDAO.createNewSemester(name));
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
+
 const updateCategory = async (req, res) => {
   const token = req.headers["authorization"];
   if (!token) return res.status(401).send("Access denied");
@@ -152,27 +135,6 @@ const updateCategory = async (req, res) => {
     const { status, name } = req.body;
     const { id } = req.params;
     res.status(200).json(await adminsDAO.updateCategory(id, { status, name }));
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-const updateSemester = async (req, res) => {
-  const token = req.headers["authorization"];
-  if (!token) return res.status(401).send("Access denied");
-  try {
-    const { status, name } = req.body;
-    const { id } = req.params;
-    res.status(200).json(await adminsDAO.updateSemester(id, { status, name }));
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-const deleteSemester = async (req, res) => {
-  const token = req.headers["authorization"];
-  if (!token) return res.status(401).send("Access denied");
-  try {
-    const { id } = req.params;
-    res.status(200).json(await adminsDAO.deleteSemester(id));
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -198,9 +160,5 @@ export default {
   getAllCategories,
   addNewCategory,
   updateCategory,
-  updateSemester,
-  createNewSemester,
-  getAllSemesters,
-  deleteSemester,
   deleteCategory,
 };

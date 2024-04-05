@@ -66,30 +66,17 @@ const userUpdateProfile = async (req, res, next) => {
   }
 };
 
-const getMentors = async (req, res, next) => {
-  const token = req.headers["authorization"];
-  if (!token) return res.status(401).send("Access denied");
+const getUserWithoutSmt = async (req, res, next) => {
   try {
-    const { skip } = req.query;
-    res.send(await userDAO.getMentors(Number.parseInt(skip)));
-  } catch (error) {
-    next(error);
-  }
-};
-const getStudents = async (req, res, next) => {
-  try {
-    const { skip } = req.query;
-    res.send(await userDAO.getStudents(Number.parseInt(skip)));
-  } catch (error) {
-    next(error);
-  }
-};
-const getTeachers = async (req, res, next) => {
-  const token = req.headers["authorization"];
-  if (!token) return res.status(401).send("Access denied");
-  try {
-    const { skip } = req.query;
-    res.send(await userDAO.getTeachers(Number.parseInt(skip)));
+    const { smtId } = req.params;
+    const { skip, role } = req.query;
+    res.send(
+      await userDAO.getUserWithoutSmt(
+        smtId,
+        Number.parseInt(skip),
+        Number.parseInt(role)
+      )
+    );
   } catch (error) {
     next(error);
   }
@@ -108,8 +95,6 @@ export default {
   getUserLogin,
   userProfile,
   userUpdateProfile,
-  getMentors,
-  getTeachers,
-  getStudents,
+  getUserWithoutSmt,
   pmtUser,
 };
