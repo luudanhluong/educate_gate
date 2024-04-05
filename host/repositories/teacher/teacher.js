@@ -241,7 +241,7 @@ const suggestMatching = async (teacherId) => {
     const result = await TemporaryMatching.insertMany(temporaryMatching);
     if (result) return "Đã thêm vào ghép tạm thời";
   } catch (error) {
-    console.log(error.message);
+    throw new Error(error.message);
   }
 };
 export default {
