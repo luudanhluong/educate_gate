@@ -102,7 +102,7 @@ function routes() {
         {
           name: "Lớp của bạn",
           collapse: classList.map((c) => ({
-            name: c.preName,
+            name: c.preName + c.suffName,
             route: "/presentation/class/" + c._id,
             component: <TeacherFunction />,
           })),
@@ -120,7 +120,7 @@ function routes() {
   }
   if (userLogin?.role === 2 && allGroups.length > 0) {
     result.push({
-      name: "Nhóm",
+      name: "ghép Mentor",
       dropdown: false,
       route: `/presentation/groups`,
       component: <ViewAllGroup />,
