@@ -22,7 +22,6 @@ import axios from "axios";
 import { BASE_URL } from "utilities/initialValue";
 import { setProjectCategories } from "app/slices/projectSlice";
 import { setGroup } from "app/slices/groupSlice";
-import { useParams } from "react-router-dom";
 
 const UpdateProject = () => {
   const dispatch = useDispatch();
@@ -32,7 +31,7 @@ const UpdateProject = () => {
   const { data: categories } = useSelector((state) => state.category.categories);
   const { projectCategories, project } = useSelector((state) => state.project);
   const { _id: uId } = userLogin;
-  const { groupId } = useParams();
+
   const [formvalues, setFormValues] = useState({
     name: "",
     description: "",
@@ -62,7 +61,7 @@ const UpdateProject = () => {
         )
         .then(() =>
           axios
-            .get(`${BASE_URL}/group/${groupId}`, config)
+            .get(`${BASE_URL}/group/${userLogin?.groupId?.[0]?._id}`, config)
             .then((res) => dispatch(setGroup(res.data[0])))
             .catch((err) => console.log(err))
         )

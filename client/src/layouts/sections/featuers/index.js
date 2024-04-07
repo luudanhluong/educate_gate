@@ -15,6 +15,8 @@ import ViewAllGroup from "./components/FeaturesOne/viewAllGroup";
 import getParams from "utilities/getParams";
 import { useLocation } from "react-router-dom";
 import { setClassStudent } from "app/slices/classOnerTeacherSlice";
+import { setGroups } from "app/slices/groupSlice";
+
 const TeachersFunction = () => {
   const dispatch = useDispatch();
   const url = useLocation();
@@ -27,7 +29,7 @@ const TeachersFunction = () => {
       Authorization: `Bearer ${jwt}`,
     },
   };
-
+  console.log(params);
   useEffect(() => {
     axios
       .get(BASE_URL + "/user/profile", config)
@@ -39,6 +41,12 @@ const TeachersFunction = () => {
     axios
       .get(`${BASE_URL}/class/${params}/students`, config)
       .then((res) => dispatch(setClassStudent(res.data)))
+      .catch((err) => console.log(err));
+  }, [params]);
+  useEffect(() => {
+    axios
+      .get(`${BASE_URL}/group/${params}/groups`, config)
+      .then((res) => dispatch(setGroups(res.data)))
       .catch((err) => console.log(err));
   }, [params]);
 

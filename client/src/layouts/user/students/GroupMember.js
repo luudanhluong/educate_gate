@@ -1,4 +1,3 @@
-import { useParams } from "react-router-dom";
 import { List, ListItem, ListItemText, Typography, Avatar, Box } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { setActivePopup } from "app/slices/activeSlice";
@@ -9,7 +8,6 @@ const GroupMembers = () => {
   const dispatch = useDispatch();
   const { group: groupDetails } = useSelector((state) => state.group);
   const { userLogin } = useSelector((state) => state.user);
-  const { groupId } = useParams();
 
   return (
     <Box
@@ -38,19 +36,20 @@ const GroupMembers = () => {
               {groupDetails.project[0]?.name}
             </Typography>
             <Typography variant="body2">{groupDetails.project[0]?.description}</Typography>
-            {userLogin?.isLeader && userLogin?.groupId === groupId && (
-              <MKButton
-                onClick={() => dispatch(setActivePopup(true))}
-                sx={{
-                  position: "absolute",
-                  bottom: 0,
-                  right: 0,
-                  margin: "8px",
-                }}
-              >
-                Cập nhật dự án
-              </MKButton>
-            )}
+            {userLogin?.isLeader &&
+              userLogin?.groupId?.[0]?._id === userLogin?.groupId?.[0]?._id && (
+                <MKButton
+                  onClick={() => dispatch(setActivePopup(true))}
+                  sx={{
+                    position: "absolute",
+                    bottom: 0,
+                    right: 0,
+                    margin: "8px",
+                  }}
+                >
+                  Cập nhật dự án
+                </MKButton>
+              )}
           </Box>
         ) : (
           ""
