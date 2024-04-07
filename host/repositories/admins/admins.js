@@ -1,6 +1,5 @@
 import Category from "../../models/categoryModel.js";
 import Class from "../../models/classModel.js";
-import Semester from "../../models/semesterModel.js";
 import User from "../../models/userModel.js";
 import UserType from "../../models/userTypeModel.js";
 import shuffleArray from "../../utilities/shuffleArray.js";
@@ -257,24 +256,10 @@ const getAllCategories = async () => {
     throw new Error(error.message);
   }
 };
-const getAllSemesters = async () => {
-  try {
-    const result = await Semester.find({}).sort({ createdAt: -1 }).exec();
-    return { data: result };
-  } catch (error) {
-    throw new Error(error.message);
-  }
-};
+
 const updateCategory = async (id, values) => {
   try {
     return await Category.findByIdAndUpdate(id, values).exec();
-  } catch (error) {
-    throw new Error(error.message);
-  }
-};
-const updateSemester = async (id, values) => {
-  try {
-    return await Semester.findByIdAndUpdate(id, values).exec();
   } catch (error) {
     throw new Error(error.message);
   }
@@ -286,20 +271,7 @@ const addNewCategory = async (name) => {
     throw new Error(error.message);
   }
 };
-const createNewSemester = async (name) => {
-  try {
-    return await Semester.create({ name });
-  } catch (error) {
-    throw new Error(error.message);
-  }
-};
-const deleteSemester = async (id) => {
-  try {
-    return await Semester.findByIdAndDelete(id);
-  } catch (error) {
-    throw new Error(error.message);
-  }
-};
+
 const deleteCategory = async (id) => {
   try {
     return await Category.findByIdAndDelete(id);
@@ -320,9 +292,5 @@ export default {
   getAllCategories,
   updateCategory,
   addNewCategory,
-  createNewSemester,
-  updateSemester,
-  getAllSemesters,
   deleteCategory,
-  deleteSemester,
 };

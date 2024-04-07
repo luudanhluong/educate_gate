@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 import SemesterDetail from "../../models/SemesterDetail.js";
-import User from "../../models/userModel.js";
 
 const getSmtDetailsBySmtId = async (smtId) => {
   try {
@@ -18,9 +17,9 @@ const addSmtDetails = async (listSmtDet) => {
   }
 };
 
-const getUserInSemester = async (smtId, role) => {
+const getUserInSemester = async (smtId, role, skip) => {
   try {
-    const result = await SemesterDetail.aggregate([
+    const pipline = [
       { $match: { semesterId: new mongoose.Types.ObjectId(smtId) } },
       {
         $lookup: {
@@ -68,9 +67,18 @@ const getUserInSemester = async (smtId, role) => {
         },
       },
       { $project: { userId: 0, categories: 0 } },
-    ]);
-
-    return result;
+    ];
+    const result = await SemesterDetail.aggregate(pipline).skip(skip).limit(10);
+    const total = await SemesterDetail.aggregate(pipline);
+    return { data: result, total: total.length };
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+const deleteDmtDetById = async (id) => {
+  try {
+    const result = await SemesterDetail.findByIdAndDelete({ _id: id });
+    if (result) return "Xóa thành công";
   } catch (error) {
     throw new Error(error.message);
   }
@@ -79,4 +87,5 @@ export default {
   getSmtDetailsBySmtId,
   addSmtDetails,
   getUserInSemester,
+  deleteDmtDetById,
 };

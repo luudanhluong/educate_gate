@@ -11,33 +11,19 @@ import MKBox from "components/MKBox";
 
 import DataTableHeadCell from "Tables/DataTableHeadCell";
 import DataTableBodyCell from "Tables/DataTableBodyCell";
-import { useDispatch, useSelector } from "react-redux";
-import { Icon } from "@mui/material";
-import { setPageNo, setSelectUser } from "app/slices/userSlice";
-import MKPagination from "components/MKPagination";
+import MKTypography from "components/MKTypography";
 
 function DataTable({ table, isSorted, noEndBorder }) {
-  const { data: listmentor, count } = useSelector((state) => state.user.mentor);
-  const { pageNo, selectUser } = useSelector((state) => state.user);
-  let qttPage = Math.ceil(count / 10);
   const columns = useMemo(() => table.columns, [table]);
   const data = useMemo(() => table.rows, [table]);
-  const dispatch = useDispatch();
   const tableInstance = useTable(
     { columns, data, initialState: { pageIndex: 0 } },
     useGlobalFilter,
     useSortBy,
     usePagination
   );
-  const handleSelectUsersetSelectUser = (key) => {
-    const index = selectUser.some((u) => u._id === listmentor[key]?._id);
-    if (!index) {
-      dispatch(setSelectUser([...selectUser, listmentor[key]]));
-    } else {
-      dispatch(setSelectUser(selectUser.filter((s) => s._id !== listmentor[key]?._id)));
-    }
-  };
   const { getTableProps, getTableBodyProps, headerGroups, prepareRow, rows, page } = tableInstance;
+
   return (
     <TableContainer
       sx={{ boxShadow: "none", overflowX: "unset", paddingBottom: "3rem", position: "relative" }}
@@ -63,18 +49,13 @@ function DataTable({ table, isSorted, noEndBorder }) {
           {page.map((row, key) => {
             prepareRow(row);
             return (
-              <TableRow
-                onClick={() => handleSelectUsersetSelectUser(key)}
-                key={key}
-                {...row.getRowProps()}
-                sx={{ cursor: "pointer" }}
-              >
+              <TableRow key={key} {...row.getRowProps()}>
                 {row.cells.map((cell, idx) => (
                   <DataTableBodyCell
                     key={idx}
                     noBorder={noEndBorder && rows.length - 1 === key}
                     align={cell.column.align ? cell.column.align : "left"}
-                    // width={cell.column.width ? cell.column.width : "auto"}
+                    width={cell.column.width ? cell.column.width : "auto"}
                     {...cell.getCellProps()}
                   >
                     {cell.render("Cell")}
@@ -85,41 +66,19 @@ function DataTable({ table, isSorted, noEndBorder }) {
           })}
         </TableBody>
       </Table>
-      {qttPage > 1 ? (
-        <MKBox
-          position="absolute"
-          display="flex"
-          gap="0.5rem"
-          sx={{
-            left: "50%",
-            transform: "translateX(-50%)",
-            bottom: "6px",
-            overflow: "auto",
-          }}
-        >
-          <MKPagination item onClick={() => (pageNo > 0 ? dispatch(setPageNo(pageNo - 1)) : null)}>
-            <Icon>keyboard_arrow_left</Icon>
-          </MKPagination>
-          {Array.from({ length: qttPage }, (_, index) => (
-            <MKPagination key={index}>
-              <MKPagination
-                active={index === pageNo}
-                onClick={() => dispatch(setPageNo(index))}
-                item
-              >
-                {index + 1}
-              </MKPagination>
-            </MKPagination>
-          ))}
-          <MKPagination
-            item
-            onClick={() => (qttPage - 1 > pageNo ? dispatch(setPageNo(pageNo + 1)) : null)}
+      {page.length === 0 && (
+        <MKBox lineHeight={1} textAlign="center">
+          <MKTypography
+            mt="1rem"
+            display="block"
+            variant="caption"
+            color="text"
+            fontSize="1rem"
+            fontWeight="medium"
           >
-            <Icon>keyboard_arrow_right</Icon>
-          </MKPagination>
+            Không có người dùng nào...
+          </MKTypography>
         </MKBox>
-      ) : (
-        ""
       )}
     </TableContainer>
   );

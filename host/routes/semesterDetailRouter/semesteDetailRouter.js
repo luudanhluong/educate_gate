@@ -19,5 +19,10 @@ smtDetRouter.get(
   verifyAccessToken,
   semesterDetailController.getUserInSemester
 );
+smtDetRouter.delete(
+  "/:id",
+  verifyAccessToken,
+  semesterDetailController.deleteDmtDetById
+);
 
 export default smtDetRouter;

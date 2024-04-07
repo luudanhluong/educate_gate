@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 const initialValue = {
   pageNo: 0,
+  limit: 10,
 };
 const mockupSlice = createSlice({
   name: "utilities",
@@ -9,9 +10,12 @@ const mockupSlice = createSlice({
     setPageNo: (state, action) => {
       state.pageNo = action.payload;
     },
+    setLimit: (state, action) => {
+      state.limit = action.payload;
+    },
   },
 });
 
 const { reducer, actions } = mockupSlice;
-export const { setPageNo } = actions;
+export const { setPageNo, setLimit } = actions;
 export default reducer;

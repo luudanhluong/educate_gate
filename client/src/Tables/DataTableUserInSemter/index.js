@@ -11,16 +11,8 @@ import MKBox from "components/MKBox";
 
 import DataTableHeadCell from "Tables/DataTableHeadCell";
 import DataTableBodyCell from "Tables/DataTableBodyCell";
-import { useDispatch, useSelector } from "react-redux";
-import Pagination from "pagination";
-import { AppBar, Grid, Tab, Tabs } from "@mui/material";
-import { setRole } from "app/slices/userSlice";
 
 function DataTable({ table, isSorted, noEndBorder }) {
-  const dispatch = useDispatch();
-  const { role } = useSelector((state) => state.user);
-  const { pageNo } = useSelector((state) => state.utilities);
-  let qttPage = 0;
   const columns = useMemo(() => table.columns, [table]);
   const data = useMemo(() => table.rows, [table]);
   const tableInstance = useTable(
@@ -29,60 +21,12 @@ function DataTable({ table, isSorted, noEndBorder }) {
     useSortBy,
     usePagination
   );
-  const handleTabType = (event, newValue) => dispatch(setRole(newValue));
   const { getTableProps, getTableBodyProps, headerGroups, prepareRow, rows, page } = tableInstance;
 
   return (
     <TableContainer
       sx={{ boxShadow: "none", overflowX: "unset", paddingBottom: "3rem", position: "relative" }}
     >
-      <MKBox px={3}>
-        <Grid item xs={6}>
-          <AppBar position="static">
-            <Tabs value={role} onChange={handleTabType}>
-              <Tab
-                icon={
-                  <MKBox
-                    component="i"
-                    color="dark"
-                    mr={1.25}
-                    sx={{ fontSize: ({ typography: { size } }) => size.sm }}
-                    className="fas fa-desktop"
-                  />
-                }
-                value={4}
-                label="Học sinh"
-              />
-              <Tab
-                icon={
-                  <MKBox
-                    component="i"
-                    color="dark"
-                    mr={1.25}
-                    sx={{ fontSize: ({ typography: { size } }) => size.sm }}
-                    className="fas fa-code"
-                  />
-                }
-                value={2}
-                label="Giáo viên"
-              />
-              <Tab
-                icon={
-                  <MKBox
-                    component="i"
-                    color="dark"
-                    mr={1.25}
-                    sx={{ fontSize: ({ typography: { size } }) => size.sm }}
-                    className="fas fa-code"
-                  />
-                }
-                value={3}
-                label="Người hướng dẫn"
-              />
-            </Tabs>
-          </AppBar>
-        </Grid>
-      </MKBox>
       <Table {...getTableProps()}>
         <MKBox component="thead">
           {headerGroups.map((headerGroup, key) => (
@@ -121,7 +65,6 @@ function DataTable({ table, isSorted, noEndBorder }) {
           })}
         </TableBody>
       </Table>
-      {qttPage > 1 && <Pagination pageNo={pageNo} qttPage={qttPage} />}
     </TableContainer>
   );
 }

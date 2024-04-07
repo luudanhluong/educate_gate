@@ -10,33 +10,33 @@ import {
   Tab,
   Tabs,
 } from "@mui/material";
-import { setActive } from "app/slices/activeSlice";
 import { setActivePopup } from "app/slices/activeSlice";
 import MKBox from "components/MKBox";
-import TablesTeacher from "layouts/tables/ad-teachers-list-table";
-import TablesStudent from "layouts/tables/ad-students-list-table";
-import TablesMentor from "layouts/tables/ad-mentors-list-table";
 import { useDispatch, useSelector } from "react-redux";
 import MKButton from "components/MKButton";
 import axios from "axios";
 import { BASE_URL } from "utilities/initialValue";
-import { setSemester } from "app/slices/semesterSlice";
-import { setSelectUser } from "app/slices/userSlice";
-import { setPageNo } from "app/slices/userSlice";
-import { setSelectAll } from "app/slices/userSlice";
-import { setMentor } from "app/slices/userSlice";
-import { setStudent } from "app/slices/userSlice";
-import { setTeacher } from "app/slices/userSlice";
+import {
+  setUserWithoutSemester,
+  setSelectAll,
+  setPageNo,
+  setSelectUser,
+  setRole,
+} from "app/slices/userSlice";
+import Tables from "layouts/tables/users-without-smt-list-table";
+import { useEffect, useState } from "react";
+import { setUsersInSmt } from "app/slices/semesterSlice";
 
 const AddInSmtDet = () => {
   const dispatch = useDispatch();
-  const { active } = useSelector((state) => state.active);
+  const [semesters, setSemesters] = useState([]);
+  const [semester, setSemester] = useState([]);
   const { active_popup } = useSelector((state) => state.active);
-  const { semester } = useSelector((state) => state.semester);
-  const { data: semesters } = useSelector((state) => state.semester.semesters);
-  const { selectUser, selectAll } = useSelector((state) => state.user);
+  const { pageNo } = useSelector((state) => state.utilities);
+  const { smtDet } = useSelector((state) => state.semester);
+  const { selectUser, selectAll, role } = useSelector((state) => state.user);
   const isActivePopup = (actions) => dispatch(setActivePopup(actions));
-  const smtId = semester?._id || (semesters && semesters[0]?._id);
+  const smtId = semester?._id || semesters?.[0]?._id;
   const jwt = localStorage.getItem("jwt");
   const config = {
     headers: {
@@ -44,9 +44,15 @@ const AddInSmtDet = () => {
       authorization: `Bearer ${jwt}`,
     },
   };
+  useEffect(() => {
+    axios
+      .get(`${BASE_URL}/semester/upcoming`, config)
+      .then((res) => setSemesters(res.data))
+      .catch((err) => console.log(err));
+  }, []);
   const handleTabType = (event, newValue) => {
     dispatch(setPageNo(0));
-    dispatch(setActive(newValue));
+    dispatch(setRole(newValue));
     dispatch(setSelectUser([]));
     dispatch(
       setSelectAll({
@@ -55,6 +61,16 @@ const AddInSmtDet = () => {
       })
     );
   };
+  useEffect(() => {
+    if (smtId)
+      axios
+        .get(
+          `${BASE_URL}/user/without_semester/${smtId}/semester?skip=${pageNo * 10}&role=${role}`,
+          config
+        )
+        .then((res) => dispatch(setUserWithoutSemester(res.data)))
+        .catch((err) => console.log(err));
+  }, [pageNo, dispatch, smtDet, role, semester, semesters, pageNo, active_popup]);
   const handleAddInSmtDet = () => {
     const formAddValue = selectUser.map((user) => user._id);
     axios
@@ -64,21 +80,14 @@ const AddInSmtDet = () => {
         config
       )
       .then(() => {
-        if (active === 2)
-          axios
-            .get(`${BASE_URL}/user/mentors?skip=0`, config)
-            .then((res) => dispatch(setMentor(res.data)))
-            .catch((err) => console.log(err));
-        if (active === 0)
-          axios
-            .get(`${BASE_URL}/user/students?skip=0`, config)
-            .then((res) => dispatch(setStudent(res.data)))
-            .catch((err) => console.log(err));
-        if (active === 1)
-          axios
-            .get(`${BASE_URL}/user/teachers?skip=0`, config)
-            .then((res) => dispatch(setTeacher(res.data)))
-            .catch((err) => console.log(err));
+        axios
+          .get(`${BASE_URL}/semester_detail/${smtId}/semester/${role}/users?skip=0`, config)
+          .then((res) => dispatch(setUsersInSmt(res.data)))
+          .catch((err) => console.log(err));
+        axios
+          .get(`${BASE_URL}/user/without_semester/${smtId}/semester?skip=0&role=${role}`, config)
+          .then((res) => dispatch(setUserWithoutSemester(res.data)))
+          .catch((err) => console.log(err));
       })
       .catch((err) => console.log(err.message));
     dispatch(
@@ -88,7 +97,16 @@ const AddInSmtDet = () => {
       })
     );
   };
-
+  useEffect(() => {
+    dispatch(
+      setSelectAll({
+        type: 0,
+        payload: false,
+      })
+    );
+    dispatch(setSelectUser([]));
+    dispatch(setPageNo(0));
+  }, [dispatch, role, active_popup]);
   return (
     <Modal
       open={active_popup.payload === "smtDet"}
@@ -107,7 +125,7 @@ const AddInSmtDet = () => {
           <MKBox px={3} my={2}>
             <Grid item xs={12}>
               <AppBar position="static">
-                <Tabs value={active} onChange={handleTabType}>
+                <Tabs value={role} onChange={handleTabType}>
                   <Tab
                     icon={
                       <MKBox
@@ -118,6 +136,7 @@ const AddInSmtDet = () => {
                         className="fas fa-desktop"
                       />
                     }
+                    value={4}
                     label="Học sinh"
                   />
                   <Tab
@@ -130,6 +149,7 @@ const AddInSmtDet = () => {
                         className="fas fa-code"
                       />
                     }
+                    value={2}
                     label="Giáo viên"
                   />
                   <Tab
@@ -142,31 +162,31 @@ const AddInSmtDet = () => {
                         className="fas fa-code"
                       />
                     }
+                    value={3}
                     label="Người hướng dẫn"
                   />
                 </Tabs>
               </AppBar>
             </Grid>
           </MKBox>
-          <MKBox>
-            <MKButton onClick={handleAddInSmtDet}>Lưu</MKButton>
-          </MKBox>
-          <MKBox mx={2} mb={1}>
-            <FormControl fullWidth>
-              <Select id="select-semster-add" name="semster-add" value={smtId}>
-                {semesters &&
-                  semesters.map((s) => (
-                    <MenuItem key={s._id} onClick={() => dispatch(setSemester(s))} value={s._id}>
+          <MKBox display="flex" gap="2rem" mx="1rem">
+            <MKBox>
+              <MKButton onClick={handleAddInSmtDet}>Lưu</MKButton>
+            </MKBox>
+            <MKBox mx={2} mb={1} minWidth="10rem">
+              <FormControl fullWidth>
+                <Select id="select-semster-add" name="semster-add" value={smtId}>
+                  {semesters?.map((s) => (
+                    <MenuItem key={s._id} onClick={() => setSemester(s)} value={s._id}>
                       {s.name}
                     </MenuItem>
                   ))}
-              </Select>
-            </FormControl>
+                </Select>
+              </FormControl>
+            </MKBox>
           </MKBox>
           <MKBox>
-            {active === 0 ? <TablesStudent /> : ""}
-            {active === 1 ? <TablesTeacher /> : ""}
-            {active === 2 ? <TablesMentor /> : ""}
+            <Tables />
           </MKBox>
         </Card>
       </Slide>

@@ -1,11 +1,11 @@
 import { setPageNo } from "app/slices/utilitiesSlice";
-import Icon from "assets/theme/components/icon";
 import MKBox from "components/MKBox";
 import PropTypes from "prop-types";
 import MKPagination from "components/MKPagination";
 import { useDispatch } from "react-redux";
+import { Icon } from "@mui/material";
 
-const Pagination = ({ qttPage, pageNo }) => {
+function Pagination({ pageNo, qttPage }) {
   const dispatch = useDispatch();
   return (
     <MKBox
@@ -19,7 +19,7 @@ const Pagination = ({ qttPage, pageNo }) => {
         overflow: "auto",
       }}
     >
-      <MKPagination item onClick={() => (pageNo > 0 ? dispatch(setPageNo(pageNo - 1)) : null)}>
+      <MKPagination item onClick={() => pageNo > 0 && dispatch(setPageNo(pageNo - 1))}>
         <Icon>keyboard_arrow_left</Icon>
       </MKPagination>
       {Array.from({ length: qttPage }, (_, index) => (
@@ -29,17 +29,20 @@ const Pagination = ({ qttPage, pageNo }) => {
           </MKPagination>
         </MKPagination>
       ))}
-      <MKPagination
-        item
-        onClick={() => (qttPage - 1 > pageNo ? dispatch(setPageNo(pageNo + 1)) : null)}
-      >
+      <MKPagination item onClick={() => qttPage - 1 > pageNo && dispatch(setPageNo(pageNo + 1))}>
         <Icon>keyboard_arrow_right</Icon>
       </MKPagination>
     </MKBox>
   );
+}
+
+Pagination.defaultProps = {
+  qttPage: 0,
+  pageNo: 1,
 };
 Pagination.propTypes = {
-  qttPage: PropTypes.number.isRequired,
-  pageNo: PropTypes.number.isRequired,
+  qttPage: PropTypes.number,
+  pageNo: PropTypes.number,
 };
+
 export default Pagination;
