@@ -24,7 +24,7 @@ function routes() {
   const dispatch = useDispatch();
   const { classList } = useSelector((state) => state.class);
   const { userLogin } = useSelector((state) => state.user);
-  const { allGroups } = useSelector((state) => state.group);
+  // const { allGroups } = useSelector((state) => state.group);
 
   const jwt = localStorage.getItem("jwt");
   const config = {
@@ -92,7 +92,9 @@ function routes() {
         },
       ],
     },
-    {
+  ];
+  if (userLogin?.role === 2 || userLogin?.role === 4) {
+    result.push({
       name: "Lớp Học",
       dropdown: true,
       icon: <Icon>article</Icon>,
@@ -108,22 +110,26 @@ function routes() {
           })),
         },
       ],
-    },
-  ];
+    });
+  }
+
   if (userLogin?.groupId?.[0]?._id && userLogin?.role === 4) {
     result.push({
       name: "Nhóm",
       dropdown: false,
-      route: `/presentation/group/${userLogin?.groupId?.[0]?._id}/members`,
+      route: `/group/${userLogin?.groupId?.[0]?._id}/members`,
       component: <GroupDetail />,
     });
   }
-  if (userLogin?.role === 2 && allGroups.length > 0) {
+
+  if (userLogin?.role === 2) {
     result.push({
-      name: "ghép Mentor",
-      dropdown: false,
-      route: `/presentation/groups`,
-      component: <ViewAllGroup />,
+      name: "Chức năng",
+      dropdown: true,
+      icon: <Icon>article</Icon>,
+      collapse: [
+        { name: "Ghép Mentor", route: `/presentation/groups`, component: <ViewAllGroup /> },
+      ],
     });
   }
   if (userLogin?.role === 1) {

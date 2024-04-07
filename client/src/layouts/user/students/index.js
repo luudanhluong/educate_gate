@@ -31,7 +31,7 @@ const GroupDetail = () => {
       Authorization: `Bearer ${jwt}`,
     },
   };
-
+  console.log(userLogin?.groupId?.[0]?._id);
   useEffect(() => {
     console.log(`${BASE_URL}/group/${groupId}`);
     axios
@@ -40,6 +40,15 @@ const GroupDetail = () => {
       .catch((err) => console.log(err));
     // dispatch(setProjectCategories([]));
   }, [groupId, dispatch]);
+
+  useEffect(() => {
+    console.log(`${BASE_URL}/group/${userLogin?.groupId?.[0]?._id}`);
+    axios
+      .get(`${BASE_URL}/group/${userLogin?.groupId?.[0]?._id}`, config)
+      .then((res) => dispatch(setGroup(res.data[0])))
+      .catch((err) => console.log(err));
+  }, [userLogin?.groupId?.[0]?._id, dispatch]);
+
   useEffect(() => {
     axios
       .get(`${BASE_URL}/user/profile`, config)
@@ -54,6 +63,7 @@ const GroupDetail = () => {
       .then((res) => dispatch(setUserLogin(res.data)))
       .catch((err) => console.log(err));
   }, [dispatch]);
+
   useEffect(() => {
     if (group.project) {
       axios
