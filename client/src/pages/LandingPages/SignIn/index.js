@@ -18,7 +18,6 @@ import MKBox from "components/MKBox";
 import MKTypography from "components/MKTypography";
 
 // Material Kit 2 React example components
-import DefaultNavbar from "examples/Navbars/DefaultNavbar";
 import SimpleFooter from "examples/Footers/SimpleFooter";
 
 // Material Kit 2 React page layout routes
@@ -33,6 +32,7 @@ import { setFetchError } from "app/slices/errorSlice";
 import { BASE_URL } from "utilities/initialValue";
 import axios from "axios";
 import MKButton from "components/MKButton";
+import DefaultNavbar from "Navbars/DefaultNavbar";
 
 function SignInBasic() {
   const dispatch = useDispatch();

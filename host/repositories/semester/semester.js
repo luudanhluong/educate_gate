@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import Semester from "../../models/semesterModel.js";
 
 const createNewSemester = async (name) => {
@@ -46,6 +47,7 @@ const getSemesterById = async (id) => {
     throw new Error(error.message);
   }
 };
+
 export default {
   createNewSemester,
   deleteSemester,

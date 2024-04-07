@@ -30,7 +30,7 @@ import { setUsersInSmt } from "app/slices/semesterSlice";
 const AddInSmtDet = () => {
   const dispatch = useDispatch();
   const [semesters, setSemesters] = useState([]);
-  const [semester, setSemester] = useState([]);
+  const [semester, setSemester] = useState({});
   const { active_popup } = useSelector((state) => state.active);
   const { pageNo } = useSelector((state) => state.utilities);
   const { smtDet } = useSelector((state) => state.semester);
@@ -171,7 +171,12 @@ const AddInSmtDet = () => {
             </MKBox>
             <MKBox mx={2} mb={1} minWidth="10rem">
               <FormControl fullWidth>
-                <Select id="select-semster-add" name="semster-add" value={smtId}>
+                <Select
+                  id="select-semster-add"
+                  name="semster-add"
+                  value={semester?._id || semesters?.[0]?._id || " "}
+                >
+                  {(!semester?.id || semesters?.[0]?._id) && <MenuItem value={" "}></MenuItem>}
                   {semesters?.map((s) => (
                     <MenuItem key={s._id} onClick={() => setSemester(s)} value={s._id}>
                       {s.name}

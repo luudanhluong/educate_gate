@@ -25,6 +25,8 @@ const initialValue = {
   },
   defaultMentor: "",
   role: 4,
+  user: {},
+  delUser: {},
 };
 const storiesSlice = createSlice({
   name: "user",
@@ -69,6 +71,12 @@ const storiesSlice = createSlice({
     setRole: (state, action) => {
       state.role = action.payload;
     },
+    setUser: (state, action) => {
+      state.user = action.payload;
+    },
+    setDelUser: (state, action) => {
+      state.delUser = action.payload;
+    },
   },
 });
 
@@ -87,5 +95,7 @@ export const {
   setSelectAll,
   setDefaultMentor,
   setRole,
+  setUser,
+  setDelUser,
 } = actions;
 export default reducer;

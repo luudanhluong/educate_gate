@@ -39,9 +39,14 @@ Authorization: Bearse eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWVkZTBlZ
  
 ###
 GET http://localhost:9999/semester/upcoming
+ 
+###
+POST http://localhost:9999/admins/create-new-classes
+
+{ "className": "a", "limitStudent": 30 }
 
 ###
-http://localhost:9999/user/without_semester/65dfe8d62499d66d73df02b5/semester?skip=0&role=4
+http://localhost:9999/user/without_semester?skip=0&role=4
 Authorization: Bearse eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWVkZTBlZGIxMWZiNWJkMTQ1YTM5ZmUiLCJpYXQiOjE3MTIyMTcwNTMsImV4cCI6MTcxMjI2MDI1M30.lEsH81RI0lUfQrzM1_2gBChJStNdCiMVtYW4nn59GGg
 
 ###

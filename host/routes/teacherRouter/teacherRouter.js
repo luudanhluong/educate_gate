@@ -9,9 +9,10 @@ teacherRouter.get(
   verifyAccessToken,
   teacherController.suggestMatching
 );
+teacherRouter.get("/inactive", verifyAccessToken, teacherController.getTeacher);
 teacherRouter.get("/classes", teacherController.getClassListByTeacher);
 teacherRouter.get(
-  "/:teacherId",
+  "/:teacherId/groups",
   verifyAccessToken,
   teacherController.getGroupsByTeacherId
 );

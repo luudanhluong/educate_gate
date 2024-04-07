@@ -95,6 +95,11 @@ export default function data() {
         user: (
           <User image={userImg} name={semester?.user?.username} email={semester?.user?.email} />
         ),
+        status: (
+          <MKTypography component="div" variant="caption" color="text" fontWeight="medium">
+            {semester?.user?.status}
+          </MKTypography>
+        ),
         gender: (
           <MKTypography component="div" variant="caption" color="text" fontWeight="medium">
             {semester?.user?.gender ? "Nam" : "Nữ"}
@@ -124,6 +129,7 @@ export default function data() {
     }) || [];
   const columns = [
     { Header: "người dùng", accessor: "user", align: "left" },
+    { Header: "trạng thái", accessor: "status", align: "center" },
     { Header: "giới tính", accessor: "gender", align: "center" },
   ];
   if (role === 4) columns.push({ Header: "Mã SV", accessor: "rollNumber", align: "center" });

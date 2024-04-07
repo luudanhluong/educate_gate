@@ -1,4 +1,6 @@
 import semesterDAO from "../../repositories/semester/index.js";
+import userDAO from "../../repositories/user/index.js";
+import semesterDetails from "../../repositories/semesterDetails/semesterDetails.js";
 
 const getAllSemesters = async (req, res, next) => {
   try {
@@ -23,13 +25,20 @@ const createNewSemester = async (req, res) => {
   }
 };
 
-const updateSemester = async (req, res) => {
+const updateSemester = async (req, res, next) => {
   try {
     const { status, name } = req.body;
     const { id } = req.params;
-    res
-      .status(200)
-      .json(await semesterDAO.updateSemester(id, { status, name }));
+    let listUsersId = [];
+    const listSmtDet = await semesterDetails.getSmtDetailsBySmtId(id);
+    for (const smtDet of listSmtDet) {
+      listUsersId.push(smtDet.userId);
+    }
+    if (status === "Ongoing") await userDAO.updateUsers(listUsersId, "Active");
+    else if (status === "Upcoming")
+      await userDAO.updateUsers(listUsersId, "InActive");
+    else await userDAO.updateUsers(listUsersId, "Disabled");
+    res.send(await semesterDAO.updateSemester(id, { status, name }));
   } catch (error) {
     next(error);
   }

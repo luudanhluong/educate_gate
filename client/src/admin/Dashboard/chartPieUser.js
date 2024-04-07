@@ -9,10 +9,10 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 const ChartPieUser = () => {
   const { teacher, mentor, student, admin } = useSelector((state) => state.user.pmtUser);
   const data = {
-    labels: ["Giao viên", "Học sinh", "Quản trị viên", "Hướng dẫn"],
+    labels: ["Giao viên", "Học sinh", "Quản trị viên", "Hướng dẫn viên"],
     datasets: [
       {
-        label: "# of Votes",
+        label: "Tổng ",
         data: [teacher, student, admin, mentor],
         backgroundColor: [
           "rgba(255, 99, 132, 0.2)",

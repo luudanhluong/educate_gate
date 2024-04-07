@@ -11,7 +11,7 @@ import * as Yup from "yup";
 import { BASE_URL } from "utilities/initialValue";
 import axios from "axios";
 import { useState } from "react";
-import { Icon, Modal, Slide } from "@mui/material";
+import { Modal, Slide } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import MKButton from "components/MKButton";
 import { setUsers } from "app/slices/userSlice";
@@ -74,11 +74,11 @@ function AddListAccount() {
             mb={1}
             textAlign="center"
           >
-            <MKBox position="relative">
-              <MKTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-                Tạo danh sách người dùng
-              </MKTypography>
-              <MKBox
+            {/* <MKBox position="relative"> */}
+            <MKTypography variant="h4" fontWeight="medium" color="white" mt={1}>
+              Tạo danh sách người dùng
+            </MKTypography>
+            {/* <MKBox
                 onClick={isActivePopup}
                 position="absolute"
                 right={0}
@@ -97,8 +97,8 @@ function AddListAccount() {
                 }}
               >
                 <Icon>clear</Icon>
-              </MKBox>
-            </MKBox>
+              </MKBox> */}
+            {/* </MKBox> */}
           </MKBox>
           <MKBox pt={4} pb={3} px={3}>
             <MKBox mb={2}>
@@ -141,12 +141,13 @@ function AddListAccount() {
                       <ErrorMessage name="file" component="div" className="lg_error_message" />
                     </MKBox>
                     <MKButton
-                      style={{ background: "#1A73E8", marginTop: 16 }}
                       type="submit"
-                      className="btn-sbm pointer"
+                      color="info"
                       sx={{
+                        width: "100%",
                         fontSize: "16px",
                         color: "#FFFFFF",
+                        marginTop: "16px",
                       }}
                     >
                       Tạo

@@ -4,7 +4,7 @@ import moment from "moment";
 import dotnv from "dotenv";
 import User from "../../models/userModel.js";
 import mongoose from "mongoose";
-import SemesterDetail from "../../models/SemesterDetail.js";
+import user from "../../routes/user/userRouter.js";
 dotnv.config();
 
 const createNewUser = async ({ username, email, password, role }) => {
@@ -114,23 +114,10 @@ const findUserById = async (id) => {
     throw new Error(error.message);
   }
 };
-const getUserWithoutSmt = async (smtId, skip, role) => {
+const getUserWithoutSmt = async (skip, role) => {
   try {
-    const listUsersInSmt = await SemesterDetail.aggregate([
-      { $match: { semesterId: new mongoose.Types.ObjectId(smtId) } },
-      {
-        $lookup: {
-          from: "users",
-          localField: "userId",
-          foreignField: "_id",
-          as: "user",
-        },
-      },
-      { $match: { "user.role": role } },
-    ]);
-    const uniqueUsers = [...new Set(listUsersInSmt.map((item) => item.userId))];
     const pipline = [
-      { $match: { role: role } },
+      { $match: { role: role, status: "InActive" } },
       {
         $lookup: {
           from: "classes",
@@ -169,13 +156,8 @@ const getUserWithoutSmt = async (smtId, skip, role) => {
         },
       },
       { $project: { classId: 0 } },
+      { $match: { semesterdetail: [] } },
     ];
-    if (role === 4) {
-      pipline.push({ $match: { semesterdetail: [] } });
-    }
-    if (role !== 4) {
-      pipline.push({ $match: { _id: { $nin: uniqueUsers } } });
-    }
     const result = await User.aggregate(pipline).skip(skip).limit(10);
     const count = await User.aggregate(pipline);
     return { data: result, total: count.length };
@@ -217,23 +199,10 @@ const pmtUser = async () => {
     throw new Error(error.message);
   }
 };
-const getUserByRole = async (role, smtId) => {
+const getUserByRole = async (role, status) => {
   try {
-    const listUsersInSmt = await SemesterDetail.aggregate([
-      { $match: { semesterId: new mongoose.Types.ObjectId(smtId) } },
-      {
-        $lookup: {
-          from: "users",
-          localField: "userId",
-          foreignField: "_id",
-          as: "user",
-        },
-      },
-      { $match: { "user.role": role } },
-    ]);
-    const uniqueUsers = [...new Set(listUsersInSmt.map((item) => item.userId))];
     const pipline = [
-      { $match: { role: role } },
+      { $match: { role: role, status: status } },
       {
         $lookup: {
           from: "semesterdetails",
@@ -242,13 +211,8 @@ const getUserByRole = async (role, smtId) => {
           as: "semesterdetail",
         },
       },
+      { $match: { semesterdetail: [] } },
     ];
-    if (role === 4) {
-      pipline.push({ $match: { semesterdetail: [] } });
-    }
-    if (role !== 4) {
-      pipline.push({ $match: { _id: { $nin: uniqueUsers } } });
-    }
     return await User.aggregate(pipline);
   } catch (error) {
     throw new Error(error.message);
@@ -257,7 +221,10 @@ const getUserByRole = async (role, smtId) => {
 const getClassesByUserId = async (userId) => {
   try {
     return await User.aggregate([
-      { $match: { _id: new mongoose.Types.ObjectId(userId) } },
+      {
+        $match: { _id: new mongoose.Types.ObjectId(userId) },
+        status: "Active",
+      },
       {
         $lookup: {
           from: "classes",
@@ -274,6 +241,19 @@ const getClassesByUserId = async (userId) => {
     throw new Error(error.message);
   }
 };
+const updateUsers = async (listUser, status) => {
+  try {
+    await User.updateMany(
+      { _id: { $in: listUser } },
+      {
+        $set: { status: status },
+      }
+    );
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
 export default {
   createNewUser,
   loginUser,
@@ -283,4 +263,5 @@ export default {
   pmtUser,
   getUserByRole,
   getClassesByUserId,
+  updateUsers,
 };

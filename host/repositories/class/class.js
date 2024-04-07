@@ -29,12 +29,6 @@ const createNewListClass = async ({
 const getClasses = async ({ item, order, limit, skip }) => {
   try {
     let query = {};
-    // if (search && search.length > 0) {
-    //   query.email = { $regex: new RegExp(search, "i") };
-    // }
-    // if (role && role > 0) {
-    //   query.role = role;
-    // }
     const listClass = await Class.find(query)
       .sort({ [item]: order })
       .skip(skip)

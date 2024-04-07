@@ -68,11 +68,9 @@ const userUpdateProfile = async (req, res, next) => {
 
 const getUserWithoutSmt = async (req, res, next) => {
   try {
-    const { smtId } = req.params;
     const { skip, role } = req.query;
     res.send(
       await userDAO.getUserWithoutSmt(
-        smtId,
         Number.parseInt(skip),
         Number.parseInt(role)
       )

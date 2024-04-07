@@ -36,7 +36,11 @@ const userSchema = new Schema(
     },
     menteeCount: { type: Number },
     isLeader: { type: Boolean, default: false },
-    status: { type: String },
+    status: {
+      type: String,
+      enum: ["Active", "InActive", "Disabled"],
+      default: "InActive",
+    },
     rollNumber: { type: String },
     memberCode: { type: String },
     slotType: { type: String },

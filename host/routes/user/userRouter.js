@@ -6,7 +6,7 @@ const user = express.Router();
 
 user.get("/profile", userController.userProfile);
 user.get(
-  "/without_semester/:smtId/semester",
+  "/without_semester",
   verifyAccessToken,
   userController.getUserWithoutSmt
 );

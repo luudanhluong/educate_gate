@@ -10,19 +10,17 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { BASE_URL } from "utilities/initialValue";
-import { setclasses } from "app/slices/classSlice";
 import AddClassList from "./addListClass";
 import { setActivePopup } from "app/slices/activeSlice";
-import { setSearchValue } from "app/slices/classSlice";
-import { setSort } from "app/slices/classSlice";
-import { setFilterPreName } from "app/slices/classSlice";
+import { setSearchValue, setSort, setFilterPreName, setclasses } from "app/slices/classSlice";
 import routes from "routes";
+import { setPageNo } from "app/slices/utilitiesSlice";
 
 function ListClass() {
   const dispatch = useDispatch();
-  const limitClass = 10;
   const { active_popup } = useSelector((state) => state.active);
-  const { searchValue, sort, pageNo } = useSelector((state) => state.class);
+  const { searchValue, sort } = useSelector((state) => state.class);
+  const { pageNo, limit } = useSelector((state) => state.utilities);
   const jwt = localStorage.getItem("jwt");
   const headers = {
     headers: {
@@ -34,8 +32,8 @@ function ListClass() {
     axios
       .get(
         `${BASE_URL}/admins/list-classes?item=createdAt&order=${sort}&skip=${
-          pageNo * limitClass
-        }&limit=${limitClass}&semester=${""}&search=${searchValue}`,
+          pageNo * limit
+        }&limit=${limit}&semester=${""}&search=${searchValue}`,
         headers
       )
       .then((response) => dispatch(setclasses(response.data)))
@@ -46,6 +44,7 @@ function ListClass() {
     dispatch(setSearchValue(""));
     dispatch(setSort(-1));
     dispatch(setFilterPreName(""));
+    dispatch(setPageNo(0));
   }, [dispatch]);
   return (
     <MKBox display="flex" flexDirection="column" sx={{ gap: "6rem" }}>

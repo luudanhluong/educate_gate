@@ -1,5 +1,6 @@
 import express from "express";
 import adminstrationController from "../../controllers/adminstrationController/index.js";
+import { verifyAccessToken } from "../../utilities/jwt.js";
 
 const adminsRouter = express.Router();
 
@@ -18,10 +19,7 @@ adminsRouter.get(
   "/add-student-in-class",
   adminstrationController.addStuentdInClass
 );
-adminsRouter.post(
-  "/create-new-classes",
-  adminstrationController.createNewListClass
-);
+adminsRouter.post("/create-new-classes", adminstrationController.createClass);
 adminsRouter.post(
   "/create_new_category",
   adminstrationController.addNewCategory
@@ -37,6 +35,11 @@ adminsRouter.post(
 adminsRouter.delete(
   "/delete_category/:id",
   adminstrationController.deleteCategory
+);
+adminsRouter.delete(
+  "/:userId/user",
+  verifyAccessToken,
+  adminstrationController.deleteUserById
 );
 
 export default adminsRouter;

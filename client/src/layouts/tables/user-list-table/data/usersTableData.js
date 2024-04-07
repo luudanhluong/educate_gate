@@ -7,14 +7,20 @@ import PropTypes from "prop-types";
 import userImg from "assets/images/user.jpg";
 import MKBadge from "components/MKBadge";
 import MKAvatar from "components/MKAvatar";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import getDate from "utilities/getDate";
+import { setDelUser } from "app/slices/userSlice";
 
 export default function data() {
   const { data } = useSelector((state) => state.user.users);
-
+  const dispatch = useDispatch();
   const User = ({ image, name, email }) => (
-    <MKBox display="flex" alignItems="center" lineHeight={1}>
+    <MKBox
+      display="flex"
+      alignItems="center"
+      lineHeight={1}
+      sx={{ userselect: "none", cursor: "pointer" }}
+    >
       <MKAvatar src={image} name={name} size="md" />
       <MKBox ml={1} lineHeight={1}>
         <MKTypography display="block" variant="button" fontWeight="medium">
@@ -24,7 +30,25 @@ export default function data() {
       </MKBox>
     </MKBox>
   );
-
+  const Action = ({ user }) => {
+    const handleDelete = () => {
+      if (user.status === "InActive") dispatch(setDelUser(user));
+    };
+    return (
+      <MKBox
+        onClick={handleDelete}
+        sx={{ cursor: "pointer", userselect: "none" }}
+        color={`text`}
+        fontWeight="medium"
+        fontSize="0.725rem"
+      >
+        Xóa
+      </MKBox>
+    );
+  };
+  Action.propTypes = {
+    user: PropTypes.object.isRequired,
+  };
   User.propTypes = {
     image: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
@@ -40,8 +64,18 @@ export default function data() {
           </MKTypography>
         ),
         status: (
+          <MKTypography component="div" variant="caption" color="text" fontWeight="medium">
+            {user.status}
+          </MKTypography>
+        ),
+        rollNumber: (
           <MKBox ml={-1}>
-            <MKBadge badgeContent="active" color="success" variant="gradient" size="sm" />
+            <MKBadge
+              badgeContent={user.rollNumber || "0000000"}
+              color="success"
+              variant="gradient"
+              size="sm"
+            />
           </MKBox>
         ),
         onboard: (
@@ -49,19 +83,16 @@ export default function data() {
             {getDate(user.createdAt)}
           </MKTypography>
         ),
-        action: (
-          <MKTypography component="a" href="#" variant="caption" color="text" fontWeight="medium">
-            Edit
-          </MKTypography>
-        ),
+        action: <Action user={user} />,
       }))
     : [];
 
   return {
     columns: [
       { Header: "người dùng", accessor: "user", width: "32%", align: "left" },
-      { Header: "giới tính", accessor: "gender", align: "center" },
       { Header: "trạng thái", accessor: "status", align: "center" },
+      { Header: "giới tính", accessor: "gender", align: "center" },
+      { Header: "mã sinh viên", accessor: "rollNumber", align: "center" },
       { Header: "onboard", accessor: "onboard", align: "center" },
       { Header: "hành động", accessor: "action", align: "center" },
     ],

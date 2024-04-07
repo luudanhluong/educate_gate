@@ -2,7 +2,6 @@
 import Card from "@mui/material/Card";
 import Grid from "@mui/material/Grid";
 
-import * as XLSX from "xlsx/xlsx.mjs";
 import MKBox from "components/MKBox";
 import MKTypography from "components/MKTypography";
 import { ErrorMessage, Field, Form, Formik } from "formik";
@@ -11,16 +10,28 @@ import { BASE_URL } from "utilities/initialValue";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { AppBar, Icon, Modal, Slide, Tab, Tabs } from "@mui/material";
+import {
+  AppBar,
+  FormControl,
+  Icon,
+  MenuItem,
+  Modal,
+  Select,
+  Slide,
+  Tab,
+  Tabs,
+} from "@mui/material";
 import { setActive } from "app/slices/activeSlice";
 import { setclasses } from "app/slices/classSlice";
 import MKButton from "components/MKButton";
 import { setActivePopup } from "app/slices/activeSlice";
 import MKInput from "components/MKInput";
+import readeFile from "utilities/readeFile";
 
 function AddClassList() {
   const dispatch = useDispatch();
-  const [fileName, setFileName] = useState();
+  const [fileValue, setFileValue] = useState();
+  const [teachers, setTeachers] = useState([]);
   const limitClass = 10;
   const { active } = useSelector((state) => state.active);
   const { filterPreName, searchValue, sort, pageNo } = useSelector((state) => state.class);
@@ -34,31 +45,31 @@ function AddClassList() {
       authorization: `Bearer ${jwt}`,
     },
   };
+
+  useEffect(() => {
+    axios
+      .get(`${BASE_URL}/teacher/inactive`, config)
+      .then((res) => setTeachers(res.data))
+      .catch((error) => console.log(error));
+  }, [dispatch]);
+  // console.log(teacher);
   useEffect(() => {
     dispatch(setActive(0));
-  }, []);
-  const formValues =
-    active === 0
-      ? {
-          preName: "",
-          suffName: "",
-          limitStudent: 30,
-          quantity: 0,
-        }
-      : {
-          file: "",
-        };
+  }, [dispatch]);
+  const formValues = {
+    className: "",
+    limitStudent: 30,
+    teacherId: "",
+    file: "",
+  };
   const initialValues = Yup.object().shape(
     active === 0
       ? {
-          preName: Yup.string().required("Vui lòng nhập tiền tố của lớp học"),
-          suffName: Yup.string(),
+          className: Yup.string().required("Vui lòng nhập tên của lớp học"),
+          teacherId: Yup.string().required("Vui lòng chọn giáo viên cho lớp học"),
           limitStudent: Yup.number()
             .typeError("Vui lòng nhập số")
             .required("Vui lòng nhập giới hạn sinh viên của lớp của lớp học"),
-          quantity: Yup.number()
-            .typeError("Vui lòng nhập số")
-            .required("Vui lòng nhập số lương sinh viên của lớp của lớp học"),
         }
       : {
           file: Yup.mixed().required("Vui lòng chọn một file"),
@@ -75,15 +86,9 @@ function AddClassList() {
       .then((response) => dispatch(setclasses(response.data)))
       .catch((error) => console.log(error));
   const handleSubmit = (values) => {
-    const { preName, suffName, limitStudent, quantity } = values;
-    const formData_1 = new FormData();
-    formData_1.append("file", fileName);
+    console.log(values);
     axios
-      .post(
-        BASE_URL + "/admins/create-new-classes",
-        active === 0 ? { preName, suffName, limitStudent, quantity } : formData_1,
-        config
-      )
+      .post(BASE_URL + "/admins/create-new-classes", active === 0 ? values : fileValue, config)
       .then(() => getClassInfo())
       .catch((error) => console.error(error.message));
   };
@@ -181,57 +186,17 @@ function AddClassList() {
                         <MKBox>
                           <Field
                             fullWidth
-                            type="text"
-                            name="quantity"
-                            value={values.quantity}
                             component={MKInput}
-                            label="Số lượng lớp muốn tạo"
-                            placeholder="0"
-                            onChange={handleChange}
-                            className={`${touched.file && errors.file ? "error" : ""}`}
-                            accept=".xls, .xlsx"
-                            id="quantity"
-                          />
-                          <ErrorMessage
-                            name="quantity"
-                            component="div"
-                            className="lg_error_message"
-                          />
-                        </MKBox>
-                        <MKBox>
-                          <Field
-                            fullWidth
-                            component={MKInput}
-                            value={values.preName}
-                            label="Nhập tiền tố của lớp"
+                            value={values.className}
+                            label="Nhập tên của lớp"
                             type="text"
                             onChange={handleChange}
-                            name="preName"
-                            className={`${touched.file && errors.file ? "error" : ""}`}
-                            accept=".xls, .xlsx"
-                            id="preName"
+                            name="className"
+                            className={`${touched.className && errors.className && "error"}`}
+                            id="className"
                           />
                           <ErrorMessage
-                            name="preName"
-                            component="div"
-                            className="lg_error_message"
-                          />
-                        </MKBox>
-                        <MKBox>
-                          <Field
-                            fullWidth
-                            component={MKInput}
-                            value={values.suffName}
-                            onChange={handleChange}
-                            label="Nhập hậu tố của lớp"
-                            type="text"
-                            name="suffName"
-                            className={`${touched.file && errors.file ? "error" : ""}`}
-                            accept=".xls, .xlsx"
-                            id="suffName"
-                          />
-                          <ErrorMessage
-                            name="suffName"
+                            name="className"
                             component="div"
                             className="lg_error_message"
                           />
@@ -245,12 +210,34 @@ function AddClassList() {
                             value={values.limitStudent}
                             onChange={handleChange}
                             name="limitStudent"
-                            className={`${touched.file && errors.file ? "error" : ""}`}
+                            className={`${touched.limitStudent && errors.limitStudent && "error"}`}
                             accept=".xls, .xlsx"
                             id="limitStudent"
                           />
                           <ErrorMessage
                             name="limitStudent"
+                            component="div"
+                            className="lg_error_message"
+                          />
+                        </MKBox>
+                        <MKBox>
+                          <FormControl fullWidth>
+                            <Select
+                              name="teacherId"
+                              onChange={handleChange}
+                              className={`${touched.className && errors.className && "error"}`}
+                              value={values.teacherId || " "}
+                            >
+                              <MenuItem value={" "}>Chọn giáo viên cho lớp học</MenuItem>
+                              {teachers?.map((s) => (
+                                <MenuItem key={s._id} value={s._id}>
+                                  {s.username}
+                                </MenuItem>
+                              ))}
+                            </Select>
+                          </FormControl>
+                          <ErrorMessage
+                            name="teacherId"
                             component="div"
                             className="lg_error_message"
                           />
@@ -266,22 +253,12 @@ function AddClassList() {
                           variant="standard"
                           InputLabelProps={{ shrink: true }}
                           name="file"
-                          className={`${touched.file && errors.file ? "error" : ""}`}
+                          className={`${touched.file && errors.file && "error"}`}
                           accept=".xls, .xlsx"
                           id="file"
                           onChange={(event) => {
                             handleChange(event);
-                            const file = event.currentTarget.files[0];
-                            const reader = new FileReader();
-
-                            reader.onload = (e) => {
-                              const data = new Uint8Array(e.target.result);
-                              const workbook = XLSX.read(data, { type: "array" });
-                              const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-                              const excelData = XLSX.utils.sheet_to_json(worksheet);
-                              setFileName(excelData);
-                            };
-                            reader.readAsArrayBuffer(new Blob([file]));
+                            readeFile(event, setFileValue);
                           }}
                         />
                         <ErrorMessage name="file" component="div" className="lg_error_message" />

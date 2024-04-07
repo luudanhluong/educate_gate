@@ -1,6 +1,6 @@
 import createError from "http-errors";
 import semesterDetails from "../../repositories/semesterDetails/index.js";
-import userRepository from "../../repositories/user/index.js";
+import userDAO from "../../repositories/user/index.js";
 import semesterDAO from "../../repositories/semester/index.js";
 
 const getSmtDetBySmtId = async (req, res, next) => {
@@ -17,19 +17,19 @@ const addSmtDet = async (req, res, next) => {
     const { smtId } = req.params;
     const { formvalue, actions } = req.body;
     const semester = await semesterDAO.getSemesterById(smtId);
-    if (semester?.[0]?.status !== "Upcoming") {
-      res.send("Không thêm được");
-      return;
-    }
+    if (semester?.[0]?.status !== "Upcoming") return;
     let listSmtDet = [];
+    let listUsersId = [];
     if (!actions.payload)
       for (const element of formvalue) {
-        listSmtDet.push({ userId: element, semesterId: smtId });
+        listSmtDet.push({ userId: element._id, semesterId: smtId });
+        listUsersId.push(element._id);
       }
     else {
-      const listUsers = await userRepository.getUserByRole(actions.type, smtId);
+      const listUsers = await userDAO.getUserByRole(actions.type, "InActive");
       for (const element of listUsers) {
-        listSmtDet.push({ userId: element, semesterId: smtId });
+        listSmtDet.push({ userId: element._id, semesterId: smtId });
+        listUsersId.push(element._id);
       }
     }
     const result = await semesterDetails.addSmtDetails(listSmtDet);

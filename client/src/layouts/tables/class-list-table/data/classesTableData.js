@@ -46,7 +46,7 @@ export default function data() {
     ? data.map((c) => ({
         name: (
           <MKTypography component="div" variant="caption" color="text" fontWeight="medium">
-            {`${c.preName}${c.code}${c.suffName ? "-" + c.suffName : ""}`}
+            {c.className}
           </MKTypography>
         ),
         qttStudent: (
@@ -71,7 +71,7 @@ export default function data() {
           ),
         status: (
           <MKBox ml={-1}>
-            <MKBadge badgeContent="active" color="success" variant="gradient" size="sm" />
+            <MKBadge badgeContent={c.status} color="success" variant="gradient" size="sm" />
           </MKBox>
         ),
         onboard: (
@@ -127,13 +127,13 @@ export default function data() {
     columns: [
       { Header: "Tên lớp", accessor: "name", align: "center" },
       {
-        Header: "giới hạn sinh viên",
+        Header: "giới hạn",
         accessor: "qttStudent",
         width: "12%",
         align: "center",
       },
       {
-        Header: "sinh viên trong lớp",
+        Header: "sinh viên",
         accessor: "curQttStudent",
         width: "12%",
         align: "center",

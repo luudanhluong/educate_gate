@@ -1,7 +1,7 @@
 import Category from "../../models/categoryModel.js";
 import Class from "../../models/classModel.js";
 import User from "../../models/userModel.js";
-import UserType from "../../models/userTypeModel.js";
+// import UserType from "../../models/userTypeModel.js";
 import shuffleArray from "../../utilities/shuffleArray.js";
 
 const getUsers = async ({ item, order, skip, limit, role, search }) => {
@@ -18,22 +18,8 @@ const getUsers = async ({ item, order, skip, limit, role, search }) => {
       .skip(skip)
       .limit(limit)
       .exec();
-    const userRole = await User.distinct("role").exec();
-    const userTypes = await UserType.find({
-      role: { $in: userRole },
-    }).exec();
     const total = await User.countDocuments(query).exec();
-    const quantityUsers = await Promise.all(
-      userTypes.map(async (type) => {
-        return {
-          name: type.name,
-          qtt: await User.countDocuments({
-            role: type.role,
-          }),
-        };
-      })
-    );
-    return { data: listUsers, total, skip, limit, userTypes, quantityUsers };
+    return { data: listUsers, total, skip, limit };
   } catch (e) {
     throw new Error(e.message.toString());
   }
@@ -46,7 +32,7 @@ const createListUsers = async (listData) => {
     throw new Error(e.message.toString());
   }
 };
-const createNewListClassesFromFile = async (listData) => {
+const createNewListClasses = async (listData) => {
   try {
     const andConditions = listData.map((item) => ({
       $and: [
@@ -70,27 +56,18 @@ const createNewListClassesFromFile = async (listData) => {
     throw new Error(e.message.toString());
   }
 };
-const createNewListClass = async ({
-  suffName,
-  preName,
-  quantity,
-  limitStudent,
-}) => {
+const createNewClass = async (data) => {
   try {
-    const listExistWithPreName = await Class.countDocuments({
-      preName: preName,
-    }).exec();
-    const data = [];
-    for (let index = 1; index <= quantity; index++) {
-      data.push({
-        suffName,
-        preName,
-        code: index + listExistWithPreName,
-        limitStudent,
-      });
-    }
     const result = await Class.create(data);
     return result;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+const deleteUserById = async (userId) => {
+  try {
+    const result = await User.findByIdAndDelete(userId);
+    if (result) return "Xóa thành công";
   } catch (error) {
     throw new Error(error.message);
   }
@@ -140,9 +117,8 @@ const getClasses = async ({ item, order, limit, skip, preName, search }) => {
       .sort({ [item]: order })
       .skip(skip)
       .limit(limit);
-    const listPreName = await Class.distinct("preName").exec();
     const total = await Class.countDocuments(query).exec();
-    return { data: result, total, skip, limit, listPreName };
+    return { data: result, total, skip, limit };
   } catch (error) {
     throw new Error(error.message);
   }
@@ -284,13 +260,14 @@ export default {
   getUsers,
   createListUsers,
   getClasses,
-  createNewListClass,
+  createNewClass,
   addStudentInClasses,
   deleteClassEmpty,
   addTeacherInClass,
-  createNewListClassesFromFile,
+  createNewListClasses,
   getAllCategories,
   updateCategory,
   addNewCategory,
   deleteCategory,
+  deleteUserById,
 };

@@ -18,6 +18,14 @@ const getUsers = async (req, res) => {
     next(error);
   }
 };
+const deleteUserById = async (req, res, next) => {
+  try {
+    const { userId } = req.params;
+    res.send(await adminsDAO.deleteUserById(userId));
+  } catch (error) {
+    next(error);
+  }
+};
 const insertListUsers = async (req, res, next) => {
   try {
     const saltRounds = 12;
@@ -37,28 +45,16 @@ const insertListUsers = async (req, res, next) => {
   }
 };
 
-const createNewListClass = async (req, res) => {
-  const token = req.headers["authorization"];
-  if (!token) return res.status(401).send("Access denied");
+const createClass = async (req, res, next) => {
   try {
-    const { className, limitStudent } = req.body;
+    const data = req.body;
     let result;
-    if (!preName) {
-      const excelFilePath = req.file.path;
-      const workbook = xlsx.readFile(excelFilePath);
-      const sheetName = workbook.SheetNames[0];
-      const userData = xlsx.utils.sheet_to_json(workbook.Sheets[sheetName]);
-      result = await adminsDAO.createNewListClassesFromFile(userData);
-    }
-    result = await adminsDAO.createNewListClass({
-      suffName,
-      preName,
-      quantity,
-      limitStudent,
-    });
-    res.status(201).json(result);
+    if (!data?.className) {
+      result = await adminsDAO.createNewListClasses(data);
+    } else result = await adminsDAO.createNewClass(data);
+    res.send(result);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    next(error);
   }
 };
 const getClasses = async (req, res, next) => {
@@ -153,7 +149,7 @@ export default {
   getUsers,
   insertListUsers,
   getClasses,
-  createNewListClass,
+  createClass,
   addStuentdInClass,
   deleteClassEmpty,
   addTeacherInClass,
@@ -161,4 +157,5 @@ export default {
   addNewCategory,
   updateCategory,
   deleteCategory,
+  deleteUserById,
 };

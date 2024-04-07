@@ -10,15 +10,48 @@ import ListAccountBase from "layouts/admin/add-list-account";
 import AddListClassBase from "layouts/admin/add-list-class";
 import TeacherFunction from "layouts/sections/featuers";
 import DashboardAdmin from "layouts/admin/dashboard";
-import { useSelector } from "react-redux";
+import SemesterAdmin from "layouts/admin/semester";
+import { useDispatch, useSelector } from "react-redux";
 import GroupDetail from "layouts/user/students";
 import ViewAllGroup from "layouts/sections/featuers/components/FeaturesOne/viewAllGroup";
+import { useEffect } from "react";
+import axios from "axios";
+import { BASE_URL } from "utilities/initialValue";
+import { setUserLogin } from "app/slices/userSlice";
+import { setAllGroup } from "app/slices/groupSlice";
+import { setClassList } from "app/slices/classSlice";
 
-function routes() {
+function Routes() {
+  const dispatch = useDispatch();
   const { classList } = useSelector((state) => state.class);
   const { userLogin } = useSelector((state) => state.user);
   const { allGroups } = useSelector((state) => state.group);
-
+  const jwt = localStorage.getItem("jwt");
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${jwt}`,
+    },
+  };
+  useEffect(() => {
+    axios
+      .get(BASE_URL + "/user/profile", config)
+      .then((res) => dispatch(setUserLogin(res.data)))
+      .catch((err) => console.log(err.message));
+  }, [dispatch]);
+  useEffect(() => {
+    if (userLogin.role === 2)
+      axios
+        .get(`${BASE_URL}/teacher/${userLogin?._id}/groups`, config)
+        .then((res) => dispatch(setAllGroup(res.data)))
+        .catch((err) => console.log(err));
+    if (userLogin?._id) {
+      axios
+        .get(`${BASE_URL}/class/${userLogin?._id}`, config)
+        .then((res) => dispatch(setClassList(res.data)))
+        .catch((err) => console.log(err.message));
+    }
+  }, [userLogin, dispatch]);
   let result = [
     {
       name: "pages",
@@ -97,6 +130,11 @@ function routes() {
           component: <DashboardAdmin />,
         },
         {
+          name: "Kỳ học",
+          route: "/admin/semester",
+          component: <SemesterAdmin />,
+        },
+        {
           name: "Danh Sách Người Dùng",
           route: "/admin/create-new-list-account",
           component: <ListAccountBase />,
@@ -118,4 +156,4 @@ function routes() {
   }
   return result;
 }
-export default routes;
+export default Routes;
