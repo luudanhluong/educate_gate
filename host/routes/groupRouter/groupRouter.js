@@ -8,6 +8,7 @@ const upload = multer({ dest: "uploads/" });
 // groupRouter.get("/:groupId/members", groupController.groupDetail);
 groupRouter.get("/:id", groupController.getGroupById);
 groupRouter.get("/:classId/groups", groupController.getGroupsByClass);
+groupRouter.get("/:teacherId/teacher", groupController.countGroupGetMatched);
 groupRouter.post("/createRandom", groupController.createRandomGroups);
 groupRouter.get(
   "/checkGroupsExist/:classId",

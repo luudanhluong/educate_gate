@@ -11,6 +11,8 @@ import "./App.css";
 import GroupDetail from "layouts/user/students/index";
 import { ToastContainer } from "react-toastify";
 import { CssBaseline } from "@mui/material";
+import TeachersFunction from "layouts/sections/featuers";
+import SignInPage from "layouts/pages/authentication/sign-in";
 
 export default function App() {
   const { pathname } = useLocation();
@@ -36,6 +38,8 @@ export default function App() {
       <Routes>
         {getRoutes(routes())}
         <Route path="/group/:groupId/members" element={<GroupDetail />} />
+        <Route path="/presentation/class/:classId" element={<TeachersFunction />} />
+        <Route path="/presentation/auth/sign-in" element={<SignInPage />} />
         <Route path="/presentation" element={<Presentation />} />
         <Route path="*" element={<Navigate to={"/presentation"} />} />
       </Routes>

@@ -167,9 +167,38 @@ const createGroupsFromExcel = async (filePath, classId) => {
       groupsMap[groupName] = group._id;
     }
   }
-
   return Object.values(groupsMap).map((groupId) => ({ groupId }));
 };
+
+const countGroupGetMatched = async (teacherId) => {
+  try {
+    const pipline = [
+      {
+        $lookup: {
+          from: "classes",
+          localField: "classId",
+          foreignField: "_id",
+          as: "class",
+        },
+      },
+      { $match: { "class.teacherId": new mongoose.Types.ObjectId(teacherId) } },
+      {
+        $lookup: {
+          from: "matcheds",
+          localField: "_id",
+          foreignField: "groupId",
+          as: "matched",
+        },
+      },
+      { $unwind: "$matched" },
+    ];
+    const results = await Group.aggregate(pipline);
+    return results.length;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
 export default {
   getGroupById,
   getGroupMembers,
@@ -180,4 +209,5 @@ export default {
   getMatchedByGroupId,
   checkGroupsExist,
   createGroupsFromExcel,
+  countGroupGetMatched,
 };

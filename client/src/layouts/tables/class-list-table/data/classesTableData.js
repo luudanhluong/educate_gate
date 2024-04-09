@@ -7,11 +7,23 @@ import PropTypes from "prop-types";
 import userImg from "assets/images/user.jpg";
 import MKBadge from "components/MKBadge";
 import MKAvatar from "components/MKAvatar";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import getDate from "utilities/getDate";
+import { setdeleteClass, setEditClass } from "app/slices/classSlice";
+import { Link } from "react-router-dom";
 
 export default function data() {
+  const dispatch = useDispatch();
   const { data } = useSelector((state) => state.class.classes);
+  const checkStatus = (status) => {
+    if (status === "Active") {
+      return "success";
+    } else if (status === "InActive") {
+      return "warning";
+    } else {
+      return "danger";
+    }
+  };
   const User = ({ image, name, email }) => (
     <MKBox display="flex" alignItems="center" lineHeight={1}>
       <MKAvatar src={image} name={name} size="md" />
@@ -44,6 +56,11 @@ export default function data() {
   };
   const rows = data
     ? data.map((c) => ({
+        code: (
+          <MKTypography component="div" variant="caption" color="text" fontWeight="medium">
+            {c._id}
+          </MKTypography>
+        ),
         name: (
           <MKTypography component="div" variant="caption" color="text" fontWeight="medium">
             {c.className}
@@ -51,7 +68,7 @@ export default function data() {
         ),
         qttStudent: (
           <MKTypography component="div" variant="caption" color="text" fontWeight="medium">
-            {30}
+            {c.limitStudent}
           </MKTypography>
         ),
         curQttStudent: (
@@ -59,19 +76,15 @@ export default function data() {
             {c.userCount}
           </MKTypography>
         ),
-        teacher:
-          c.teacher.length > 0 ? (
-            c.teacher.map((t) => (
-              <User key={t._id} image={userImg} name={t.username} email={t.email} />
-            ))
-          ) : (
-            <MKTypography component="span" variant="caption" color="text" fontWeight="medium">
-              Đang chờ
-            </MKTypography>
-          ),
+        teacher: <User image={userImg} name={c.teacher.username} email={c.teacher.email} />,
         status: (
           <MKBox ml={-1}>
-            <MKBadge badgeContent={c.status} color="success" variant="gradient" size="sm" />
+            <MKBadge
+              badgeContent={c.status}
+              color={checkStatus(c.status)}
+              variant="gradient"
+              size="sm"
+            />
           </MKBox>
         ),
         onboard: (
@@ -79,29 +92,21 @@ export default function data() {
             {getDate(c.createdAt)}
           </MKTypography>
         ),
-        semester: (
-          <MKTypography component="span" variant="caption" color="text" fontWeight="medium">
-            {"Fall 2023"}
-          </MKTypography>
-        ),
+        semester:
+          c.semester.length > 0 ? (
+            <MKTypography component="span" variant="caption" color="text" fontWeight="medium">
+              {c.semester?.[0]?.name}
+            </MKTypography>
+          ) : (
+            <MKTypography component="span" variant="caption" color="text" fontWeight="medium">
+              Chưa có
+            </MKTypography>
+          ),
         action: (
           <MKBox display="flex" gap="0.5rem">
-            <MKTypography
-              component="span"
-              variant="caption"
-              color="text"
-              fontWeight="medium"
-              sx={{
-                cursor: "pointer",
-                "&:hover": {
-                  color: "#000000",
-                },
-              }}
-            >
-              Edit
-            </MKTypography>{" "}
             {c.userCount === 0 ? (
               <MKTypography
+                onClick={() => dispatch(setdeleteClass(c))}
                 component="span"
                 variant="caption"
                 color="text"
@@ -116,7 +121,23 @@ export default function data() {
                 Delete
               </MKTypography>
             ) : (
-              ""
+              <MKTypography
+                onClick={() => dispatch(setEditClass(c))}
+                component="span"
+                variant="caption"
+                color="text"
+                fontWeight="medium"
+                sx={{
+                  cursor: "pointer",
+                  "&:hover": {
+                    color: "#000000",
+                  },
+                }}
+              >
+                <Link to={`/presentation/class/${c._id}`} underline="hover">
+                  Xem
+                </Link>
+              </MKTypography>
             )}
           </MKBox>
         ),
@@ -125,22 +146,21 @@ export default function data() {
 
   return {
     columns: [
-      { Header: "Tên lớp", accessor: "name", align: "center" },
+      { Header: "mã lớp", accessor: "code", align: "center" },
+      { Header: "tên lớp", accessor: "name", align: "center" },
       {
         Header: "giới hạn",
         accessor: "qttStudent",
-        width: "12%",
         align: "center",
       },
       {
         Header: "sinh viên",
         accessor: "curQttStudent",
-        width: "12%",
         align: "center",
       },
-      { Header: "giáo viên", accessor: "teacher", width: "20%", align: "left" },
+      { Header: "giáo viên", accessor: "teacher", align: "left" },
       { Header: "trạng thái", accessor: "status", align: "center" },
-      { Header: "onboard", accessor: "onboard", align: "center" },
+      { Header: "onboard", accessor: "onboard", width: "10%", align: "center" },
       { Header: "kì học", accessor: "semester", align: "center" },
       { Header: "hành động", accessor: "action", align: "center" },
     ],

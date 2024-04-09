@@ -7,4 +7,6 @@ const headers = {
 };
 const BASE_URL = "http://localhost:9999";
 
-export { clientId, POST, BASE_URL, headers };
+const formatNumber = (value) => value.toString().padStart(2, "0");
+
+export { clientId, POST, BASE_URL, headers, formatNumber };

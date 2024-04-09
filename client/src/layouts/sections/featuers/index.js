@@ -17,7 +17,7 @@ import { useLocation } from "react-router-dom";
 import { setClassStudent } from "app/slices/classOnerTeacherSlice";
 import { setGroups } from "app/slices/groupSlice";
 
-const TeachersFunction = () => {
+const TeacherFunction = () => {
   const dispatch = useDispatch();
   const url = useLocation();
   const params = getParams(3, url.pathname);
@@ -29,7 +29,6 @@ const TeachersFunction = () => {
       Authorization: `Bearer ${jwt}`,
     },
   };
-  console.log(params);
   useEffect(() => {
     axios
       .get(BASE_URL + "/user/profile", config)
@@ -42,13 +41,13 @@ const TeachersFunction = () => {
       .get(`${BASE_URL}/class/${params}/students`, config)
       .then((res) => dispatch(setClassStudent(res.data)))
       .catch((err) => console.log(err));
-  }, [params]);
+  }, [params, dispatch]);
   useEffect(() => {
     axios
       .get(`${BASE_URL}/group/${params}/groups`, config)
       .then((res) => dispatch(setGroups(res.data)))
       .catch((err) => console.log(err));
-  }, [params]);
+  }, [params, dispatch]);
 
   return (
     <>
@@ -87,4 +86,4 @@ const TeachersFunction = () => {
     </>
   );
 };
-export default TeachersFunction;
+export default TeacherFunction;

@@ -66,21 +66,19 @@ export default function data() {
   Gender.propTypes = {
     sex: PropTypes.bool.isRequired,
   };
-  const rows = data
-    ? data.map((item) => ({
-        choice: <Choice name="mentor" value={item} />,
-        user: (
-          <User
-            image={userImg}
-            id={item.mentorId[0]._id}
-            name={item.mentorId[0].username}
-            email={item.mentorId[0].email}
-          />
-        ),
-        gender: <Gender sex={item.mentorId[0] ? item.mentorId[0].gender : ""} />,
-        degree: <Details description={item.mentorId[0] ? item.mentorId[0].degree : ""} />,
-      }))
-    : [];
+  const rows = data?.map((item) => ({
+    choice: <Choice name="mentor" value={item} />,
+    user: (
+      <User
+        image={userImg}
+        id={item.mentorId[0]._id}
+        name={item.mentorId[0].username}
+        email={item.mentorId[0].email}
+      />
+    ),
+    gender: <Gender sex={item.mentorId[0] ? item.mentorId[0].gender : ""} />,
+    degree: <Details description={item.mentorId[0] ? item.mentorId[0].degree : ""} />,
+  }));
 
   return {
     columns: [

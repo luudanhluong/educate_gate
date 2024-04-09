@@ -5,20 +5,25 @@ import MKBox from "components/MKBox";
 import PropTypes from "prop-types";
 import "./studentList.css";
 import MKButton from "components/MKButton";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
-import { BASE_URL } from "utilities/initialValue";
-import { setAllGroup } from "app/slices/groupSlice";
+import { BASE_URL, formatNumber } from "utilities/initialValue";
+import { setAllGroup, setGroup } from "app/slices/groupSlice";
 import { setActivePopup } from "app/slices/activeSlice";
-import { setGroup } from "app/slices/groupSlice";
 import { setDefaultMentor } from "app/slices/userSlice";
+import MKTypography from "components/MKTypography";
+import Pagination from "pagination";
 
-const ViewAllGroup = ({ teacherId }) => {
+const ViewGroups = ({ teacherId }) => {
   const dispatch = useDispatch();
-  const { allGroups } = useSelector((state) => state.group);
+  const limit = 24;
+  const { data: allGroups, total } = useSelector((state) => state.group.allGroups);
+  const { pageNo } = useSelector((state) => state.utilities);
+  const [qttMatched, setQttMatched] = useState(0);
   const navigate = useNavigate();
   const { active_popup } = useSelector((state) => state.active);
   const isActivePopup = () => dispatch(setActivePopup(!active_popup));
+  const skip = pageNo * limit;
   const jwt = localStorage.getItem("jwt");
   const config = {
     headers: {
@@ -26,45 +31,49 @@ const ViewAllGroup = ({ teacherId }) => {
       Authorization: `Bearer ${jwt}`,
     },
   };
-
-  useEffect(() => {
-    axios
-      .get(`${BASE_URL}/teacher/${teacherId}/suggest`, config)
-      .then(() => getAllGroups())
-      .then((err) => console.log(err));
-  }, [dispatch, active_popup, teacherId]);
-  const getAllGroups = () =>
-    axios
-      .get(`${BASE_URL}/teacher/${teacherId}`, config)
-      .then((res) => dispatch(setAllGroup(res.data)))
-      .then((err) => console.log(err));
+  let qttPage = total ? Math.ceil(total / limit) : 0;
   useEffect(() => {
     if (teacherId)
       axios
-        .get(`${BASE_URL}/teacher/${teacherId}`, config)
-        .then((res) => dispatch(setAllGroup(res.data)))
-        .then((err) => console.log(err.message));
-  }, [dispatch, teacherId]);
+        .get(`${BASE_URL}/teacher/${teacherId}/suggest`, config)
+        .then(() => getAllGroups())
+        .catch((err) => console.log(err));
+  }, [dispatch, active_popup, teacherId, pageNo]);
+  const getAllGroups = () => {
+    axios
+      .get(`${BASE_URL}/teacher/${teacherId}/groups?skip=${skip}&limit=${limit}`, config)
+      .then((res) => dispatch(setAllGroup(res.data)))
+      .catch((err) => console.log(err));
+    axios
+      .get(`${BASE_URL}/group/${teacherId}/teacher`, config)
+      .then((res) => setQttMatched(res.data))
+      .catch((err) => console.log(err));
+  };
+  useEffect(() => {
+    if (teacherId) getAllGroups();
+  }, [dispatch, teacherId, pageNo]);
   const handleGroupDetailClick = (groupId) => {
     navigate(`/group/${groupId}/members`);
   };
   const handleClickSuggest = () => {
-    axios
-      .get(`${BASE_URL}/teacher/${teacherId}/suggest`, config)
-      .then(() => getAllGroups())
-      .then((err) => console.log(err));
+    if (teacherId)
+      axios
+        .get(`${BASE_URL}/teacher/${teacherId}/suggest`, config)
+        .then(() => getAllGroups())
+        .catch((err) => console.log(err));
   };
   const handleClickSaveAll = () => {
-    axios
-      .get(`${BASE_URL}/matched/${teacherId}/teacher`, config)
-      .then(() => getAllGroups())
-      .then((err) => console.log(err));
+    if (teacherId)
+      axios
+        .get(`${BASE_URL}/matched/${teacherId}/teacher`, config)
+        .then(() => getAllGroups())
+        .catch((err) => console.log(err));
   };
   const handleSaveMatched = (gid, uid) => {
     axios
-      .post(`${BASE_URL}/matched/`, { groupId: gid, userId: uid }, config)
+      .post(`${BASE_URL}/matched`, { groupId: gid, userId: uid }, config)
       .then(() => getAllGroups())
-      .then((err) => console.log(err));
+      .catch((err) => console.log(err));
   };
   const handleClickViewTemporaryMatching = (group, mid) => {
     axios
@@ -106,9 +115,9 @@ const ViewAllGroup = ({ teacherId }) => {
               noWrap
             >
               <Typography as={"span"} fontSize={"0.825rem"} fontWeight={"500"}>
-                Tên:{" "}
-              </Typography>{" "}
-              {username}{" "}
+                Tên:
+              </Typography>
+              {username}
               <Typography as={"span"} fontSize={"0.825rem"} sx={{ color: "#000" }}>
                 <em>{label ? `(${label})` : ""}</em>
               </Typography>
@@ -152,10 +161,23 @@ const ViewAllGroup = ({ teacherId }) => {
   return (
     <>
       <MKBox px={"14px"} my={1} display="flex" justifyContent="end" gap="1.5rem">
+        <MKBox display="flex" alignItems="center" lineHeight="1" fontSize="0.925rem" gap="0.5rem">
+          <MKTypography as="span" fontWeight="medium">
+            Số nhóm được ghép:
+          </MKTypography>
+          <MKTypography as="span">{formatNumber(qttMatched || 0)}</MKTypography>
+        </MKBox>
+        <MKBox display="flex" alignItems="center" lineHeight="1" fontSize="0.925rem" gap="0.5rem">
+          <MKTypography as="span" fontWeight="medium">
+            Tổng nhóm:
+          </MKTypography>
+          <MKTypography as="span">{formatNumber(total || 0)}</MKTypography>
+        </MKBox>
         <MKButton onClick={handleClickSuggest}>Gợi ý</MKButton>
         <MKButton onClick={handleClickSaveAll}>Lưu tất cả</MKButton>
       </MKBox>
       <Box
+        pb="3rem"
         sx={{
           marginLeft: "16px",
           marginBottom: "10px",
@@ -165,7 +187,7 @@ const ViewAllGroup = ({ teacherId }) => {
           gap: 1,
         }}
       >
-        {allGroups.map((g, i) => (
+        {allGroups?.map((g, i) => (
           <Box
             key={g._id + i}
             sx={{
@@ -199,19 +221,18 @@ const ViewAllGroup = ({ teacherId }) => {
                   fontSize={"0.925rem"}
                   className="truncate"
                 >
-                  Nhóm: {g.group?.name}
+                  Tên nhóm: {g.group?.name}
                 </Typography>
                 <MKButton
                   disabled={g.matched?.length > 0}
                   onClick={() => handleSaveMatched(g.group?._id, g.matching[0]?._id)}
-                  className="gradient-animated"
                   sx={{ minHeight: "0", padding: "0" }}
                 >
                   Lưu
                 </MKButton>
               </MKBox>
               <Typography variant="body2" sx={{ fontSize: "0.8rem" }}>
-                Dự án: {g.project?.name}
+                Ten dự án: {g.project?.name}
               </Typography>
               <Typography variant="body2" sx={{ fontSize: "0.8rem" }}>
                 Lĩnh vực: {g.projectcategories?.map((p) => p.name).join(", ")}
@@ -248,9 +269,9 @@ const ViewAllGroup = ({ teacherId }) => {
                 display={"flex"}
                 textAlign={"center"}
                 alignItems={"center"}
-                sx={{ color: "#000" }}
+                sx={{ color: "#000", p: 1.3, flexGrow: 1, display: "flex", alignItems: "center" }}
               >
-                {g.matched.length === 0 && <em>Chưa tìm thấy nhóm phù hợp</em>}
+                {g.matched.length === 0 && <em>Chưa tìm thấy người hướng dẫn phù hợp</em>}
               </Typography>
             )}
             {g.matched.length > 0 && (
@@ -285,12 +306,31 @@ const ViewAllGroup = ({ teacherId }) => {
             </Box>
           </Box>
         ))}
+        {qttPage > 1 && <Pagination pageNo={pageNo} qttPage={qttPage} />}
       </Box>
+      {allGroups?.length === 0 && (
+        <MKBox lineHeight={1} textAlign="center" width={"100%"}>
+          <MKTypography
+            mt="1rem"
+            display="block"
+            variant="caption"
+            color="text"
+            fontSize="1rem"
+            fontWeight="medium"
+          >
+            Chưa có nhóm được tạo...
+          </MKTypography>
+        </MKBox>
+      )}
     </>
   );
 };
 
-ViewAllGroup.propTypes = {
+ViewGroups.defaultProps = {
+  teacherId: "",
+};
+ViewGroups.propTypes = {
   teacherId: PropTypes.string.isRequired,
 };
-export default ViewAllGroup;
+
+export default ViewGroups;

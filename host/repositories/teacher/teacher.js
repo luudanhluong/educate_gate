@@ -4,7 +4,6 @@ import User from "../../models/userModel.js";
 import shuffleArray from "../../utilities/shuffleArray.js";
 import Matched from "../../models/matchedModel.js";
 import TemporaryMatching from "../../models/temporaryMatching.js";
-import Group from "../../models/groupModel.js";
 
 const getClassByTeacherId = async (teacherId) => {
   try {
@@ -14,7 +13,7 @@ const getClassByTeacherId = async (teacherId) => {
     throw new Error("Internal Server Error");
   }
 };
-const getGroupsByTeacherId = async (teacherId) => {
+const getGroupsByTeacherId = async (teacherId, skip) => {
   try {
     const listGroups = await Class.aggregate([
       { $match: { teacherId: new mongoose.Types.ObjectId(teacherId) } },
@@ -121,8 +120,22 @@ const getGroupsByTeacherId = async (teacherId) => {
       {
         $sort: { "group.name": 1 },
       },
+    ])
+      .skip(skip)
+      .limit(24);
+    const total = await Class.aggregate([
+      { $match: { teacherId: new mongoose.Types.ObjectId(teacherId) } },
+      {
+        $lookup: {
+          from: "groups",
+          localField: "_id",
+          foreignField: "classId",
+          as: "group",
+        },
+      },
+      { $unwind: "$group" },
     ]);
-    return listGroups;
+    return { data: listGroups, total: total.length };
   } catch (error) {
     throw new Error(error.message);
   }
@@ -244,6 +257,7 @@ const suggestMatching = async (teacherId) => {
     throw new Error(error.message);
   }
 };
+
 export default {
   getClassByTeacherId,
   suggestMatching,

@@ -2,9 +2,10 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialValue = {
   classes: {},
   classList: [],
-  filterPreName: "",
   searchValue: "",
   sort: -1,
+  deleteClass: {},
+  editClass: {},
   pageNo: 0,
 };
 const classSlice = createSlice({
@@ -17,9 +18,6 @@ const classSlice = createSlice({
     setClassList: (state, action) => {
       state.classList = action.payload;
     },
-    setFilterPreName: (state, action) => {
-      state.filterPreName = action.payload;
-    },
     setSearchValue: (state, action) => {
       state.searchValue = action.payload;
     },
@@ -29,10 +27,23 @@ const classSlice = createSlice({
     setPageNo: (state, action) => {
       state.pageNo = action.payload;
     },
+    setdeleteClass: (state, action) => {
+      state.deleteClass = action.payload;
+    },
+    setEditClass: (state, action) => {
+      state.editClass = action.payload;
+    },
   },
 });
 
 const { reducer, actions } = classSlice;
-export const { setclasses, setFilterPreName, setSearchValue, setSort, setPageNo, setClassList } =
-  actions;
+export const {
+  setclasses,
+  setSearchValue,
+  setSort,
+  setPageNo,
+  setClassList,
+  setdeleteClass,
+  setEditClass,
+} = actions;
 export default reducer;

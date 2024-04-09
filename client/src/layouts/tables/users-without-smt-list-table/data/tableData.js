@@ -54,9 +54,7 @@ export default function data() {
       if (!selectUser.some((user) => user._id === value._id)) {
         dispatch(setSelectUser([...selectUser, value]));
         dispatch(setSelectAll({ type: role, payload: data.length === selectUser.length + 1 }));
-        console.log(data.length, selectUser.length + 1);
       } else {
-        console.log(data.length, selectUser.length - 1);
         dispatch(setSelectAll({ type: role, payload: data.length === selectUser.length - 1 }));
         dispatch(setSelectUser(selectUser.filter((user) => user._id !== value._id)));
       }

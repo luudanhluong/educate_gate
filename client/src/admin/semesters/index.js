@@ -85,35 +85,6 @@ const Semesters = () => {
                       value={semester?._id || semesters?.[0]?._id || " "}
                     >
                       <MenuItem value=" ">Chọn Kỳ học</MenuItem>
-                      {/* <MenuItem
-                        value={" "}
-                        sx={{ display: "flex", gap: "0.5rem" }}
-                        onClick={() => {
-                          isActivePopup({ type: "open", payload: "semester" });
-                          dispatch(setSemester({}));
-                        }}
-                      >
-                        <MKBox
-                          sx={{
-                            display: "flex",
-                            justifyContent: "center",
-                            gap: "0.5rem",
-                          }}
-                        >
-                          <Typography component={"span"} fontSize={"0.825rem"}>
-                            Thêm kỳ học
-                          </Typography>
-                          <MKBox
-                            sx={{
-                              lineHeight: 1,
-                              color: "#4558ff",
-                              fontSize: "20px",
-                            }}
-                          >
-                            <Icon>add</Icon>
-                          </MKBox>
-                        </MKBox>
-                      </MenuItem> */}
                       {semesters?.map((s) => (
                         <MenuItem
                           key={s._id}

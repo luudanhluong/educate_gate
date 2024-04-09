@@ -10,6 +10,7 @@ user.get(
   verifyAccessToken,
   userController.getUserWithoutSmt
 );
+user.get("/:smtId/semester", userController.getUserBySmtId);
 user.get("/parameter", verifyAccessToken, userController.pmtUser);
 user.patch(
   "/profile/update",

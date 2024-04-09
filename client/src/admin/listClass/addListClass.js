@@ -32,12 +32,13 @@ function AddClassList() {
   const dispatch = useDispatch();
   const [fileValue, setFileValue] = useState();
   const [teachers, setTeachers] = useState([]);
-  const limitClass = 10;
   const { active } = useSelector((state) => state.active);
-  const { filterPreName, searchValue, sort, pageNo } = useSelector((state) => state.class);
+  const { search, limit } = useSelector((state) => state.utilities);
+  const { sort, pageNo } = useSelector((state) => state.class);
   const { active_popup } = useSelector((state) => state.active);
   const isActivePopup = () => dispatch(setActivePopup(!active_popup));
   const handleTabType = (event, newValue) => dispatch(setActive(newValue));
+  const skip = pageNo * limit;
   const jwt = localStorage.getItem("jwt");
   const config = {
     headers: {
@@ -51,8 +52,7 @@ function AddClassList() {
       .get(`${BASE_URL}/teacher/inactive`, config)
       .then((res) => setTeachers(res.data))
       .catch((error) => console.log(error));
-  }, [dispatch]);
-  // console.log(teacher);
+  }, []);
   useEffect(() => {
     dispatch(setActive(0));
   }, [dispatch]);
@@ -77,18 +77,12 @@ function AddClassList() {
   );
   const getClassInfo = () =>
     axios
-      .get(
-        `${BASE_URL}/admins/list-classes?item=createdAt&order=${sort}&skip=${
-          pageNo * limitClass
-        }&limit=${limitClass}&preName=${filterPreName}&search=${searchValue}`,
-        config
-      )
+      .get(`${BASE_URL}/class?item=createdAt&order=${sort}&skip=${skip}&search=${search}`, config)
       .then((response) => dispatch(setclasses(response.data)))
       .catch((error) => console.log(error));
   const handleSubmit = (values) => {
-    console.log(values);
     axios
-      .post(BASE_URL + "/admins/create-new-classes", active === 0 ? values : fileValue, config)
+      .post(BASE_URL + "/class/create_new_classes", active === 0 ? values : fileValue, config)
       .then(() => getClassInfo())
       .catch((error) => console.error(error.message));
   };
@@ -211,7 +205,6 @@ function AddClassList() {
                             onChange={handleChange}
                             name="limitStudent"
                             className={`${touched.limitStudent && errors.limitStudent && "error"}`}
-                            accept=".xls, .xlsx"
                             id="limitStudent"
                           />
                           <ErrorMessage
@@ -226,6 +219,7 @@ function AddClassList() {
                               name="teacherId"
                               onChange={handleChange}
                               className={`${touched.className && errors.className && "error"}`}
+                              sx={{ padding: "0.75rem !important" }}
                               value={values.teacherId || " "}
                             >
                               <MenuItem value={" "}>Chọn giáo viên cho lớp học</MenuItem>

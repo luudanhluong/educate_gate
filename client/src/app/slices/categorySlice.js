@@ -2,8 +2,11 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialValue = {
   categories: {
     data: [],
+    total: 0,
   },
   category: {},
+  delCat: {},
+  editCat: {},
   mentorCategories: {
     data: [],
   },
@@ -25,9 +28,15 @@ const classSlice = createSlice({
     setCategory: (state, action) => {
       state.category = action.payload;
     },
+    setDelCat: (state, action) => {
+      state.delCat = action.payload;
+    },
+    setEditCat: (state, action) => {
+      state.editCat = action.payload;
+    },
   },
 });
 
 const { reducer, actions } = classSlice;
-export const { setCategories, setMentorCategories, setCid, setCategory } = actions;
+export const { setCategories, setMentorCategories, setCid, setCategory, setDelCat } = actions;
 export default reducer;

@@ -5,7 +5,7 @@ import Icon from "@mui/material/Icon";
 import AboutUs from "layouts/pages/landing-pages/about-us";
 import ContactUs from "layouts/pages/landing-pages/contact-us";
 import Author from "layouts/pages/landing-pages/author";
-import SignIn from "layouts/pages/authentication/sign-in";
+// import SignIn from "layouts/pages/authentication/sign-in";
 import ListAccountBase from "layouts/admin/add-list-account";
 import AddListClassBase from "layouts/admin/add-list-class";
 import TeacherFunction from "layouts/sections/featuers";
@@ -20,12 +20,14 @@ import { BASE_URL } from "utilities/initialValue";
 import { setUserLogin } from "app/slices/userSlice";
 import { setAllGroup } from "app/slices/groupSlice";
 import { setClassList } from "app/slices/classSlice";
+import GroupsAdmin from "layouts/admin/list-groups";
+import CategoriesAdmin from "layouts/admin/list-categories";
 
 function Routes() {
   const dispatch = useDispatch();
   const { classList } = useSelector((state) => state.class);
   const { userLogin } = useSelector((state) => state.user);
-  const { allGroups } = useSelector((state) => state.group);
+  // const { allGroups } = useSelector((state) => state.group);
   const jwt = localStorage.getItem("jwt");
   const config = {
     headers: {
@@ -34,20 +36,21 @@ function Routes() {
     },
   };
   useEffect(() => {
-    axios
-      .get(BASE_URL + "/user/profile", config)
-      .then((res) => dispatch(setUserLogin(res.data)))
-      .catch((err) => console.log(err.message));
+    if (jwt)
+      axios
+        .get(BASE_URL + "/user/profile", config)
+        .then((res) => dispatch(setUserLogin(res.data)))
+        .catch((err) => console.log(err.message));
   }, [dispatch]);
   useEffect(() => {
-    if (userLogin.role === 2)
+    if (userLogin.role === 2 && jwt)
       axios
         .get(`${BASE_URL}/teacher/${userLogin?._id}/groups`, config)
         .then((res) => dispatch(setAllGroup(res.data)))
         .catch((err) => console.log(err));
-    if (userLogin?._id) {
+    if (userLogin?._id && jwt) {
       axios
-        .get(`${BASE_URL}/class/${userLogin?._id}`, config)
+        .get(`${BASE_URL}/class/${userLogin?._id}/user`, config)
         .then((res) => dispatch(setClassList(res.data)))
         .catch((err) => console.log(err.message));
     }
@@ -139,24 +142,41 @@ function Routes() {
         },
         {
           name: "Danh Sách Người Dùng",
-          route: "/admin/create-new-list-account",
+          route: "/admin/list-accounts",
           component: <ListAccountBase />,
         },
         {
           name: "Danh Sách Lớp Học",
-          route: "/admin/create-new-class",
+          route: "/admin/list-classes",
           component: <AddListClassBase />,
+        },
+        {
+          name: "Danh Sách Các Nhóm",
+          route: "/admin/list-groups",
+          component: <GroupsAdmin />,
+        },
+        {
+          name: "Danh Sách Các Lĩnh Vực",
+          route: "/admin/list-categories",
+          component: <CategoriesAdmin />,
         },
       ],
     });
   }
-  if (localStorage.getItem("jwt")) {
-    result.push({
-      name: "Đăng nhập",
-      route: "/pages/authentication/sign-in",
-      component: <SignIn />,
-    });
-  }
+  // if (!jwt)
+  //   result.push({
+  //     name: "Đăng nhập",
+  //     route: "/pages/authentication/sign-in",
+  //     component: <SignIn />,
+  //   });
+  // else {
+  //   result.push({
+  //     name: "Đăng xuất",
+  //     route: "/pages/authentication/sign-in",
+  //     component: <></>,
+  //   });
+  //   localStorage.removeItem("jwt");
+  // }
   return result;
 }
 export default Routes;

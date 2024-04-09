@@ -26,40 +26,29 @@ const Semester = () => {
       authorization: `Bearer ${jwt}`,
     },
   };
+  const getSmt = () =>
+    axios
+      .get(`${BASE_URL}/semester`, config)
+      .then((res) => dispatch(setSemesters(res.data)))
+      .catch((err) => console.log(err));
   const handleSubmit = (values) => {
     if (active_popup.type === "update")
       axios
         .patch(`${BASE_URL}/semester/${values._id}`, values, config)
-        .then(() =>
-          axios
-            .get(`${BASE_URL}/semester`, config)
-            .then((res) => dispatch(setSemesters(res.data)))
-            .catch((err) => console.log(err))
-        )
+        .then(() => getSmt())
         .catch((err) => console.log(err));
     else
       axios
         .post(`${BASE_URL}/semester`, values, config)
-        .then(() =>
-          axios
-            .get(`${BASE_URL}/semester`, config)
-            .then((res) => dispatch(setSemesters(res.data)))
-            .catch((err) => console.log(err))
-        )
+        .then(() => getSmt())
         .catch((err) => console.log(err));
     isActivePopup({ type: "close", payload: "" });
   };
   const deleteSemester = (values) => {
-    console.log(values);
     if (values.status !== "Upcoming") return;
     axios
       .delete(`${BASE_URL}/semester/${values._id}`, config)
-      .then(() =>
-        axios
-          .get(`${BASE_URL}/semester`, config)
-          .then((res) => dispatch(setSemesters(res.data)))
-          .catch((err) => console.log(err))
-      )
+      .then(() => getSmt())
       .catch((err) => console.log(err));
     isActivePopup({ type: "close", payload: "" });
   };

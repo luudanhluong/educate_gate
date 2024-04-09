@@ -47,19 +47,11 @@ const userUpdateProfile = async (req, res, next) => {
   if (!token) return res.status(401).send("Access denied");
   const tokenString = token.split(" ")[1];
   try {
-    const { username, gender, Dob, phoneNumber, menteeCount, degree } =
-      req.body;
+    const user = req.body;
     const decoded = jwt.verify(tokenString, process.env.SECRETKEY);
     req.user = decoded;
     const { _id } = decoded;
-    const result = await userDAO.userUpdateProfile(_id, {
-      username,
-      gender,
-      Dob,
-      phoneNumber,
-      menteeCount,
-      degree,
-    });
+    const result = await userDAO.userUpdateProfile(_id, user);
     res.status(200).json(result);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -87,7 +79,15 @@ const pmtUser = async (req, res, next) => {
     next(error);
   }
 };
-
+const getUserBySmtId = async (req, res, next) => {
+  try {
+    const { role } = req.query;
+    const { smtId } = req.params;
+    res.send(await userDAO.getUserBySmtId(smtId, Number(role)));
+  } catch (error) {
+    next(error);
+  }
+};
 export default {
   addNewUser,
   getUserLogin,
@@ -95,4 +95,5 @@ export default {
   userUpdateProfile,
   getUserWithoutSmt,
   pmtUser,
+  getUserBySmtId,
 };

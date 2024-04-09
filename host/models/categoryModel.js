@@ -5,8 +5,8 @@ const categorySchema = new Schema(
     name: { type: String, required: true },
     status: {
       type: String,
-      enum: ["Active", "Inactive"],
-      default: "Active",
+      enum: ["Active", "InActive"],
+      default: "InActive",
     },
   },
   {

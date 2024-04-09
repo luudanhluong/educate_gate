@@ -1,9 +1,5 @@
 import Grid from "@mui/material/Grid";
-
-// Material Kit 2 React components
 import MKBox from "components/MKBox";
-// Images
-// import bgImage from "assets/images/bg-sign-in-basic.jpeg";
 import DefaultNavbar from "Navbars/DefaultNavbar";
 import Tables from "layouts/tables/class-list-table";
 import { useEffect } from "react";
@@ -12,38 +8,42 @@ import axios from "axios";
 import { BASE_URL } from "utilities/initialValue";
 import AddClassList from "./addListClass";
 import { setActivePopup } from "app/slices/activeSlice";
-import { setSearchValue, setSort, setFilterPreName, setclasses } from "app/slices/classSlice";
+import { setSort, setclasses } from "app/slices/classSlice";
+import { setPageNo, setSearch } from "app/slices/utilitiesSlice";
 import routes from "routes";
-import { setPageNo } from "app/slices/utilitiesSlice";
 
 function ListClass() {
   const dispatch = useDispatch();
   const { active_popup } = useSelector((state) => state.active);
-  const { searchValue, sort } = useSelector((state) => state.class);
-  const { pageNo, limit } = useSelector((state) => state.utilities);
+  const { sort, deleteClass } = useSelector((state) => state.class);
+  const { pageNo, limit, search } = useSelector((state) => state.utilities);
+  const skip = pageNo * limit;
   const jwt = localStorage.getItem("jwt");
-  const headers = {
+  const config = {
     headers: {
       "Content-Type": "application/json",
       authorization: `Bearer ${jwt}`,
     },
   };
-  useEffect(() => {
+  const getClassInfo = () =>
     axios
-      .get(
-        `${BASE_URL}/admins/list-classes?item=createdAt&order=${sort}&skip=${
-          pageNo * limit
-        }&limit=${limit}&semester=${""}&search=${searchValue}`,
-        headers
-      )
-      .then((response) => dispatch(setclasses(response.data)))
-      .catch((error) => console.log(error.message));
-  }, [dispatch, searchValue, sort, pageNo]);
+      .get(`${BASE_URL}/class?item=createdAt&order=${sort}&skip=${skip}&search=${search}`, config)
+      .then((res) => dispatch(setclasses(res.data)))
+      .catch((error) => console.log(error));
+  useEffect(() => {
+    if (deleteClass?._id)
+      axios
+        .delete(`${BASE_URL}/class/${deleteClass?._id}`)
+        .then(() => getClassInfo())
+        .catch((error) => console.log(error.message));
+  }, [dispatch, deleteClass]);
+  useEffect(() => {
+    getClassInfo();
+  }, [dispatch, search, sort, pageNo]);
   useEffect(() => {
     dispatch(setActivePopup(false));
-    dispatch(setSearchValue(""));
+    dispatch(setSearch(""));
     dispatch(setSort(-1));
-    dispatch(setFilterPreName(""));
     dispatch(setPageNo(0));
   }, [dispatch]);
   return (

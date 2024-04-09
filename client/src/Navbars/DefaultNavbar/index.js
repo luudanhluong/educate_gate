@@ -26,6 +26,8 @@ import DefaultNavbarMobile from "Navbars/DefaultNavbar/DefaultNavbarMobile";
 
 // Material Kit 2 React base styles
 import breakpoints from "assets/theme/base/breakpoints";
+import { useDispatch } from "react-redux";
+import { setUserLogin } from "app/slices/userSlice";
 
 function DefaultNavbar({ brand, routes, transparent, light, action, sticky, relative, center }) {
   const [dropdown, setDropdown] = useState("");
@@ -37,7 +39,8 @@ function DefaultNavbar({ brand, routes, transparent, light, action, sticky, rela
   const [arrowRef, setArrowRef] = useState(null);
   const [mobileNavbar, setMobileNavbar] = useState(false);
   const [mobileView, setMobileView] = useState(false);
-
+  const dispatch = useDispatch();
+  const jwt = localStorage.getItem("jwt");
   const openMobileNavbar = () => setMobileNavbar(!mobileNavbar);
 
   useEffect(() => {
@@ -509,6 +512,33 @@ function DefaultNavbar({ brand, routes, transparent, light, action, sticky, rela
                 </MKButton>
               ))}
           </MKBox>
+          {!jwt ? (
+            <MKTypography
+              component={Link}
+              mt={"2px"}
+              to="/presentation/auth/sign-in"
+              color={light ? "white" : "dark"}
+              fontSize="0.875rem"
+              sx={{ letterSpacing: "-0.125px", fontWeight: "400" }}
+            >
+              Đăng nhập
+            </MKTypography>
+          ) : (
+            <MKTypography
+              component={Link}
+              mt={"2px"}
+              to="/presentation/auth/sign-in"
+              color={light ? "white" : "dark"}
+              fontSize="0.875rem"
+              onClick={() => {
+                localStorage.removeItem("jwt");
+                dispatch(setUserLogin({}));
+              }}
+              sx={{ letterSpacing: "-0.125px", fontWeight: "400" }}
+            >
+              Đăng xuất
+            </MKTypography>
+          )}
           <MKBox
             display={{ xs: "inline-block", lg: "none" }}
             lineHeight={0}
@@ -538,7 +568,7 @@ function DefaultNavbar({ brand, routes, transparent, light, action, sticky, rela
 
 // Setting default values for the props of DefaultNavbar
 DefaultNavbar.defaultProps = {
-  brand: "Education Gate",
+  brand: "StartUp Gate",
   transparent: false,
   light: false,
   action: false,

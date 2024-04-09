@@ -15,46 +15,39 @@ const Category = () => {
   const dispatch = useDispatch();
   const { active_popup } = useSelector((state) => state.active);
   const { category } = useSelector((state) => state.category);
+  const { search, pageNo, limit } = useSelector((state) => state.utilities);
   const isActivePopup = (actions) => dispatch(setActivePopup(actions));
+  const skip = pageNo * limit;
   const jwt = localStorage.getItem("jwt");
-  const headers = {
+  const config = {
     headers: {
       "Content-Type": "application/json",
       authorization: `Bearer ${jwt}`,
     },
   };
+  const getCategoriesInfo = () =>
+    axios
+      .get(`${BASE_URL}/category?skip=${skip}&search=${search}`)
+      .then((res) => dispatch(setCategories(res.data)))
+      .catch((e) => console.log(e));
   const handleSubmit = (values) => {
-    console.log(values);
     if (active_popup.type === "update")
       axios
-        .patch(`${BASE_URL}/admins/update_category/${category._id}`, values, headers)
-        .then(() =>
-          axios
-            .get(`${BASE_URL}/admins/all_categories`, headers)
-            .then((res) => dispatch(setCategories(res.data)))
-            .catch((err) => console.log(err.message))
-        )
-        .catch((err) => console.log(err.message));
+        .patch(`${BASE_URL}/category/${category._id}`, values, config)
+        .then(() => getCategoriesInfo())
+        .catch((err) => console.log(err));
     else
       axios
-        .post(`${BASE_URL}/admins/create_new_category`, values, headers)
-        .then(() =>
-          axios
-            .get(`${BASE_URL}/admins/all_categories`, headers)
-            .then((res) => dispatch(setCategories(res.data)))
-        )
-        .catch((err) => console.log(err.message));
+        .post(`${BASE_URL}/category`, values, config)
+        .then(() => getCategoriesInfo())
+        .catch((err) => console.log(err));
     isActivePopup({ type: "close", payload: "" });
   };
-  const deleteSemester = (id) => {
+  const deleteSemester = () => {
     axios
-      .delete(`${BASE_URL}/admins/delete_category/${id}`, headers)
-      .then(() =>
-        axios
-          .get(`${BASE_URL}/admins/all_categories`, headers)
-          .then((res) => dispatch(setCategories(res.data)))
-      );
-    // .catch((err) => console.log(err.message));
+      .delete(`${BASE_URL}/category/${category._id}`, config)
+      .then(() => getCategoriesInfo())
+      .catch((err) => console.log(err));
     isActivePopup({ type: "close", payload: "" });
   };
   const initialValues = Yup.object().shape({
@@ -81,7 +74,7 @@ const Category = () => {
             textAlign="center"
           >
             <MKTypography variant="h4" fontWeight="medium" color="white" my={1}>
-              Thêm thể loại mới
+              Lĩnh Vực
             </MKTypography>
           </MKBox>
           <MKBox py={2} px={1}>
@@ -111,7 +104,7 @@ const Category = () => {
                     />
                     <ErrorMessage name="name" component="div" className="lg_error_message" />
                   </MKBox>
-                  {active_popup.type === "update" ? (
+                  {active_popup.type === "update" && (
                     <FormControl fullWidth pb={1}>
                       <InputLabel id="select-category-label">Trạng thái thể loại</InputLabel>
                       <Select
@@ -123,11 +116,9 @@ const Category = () => {
                         label="Trạng thái thể loại"
                       >
                         <MenuItem value={"Active"}>Hoạt động</MenuItem>
-                        <MenuItem value={"Inactive"}>Không hoạt động</MenuItem>
+                        <MenuItem value={"InActive"}>Không hoạt động</MenuItem>
                       </Select>
                     </FormControl>
-                  ) : (
-                    ""
                   )}
                   <MKBox display="flex" gap="3.5rem">
                     <MKButton
@@ -147,9 +138,9 @@ const Category = () => {
                     >
                       Thêm
                     </MKButton>
-                    {active_popup.type === "update" ? (
+                    {active_popup.type === "update" && (
                       <MKButton
-                        onClick={() => deleteSemester(values._id)}
+                        onClick={() => deleteSemester()}
                         sx={{
                           background: "#1A73E8",
                           marginTop: "6px",
@@ -165,8 +156,6 @@ const Category = () => {
                       >
                         Xóa
                       </MKButton>
-                    ) : (
-                      ""
                     )}
                   </MKBox>
                 </Form>

@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import teacherDAO from "../../repositories/teacher/index.js";
 import userDAO from "../../repositories/user/index.js";
 
-const getClassListByTeacher = async (req, res) => {
+const getClassListByTeacher = async (req, res, next) => {
   const token = req.headers["authorization"];
   if (!token) return res.status(401).send("Access denied");
   const tokenString = token.split(" ")[1];
@@ -15,7 +15,7 @@ const getClassListByTeacher = async (req, res) => {
     next(error);
   }
 };
-const suggestMatching = async (req, res) => {
+const suggestMatching = async (req, res, next) => {
   try {
     const { teacherId } = req.params;
     res.send(await teacherDAO.suggestMatching(teacherId));
@@ -26,13 +26,14 @@ const suggestMatching = async (req, res) => {
 
 const getGroupsByTeacherId = async (req, res, next) => {
   try {
+    const { skip } = req.query;
     const { teacherId } = req.params;
-    res.send(await teacherDAO.getGroupsByTeacherId(teacherId));
+    res.send(await teacherDAO.getGroupsByTeacherId(teacherId, Number(skip)));
   } catch (error) {
     next(error);
   }
 };
-const getTeacher = async (req, res, next) => {
+const getTeachers = async (req, res, next) => {
   try {
     res.send(await userDAO.getUserByRole(2, "InActive"));
   } catch (error) {
@@ -43,5 +44,5 @@ export default {
   getClassListByTeacher,
   suggestMatching,
   getGroupsByTeacherId,
-  getTeacher,
+  getTeachers,
 };

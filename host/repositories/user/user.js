@@ -35,25 +35,15 @@ const loginUser = async ({ email, password }) => {
     }
     return res.status(404).json({ error: "Người dùng không tồn tại." });
   } catch (e) {
-    throw new Error(e.message.toString());
+    throw new Error(e);
   }
 };
-const userUpdateProfile = async (
-  id,
-  { username, gender, Dob, phoneNumber, menteeCount, degree }
-) => {
+const userUpdateProfile = async (id, user) => {
   try {
     await User.updateOne(
       { _id: id },
       {
-        $set: {
-          username,
-          gender,
-          Dob,
-          phoneNumber,
-          menteeCount,
-          degree,
-        },
+        $set: user,
       }
     );
     const token = jwt.sign({ _id: id }, process.env.SECRETKEY, {
@@ -253,7 +243,29 @@ const updateUsers = async (listUser, status) => {
     throw new Error(error.message);
   }
 };
-
+const getUserBySmtId = async (smtId, role) => {
+  try {
+    return await User.aggregate([
+      { $match: { role: role } },
+      {
+        $lookup: {
+          from: "semesterdetails",
+          localField: "_id",
+          foreignField: "userId",
+          as: "semesterdetails",
+        },
+      },
+      {
+        $match: {
+          "semesterdetails.semesterId": new mongoose.Types.ObjectId(smtId),
+        },
+      },
+      { $addFields: { semesterdetails: 0 } },
+    ]);
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
 export default {
   createNewUser,
   loginUser,
@@ -264,4 +276,5 @@ export default {
   getUserByRole,
   getClassesByUserId,
   updateUsers,
+  getUserBySmtId,
 };

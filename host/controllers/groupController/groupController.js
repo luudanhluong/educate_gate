@@ -1,4 +1,3 @@
-import Group from "../../models/groupModel.js";
 import User from "../../models/userModel.js";
 import groupDAO from "../../repositories/group/index.js";
 import xlsx from "xlsx";
@@ -101,7 +100,15 @@ const createGroupsFromExcel = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-
+const countGroupGetMatched = async (req, res, next) => {
+  try {
+    const { teacherId } = req.params;
+    const result = await groupDAO.countGroupGetMatched(teacherId);
+    res.status(201).json(result);
+  } catch (error) {
+    next(error);
+  }
+};
 export default {
   // groupDetail,
   getGroupById,
@@ -109,4 +116,5 @@ export default {
   createRandomGroups,
   createGroupsFromExcel,
   checkGroupsExistController,
+  countGroupGetMatched,
 };

@@ -14,21 +14,57 @@ const createNewListClass = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+const createClass = async (req, res, next) => {
+  try {
+    const data = req.body;
+    const result = await classDAO.createNewClass(data);
+    res.send(result);
+  } catch (error) {
+    next(error);
+  }
+};
+const deleteClass = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    await classDAO.deleteClass(id);
+    res.send("Delete class successfully");
+  } catch (error) {
+    next(error);
+  }
+};
+const getClass = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const result = await classDAO.getClass(id);
+    res.send(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
 const getClasses = async (req, res, next) => {
   try {
-    const { item, order, limit, skip } = req.query;
+    const { item, order, skip, search } = req.query;
     const result = await classDAO.getClasses({
       item,
-      order: Number(order),
-      limit,
-      skip,
+      order: Number(order || 1),
+      limit: Number(10),
+      skip: Number(skip || 0),
+      search: search,
     });
     res.status(201).json(result);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
-
+const addStuentdInClass = async (req, res, next) => {
+  try {
+    const result = await classDAO.addStudentInClasses(4, "InActive");
+    res.send(result);
+  } catch (error) {
+    next(error);
+  }
+};
 const getStudentInClass = async (req, res) => {
   try {
     const { classId } = req.params;
@@ -67,4 +103,8 @@ export default {
   getStudentInClass,
   getClassById,
   getClassesByUserId,
+  addStuentdInClass,
+  createClass,
+  getClass,
+  deleteClass,
 };

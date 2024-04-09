@@ -22,8 +22,8 @@ const addSmtDet = async (req, res, next) => {
     let listUsersId = [];
     if (!actions.payload)
       for (const element of formvalue) {
-        listSmtDet.push({ userId: element._id, semesterId: smtId });
-        listUsersId.push(element._id);
+        listSmtDet.push({ userId: element, semesterId: smtId });
+        listUsersId.push(element);
       }
     else {
       const listUsers = await userDAO.getUserByRole(actions.type, "InActive");
