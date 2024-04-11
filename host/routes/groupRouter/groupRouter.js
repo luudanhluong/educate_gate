@@ -1,18 +1,33 @@
 import express from "express";
 import groupController from "../../controllers/groupController/index.js";
+import { verifyAccessToken } from "../../utilities/jwt.js";
 
 const groupRouter = express.Router();
-import multer from "multer";
-
-const upload = multer({ dest: "uploads/" });
 // groupRouter.get("/:groupId/members", groupController.groupDetail);
-groupRouter.get("/:id", groupController.getGroupById);
-groupRouter.get("/:classId/groups", groupController.getGroupsByClass);
-groupRouter.get("/:teacherId/teacher", groupController.countGroupGetMatched);
-groupRouter.post("/createRandom", groupController.createRandomGroups);
+groupRouter.get("/:id", verifyAccessToken, groupController.getGroupById);
+groupRouter.get(
+  "/:classId/groups",
+  verifyAccessToken,
+  groupController.getGroupsByClass
+);
+groupRouter.get(
+  "/:teacherId/teacher",
+  verifyAccessToken,
+  groupController.countGroupGetMatched
+);
+groupRouter.post(
+  "/createRandom",
+  verifyAccessToken,
+  groupController.createRandomGroups
+);
 groupRouter.get(
   "/checkGroupsExist/:classId",
+  verifyAccessToken,
   groupController.checkGroupsExistController
 );
-groupRouter.post("/:id/teacher", groupController.createGroupsFromExcel);
+groupRouter.post(
+  "/:id/teacher",
+  verifyAccessToken,
+  groupController.createGroupsFromExcel
+);
 export default groupRouter;

@@ -14,6 +14,8 @@ import getParams from "utilities/getParams";
 import { useLocation } from "react-router-dom";
 import { setClassId } from "app/slices/classOnerTeacherSlice";
 import MKButton from "components/MKButton";
+import ExcelJS from "exceljs";
+import saveAs from "file-saver";
 
 const StudentsList = () => {
   const dispatch = useDispatch();
@@ -22,7 +24,6 @@ const StudentsList = () => {
   const classStudent = useSelector((state) => state.classOnerTeacher.classStudent);
   const { active_create_group, active_create_group_excel } = useSelector((state) => state.active);
   const [showCreateGroupButtons, setShowCreateGroupButtons] = useState(false);
-
   useEffect(() => {
     if (classId) {
       dispatch(setClassId(classId));
@@ -43,16 +44,35 @@ const StudentsList = () => {
   const handleExcelGroup = () => {
     dispatch(setActivePopupCreateGroupFromExcel(true));
   };
+  const handleExportExcel = () => {
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet("Danh_sach_hoc_sinh");
+    classStudent.forEach((row) => {
+      const { email, memberCode, rollNumber, username, gender } = row;
+      worksheet.addRow([email, memberCode, rollNumber, username, gender ? "nam" : "nữ"]);
+    });
+    const fileName = "Danh_sach_hoc_sinh.xlsx";
+    workbook.xlsx.writeBuffer().then(function (buffer) {
+      saveAs(new Blob([buffer], { type: "application/octet-stream" }), fileName);
+    });
+  };
 
   return (
     <MKBox pl={"25px"} pr={"5px"}>
       <Grid container spacing={3}>
+        <MKButton onClick={handleExportExcel} sx={{ textTransform: "none" }}>
+          Tải file
+        </MKButton>
         <Grid item xs={12}>
           {showCreateGroupButtons && (
             <>
               <MKBox px={"14px"} my={1} display="flex" justifyContent="end" gap="1.5rem">
-                <MKButton onClick={handleRandomGroup}>Tạo Nhóm Ngẫu Nhiên</MKButton>
-                <MKButton onClick={handleExcelGroup}>Tạo Nhóm Bằng Excel</MKButton>
+                <MKButton onClick={handleRandomGroup} sx={{ textTransform: "none" }}>
+                  Tạo Nhóm Ngẫu Nhiên
+                </MKButton>
+                <MKButton onClick={handleExcelGroup} sx={{ textTransform: "none" }}>
+                  Tạo Nhóm Bằng Excel
+                </MKButton>
               </MKBox>
             </>
           )}

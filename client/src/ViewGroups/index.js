@@ -77,7 +77,7 @@ const ViewGroups = ({ teacherId }) => {
   };
   const handleClickViewTemporaryMatching = (group, mid) => {
     axios
-      .post(`${BASE_URL}/temporary_matching/${group?._id}/group`)
+      .post(`${BASE_URL}/temporary_matching/${group?._id}/group`, config)
       .then(() => {
         isActivePopup();
       })

@@ -5,7 +5,6 @@ import Icon from "@mui/material/Icon";
 import AboutUs from "layouts/pages/landing-pages/about-us";
 import ContactUs from "layouts/pages/landing-pages/contact-us";
 import Author from "layouts/pages/landing-pages/author";
-// import SignIn from "layouts/pages/authentication/sign-in";
 import ListAccountBase from "layouts/admin/add-list-account";
 import AddListClassBase from "layouts/admin/add-list-class";
 import TeacherFunction from "layouts/sections/featuers";
