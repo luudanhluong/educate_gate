@@ -14,9 +14,5 @@ groupRouter.get(
   "/checkGroupsExist/:classId",
   groupController.checkGroupsExistController
 );
-groupRouter.post(
-  "/createGroupsFromFile",
-  upload.single("file"),
-  groupController.createGroupsFromExcel
-);
+groupRouter.post("/:id/teacher", groupController.createGroupsFromExcel);
 export default groupRouter;

@@ -77,7 +77,6 @@ const CreateGroupModal = () => {
         handleClosePopup();
       })
       .catch((error) => {
-        console.error("Error creating groups:", error);
         toast.error("Có lỗi xảy ra khi tạo nhóm!");
       });
   };

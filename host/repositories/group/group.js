@@ -153,22 +153,6 @@ const checkGroupsExist = async (classId) => {
   const groups = await Group.find({ classId: classId });
   return groups.length > 0;
 };
-const createGroupsFromExcel = async (filePath, classId) => {
-  const workbook = xlsx.readFile(filePath);
-  const sheetName = workbook.SheetNames[0];
-  const xlData = xlsx.utils.sheet_to_json(workbook.Sheets[sheetName]);
-
-  const groupsMap = {};
-
-  for (const data of xlData) {
-    const groupName = `Group ${data["Tên Nhóm"]}`;
-    if (!groupsMap[groupName]) {
-      const group = await createGroup(groupName, classId);
-      groupsMap[groupName] = group._id;
-    }
-  }
-  return Object.values(groupsMap).map((groupId) => ({ groupId }));
-};
 
 const countGroupGetMatched = async (teacherId) => {
   try {
@@ -208,6 +192,5 @@ export default {
   addUserToGroup,
   getMatchedByGroupId,
   checkGroupsExist,
-  createGroupsFromExcel,
   countGroupGetMatched,
 };

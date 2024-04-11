@@ -1,10 +1,4 @@
-import Group from "../../models/groupModel.js";
-import Matched from "../../models/matchedModel.js";
-import MentorCategory from "../../models/mentorCategory.js";
-import ProjectCategory from "../../models/projectCategory.js";
 import Project from "../../models/projectModel.js";
-import TemporaryMatching from "../../models/temporaryMatching.js";
-import User from "../../models/userModel.js";
 
 const createProject = async (projectData) => {
   try {

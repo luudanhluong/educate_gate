@@ -21,15 +21,10 @@ const CreateGroupFromExcelPopup = () => {
   };
 
   const handleSubmit = async () => {
-    if (!selectedClassId || !file) {
+    if (!file) {
       alert("Please upload a file.");
       return;
     }
-
-    const formData = new FormData();
-    formData.append("classId", selectedClassId);
-    formData.append("file", file);
-
     try {
       await axios.post(`${BASE_URL}/group/createGroupsFromFile`, formData, {
         headers: {
@@ -55,33 +50,10 @@ const CreateGroupFromExcelPopup = () => {
           <Card>
             <MKBox variant="gradient" textAlign="center" p={2} mb={1}>
               <MKTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-                Create Groups from Excel
+                Tạo nhóm từ file
               </MKTypography>
-              <MKBox
-                onClick={isActivePopup}
-                position="absolute"
-                right={0}
-                fontSize={24}
-                top="50%"
-                sx={{
-                  transform: "translateY(-50%)",
-                  "&:hover": {
-                    backgroundColor: "rgba(0,0,0,0.5)",
-                    borderRadius: "50%",
-                    color: "#FFF",
-                  },
-                  lineHeight: 1,
-                  padding: "5px 5px 2px",
-                  cursor: "pointer",
-                }}
-              >
-                <Icon>clear</Icon>
-              </MKBox>
             </MKBox>
             <MKBox p={2}>
-              <MKTypography variant="subtitle1" gutterBottom>
-                Selected Class: {selectedClassId}
-              </MKTypography>
               <input
                 type="file"
                 accept=".xlsx"

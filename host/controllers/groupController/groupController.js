@@ -1,6 +1,7 @@
 import User from "../../models/userModel.js";
 import groupDAO from "../../repositories/group/index.js";
-import xlsx from "xlsx";
+import projectDAO from "../../repositories/project/project.js";
+import userDAO from "../../repositories/user/index.js";
 
 const getGroupById = async (req, res) => {
   try {
@@ -68,36 +69,42 @@ const createRandomGroups = async (req, res) => {
   }
 };
 
-const createGroupsFromExcel = async (req, res) => {
-  const token = req.headers["authorization"];
-  if (!token) return res.status(401).send("Access denied");
-
+const createGroupsFromExcel = async (req, res, next) => {
   try {
-    const excelFilePath = req.file.path;
-    const workbook = xlsx.readFile(excelFilePath);
-    const sheetName = workbook.SheetNames[0];
-    const userData = xlsx.utils.sheet_to_json(workbook.Sheets[sheetName]);
-
-    const groups = {};
-
-    for (const user of userData) {
-      const groupName = user["Tên Nhóm"];
-      if (!groups[groupName]) {
-        groups[groupName] = {
-          name: groupName,
-          students: [],
-        };
+    const { id: classId } = req.query;
+    const datas = req.body;
+    let project;
+    let group;
+    let user;
+    let flag = false;
+    for (const data of datas) {
+      const { Email, RollNumber, MemberCode, ProjectName, FullName, GroupNo } =
+        data;
+      if (GroupNo) {
+        if (ProjectName) {
+          project = await projectDAO.createProject({ name: ProjectName });
+        }
+        group = await groupDAO.createGroup({
+          classId: classId,
+          projectId: project?._id || "",
+          name: "Nhóm " + GroupNo,
+        });
+        if (group)
+          user = await userDAO.updateUser(
+            {
+              email: Email,
+              rollNumber: RollNumber,
+              memberCode: MemberCode,
+              username: FullName,
+            },
+            { groupId: group?._id || "" }
+          );
+        if (user) flag = true;
       }
-      groups[groupName].students.push({
-        name: user["Tên Học Sinh"],
-        email: user["Email"],
-      });
     }
-
-    const createdGroups = await groupDAO.createGroup(groups);
-    res.status(201).json(createdGroups);
+    if (flag) res.send("success");
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    next(error);
   }
 };
 const countGroupGetMatched = async (req, res, next) => {

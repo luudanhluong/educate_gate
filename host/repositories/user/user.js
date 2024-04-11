@@ -4,7 +4,6 @@ import moment from "moment";
 import dotnv from "dotenv";
 import User from "../../models/userModel.js";
 import mongoose from "mongoose";
-import user from "../../routes/user/userRouter.js";
 dotnv.config();
 
 const createNewUser = async ({ username, email, password, role }) => {
@@ -243,6 +242,18 @@ const updateUsers = async (listUser, status) => {
     throw new Error(error.message);
   }
 };
+const updateUser = async (query, user) => {
+  try {
+    await User.updateMany(
+      { query },
+      {
+        $set: user,
+      }
+    );
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
 const getUserBySmtId = async (smtId, role) => {
   try {
     return await User.aggregate([
@@ -277,4 +288,5 @@ export default {
   getClassesByUserId,
   updateUsers,
   getUserBySmtId,
+  updateUser,
 };
