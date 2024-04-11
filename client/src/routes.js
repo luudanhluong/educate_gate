@@ -13,7 +13,6 @@ import DashboardAdmin from "layouts/admin/dashboard";
 import SemesterAdmin from "layouts/admin/semester";
 import { useDispatch, useSelector } from "react-redux";
 import GroupDetail from "layouts/user/students";
-import ViewAllGroup from "layouts/sections/featuers/components/FeaturesOne/viewAllGroup";
 import { useEffect } from "react";
 import axios from "axios";
 import { BASE_URL } from "utilities/initialValue";
@@ -22,12 +21,13 @@ import { setAllGroup } from "app/slices/groupSlice";
 import { setClassList } from "app/slices/classSlice";
 import GroupsAdmin from "layouts/admin/list-groups";
 import CategoriesAdmin from "layouts/admin/list-categories";
+import ViewGroups from "ViewGroups";
 
 function Routes() {
   const dispatch = useDispatch();
   const { classList } = useSelector((state) => state.class);
   const { userLogin } = useSelector((state) => state.user);
-  // const { allGroups } = useSelector((state) => state.group);
+  const { allGroups } = useSelector((state) => state.group);
   const jwt = localStorage.getItem("jwt");
   const config = {
     headers: {
@@ -112,15 +112,12 @@ function Routes() {
       component: <GroupDetail />,
     });
   }
-
-  if (userLogin?.role === 2) {
+  if (allGroups?.length > 0 && userLogin?.role === 2) {
     result.push({
-      name: "Chức năng",
-      dropdown: true,
-      icon: <Icon>article</Icon>,
-      collapse: [
-        { name: "Ghép Mentor", route: `/presentation/groups`, component: <ViewAllGroup /> },
-      ],
+      name: "Nhóm",
+      dropdown: false,
+      route: `/presentation/groups`,
+      component: <ViewGroups teacherId={userLogin?._id} />,
     });
   }
   if (userLogin?.role === 1) {
@@ -163,20 +160,6 @@ function Routes() {
       ],
     });
   }
-  // if (!jwt)
-  //   result.push({
-  //     name: "Đăng nhập",
-  //     route: "/pages/authentication/sign-in",
-  //     component: <SignIn />,
-  //   });
-  // else {
-  //   result.push({
-  //     name: "Đăng xuất",
-  //     route: "/pages/authentication/sign-in",
-  //     component: <></>,
-  //   });
-  //   localStorage.removeItem("jwt");
-  // }
   return result;
 }
 export default Routes;
