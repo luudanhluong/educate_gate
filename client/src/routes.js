@@ -85,7 +85,7 @@ function Routes() {
       ],
     },
   ];
-  if (classList?.length > 0) {
+  if (classList?.length > 0 && userLogin?._id) {
     result.push({
       name: "Lớp Học",
       dropdown: true,
@@ -96,7 +96,7 @@ function Routes() {
         {
           name: "Lớp của bạn",
           collapse: classList?.map((c) => ({
-            name: c.preName + c.suffName,
+            name: c.className,
             route: "/presentation/class/" + c._id,
             component: <TeacherFunction />,
           })),

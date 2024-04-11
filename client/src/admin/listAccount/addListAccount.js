@@ -78,27 +78,6 @@ function AddListAccount() {
             <MKTypography variant="h4" fontWeight="medium" color="white" mt={1}>
               Tạo danh sách người dùng
             </MKTypography>
-            {/* <MKBox
-                onClick={isActivePopup}
-                position="absolute"
-                right={0}
-                fontSize={24}
-                top="50%"
-                sx={{
-                  transform: "translateY(-50%)",
-                  "&:hover": {
-                    backgroundColor: "rgba(0,0,0,0.5)",
-                    borderRadius: "50%",
-                    color: "#FFF",
-                  },
-                  lineHeight: 1,
-                  padding: "5px 5px 2px",
-                  cursor: "pointer",
-                }}
-              >
-                <Icon>clear</Icon>
-              </MKBox> */}
-            {/* </MKBox> */}
           </MKBox>
           <MKBox pt={4} pb={3} px={3}>
             <MKBox mb={2}>
