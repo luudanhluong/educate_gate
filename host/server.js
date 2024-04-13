@@ -38,11 +38,6 @@ const storage = multer.diskStorage({
     );
   },
 });
-const upload = multer({ storage: storage });
-
-app.get("/", (req, res) => {
-  console.log("hello world");
-});
 app.use("/mentor", mentorRouter);
 app.use("/semester_detail", smtDetRouter);
 app.use("/semester", semesterRouter);
@@ -57,7 +52,6 @@ app.use("/project_category", projectCategoryRouter);
 app.use("/temporary_matching", temporaryMatchingRouter);
 app.use("/matched", matchedRouter);
 app.use("/admins", adminsRouter);
-
 app.use(async (req, res, next) => {
   next(createError.NotFound());
 });

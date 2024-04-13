@@ -14,7 +14,11 @@ teacherRouter.get(
   verifyAccessToken,
   teacherController.getTeachers
 );
-teacherRouter.get("/classes", teacherController.getClassListByTeacher);
+teacherRouter.get(
+  "/classes",
+  verifyAccessToken,
+  teacherController.getClassListByTeacher
+);
 teacherRouter.get(
   "/:teacherId/groups",
   verifyAccessToken,

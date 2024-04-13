@@ -4,13 +4,13 @@ import { verifyAccessToken } from "../../utilities/jwt.js";
 
 const user = express.Router();
 
-user.get("/profile", userController.userProfile);
+user.get("/profile", verifyAccessToken, userController.userProfile);
 user.get(
   "/without_semester",
   verifyAccessToken,
   userController.getUserWithoutSmt
 );
-user.get("/:smtId/semester", userController.getUserBySmtId);
+user.get("/:smtId/semester", verifyAccessToken, userController.getUserBySmtId);
 user.get("/parameter", verifyAccessToken, userController.pmtUser);
 user.patch(
   "/profile/update",

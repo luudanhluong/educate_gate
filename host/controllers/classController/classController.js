@@ -1,5 +1,6 @@
 import classDAO from "../../repositories/class/index.js";
 import userDAO from "../../repositories/user/index.js";
+
 const createNewListClass = async (req, res) => {
   try {
     const { suffName, preName, quantity, limitStudent } = req.body;
@@ -97,6 +98,7 @@ const getClassesByUserId = async (req, res, next) => {
     next(error);
   }
 };
+const exportExcel = async (req, res, next) => {};
 export default {
   createNewListClass,
   getClasses,
@@ -107,4 +109,5 @@ export default {
   createClass,
   getClass,
   deleteClass,
+  exportExcel,
 };
