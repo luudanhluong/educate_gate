@@ -1,96 +1,127 @@
-import React, { useEffect, useState } from "react";
+// import React, { useEffect, useState } from "react";
 import MKBox from "components/MKBox";
-import Grid from "@mui/material/Grid";
-import { useDispatch, useSelector } from "react-redux";
-import "./studentList.css";
-import { Icon } from "@mui/material";
-import CreateGroupModal from "./CreateGroupRandomModal";
-import CreateGroupFromExcelPopup from "../CreateGroupUpFileModal";
-import {
-  setActivePopupCreateGroup,
-  setActivePopupCreateGroupFromExcel,
-} from "app/slices/activeSlice";
+// // import Grid from "@mui/material/Grid";
+// import { useDispatch, useSelector } from "react-redux";
+// import "./studentList.css";
+// import { Icon } from "@mui/material";
+// import CreateGroupModal from "./CreateGroupRandomModal";
+// import CreateGroupFromExcelPopup from "../CreateGroupUpFileModal";
+// import {
+//   setActivePopupCreateGroup,
+//   setActivePopupCreateGroupFromExcel,
+// } from "app/slices/activeSlice";
+// import getParams from "utilities/getParams";
+// import { useLocation } from "react-router-dom";
+// import { setClassId } from "app/slices/classOnerTeacherSlice";
+// import MKButton from "components/MKButton";
+import MKTypography from "components/MKTypography";
+import PropTypes from "prop-types";
+
+// Images
+import userImg from "assets/images/user.jpg";
+import MKBadge from "components/MKBadge";
+import MKAvatar from "components/MKAvatar";
+import { useEffect, useState } from "react";
+import { BASE_URL } from "utilities/initialValue";
 import getParams from "utilities/getParams";
 import { useLocation } from "react-router-dom";
-import { setClassId } from "app/slices/classOnerTeacherSlice";
-import MKButton from "components/MKButton";
+import axios from "axios";
+import Icon from "@mui/icons-material/Star";
+import { setClassStudent } from "app/slices/classOnerTeacherSlice";
+import { useDispatch } from "react-redux";
 
-const StudentsList = () => {
+export default function data() {
   const dispatch = useDispatch();
-  const url = useLocation();
-  const classId = getParams(3, url.pathname);
-  const classStudent = useSelector((state) => state.classOnerTeacher.classStudent);
-  const { active_create_group, active_create_group_excel } = useSelector((state) => state.active);
-  const [showCreateGroupButtons, setShowCreateGroupButtons] = useState(false);
-
-  useEffect(() => {
-    if (classId) {
-      dispatch(setClassId(classId));
-    }
-  }, [classId, dispatch]);
-
-  useEffect(() => {
-    const allWithoutGroup =
-      classStudent.length > 0 &&
-      classStudent.every((student) => student.groupName === "Chưa có nhóm");
-    setShowCreateGroupButtons(allWithoutGroup);
-  }, [classStudent]);
-
-  const handleRandomGroup = () => {
-    dispatch(setActivePopupCreateGroup(true));
+  const [data, setData] = useState([]);
+  const location = useLocation();
+  const classId = getParams(3, location.pathname);
+  const jwt = localStorage.getItem("jwt");
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${jwt}`,
+    },
   };
 
-  const handleExcelGroup = () => {
-    dispatch(setActivePopupCreateGroupFromExcel(true));
-  };
-
-  return (
-    <MKBox pl={"25px"} pr={"5px"}>
-      <Grid container spacing={3}>
-        <Grid item xs={12}>
-          {showCreateGroupButtons && (
-            <>
-              <MKBox px={"14px"} my={1} display="flex" justifyContent="end" gap="1.5rem">
-                <MKButton onClick={handleRandomGroup}>Tạo Nhóm Ngẫu Nhiên</MKButton>
-                <MKButton onClick={handleExcelGroup}>Tạo Nhóm Bằng Excel</MKButton>
-              </MKBox>
-            </>
-          )}
-          {active_create_group && <CreateGroupModal />}
-          {active_create_group_excel && <CreateGroupFromExcelPopup />}
-          <div className="table-container">
-            <table className="styled-table">
-              <thead>
-                <tr className="gradient-animated">
-                  <th>Họ tên</th>
-                  <th>Email</th>
-                  <th>Mã sinh viên</th>
-                  <th>Nhóm trưởng</th>
-                  <th>Tên nhóm</th>
-                </tr>
-              </thead>
-              <tbody>
-                {Object.values(classStudent).length > 0 &&
-                  Object.values(classStudent).map((student) => (
-                    <tr key={student._id}>
-                      <td>{student.username}</td>
-                      <td>{student.email}</td>
-                      <td>{student.rollNumber}</td>
-                      <td>
-                        {student.isLeader ? (
-                          <Icon sx={{ marginLeft: "8px", fontSize: "20px !important" }}>star</Icon>
-                        ) : null}
-                      </td>
-                      <td>{student.groupName}</td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
-          </div>
-        </Grid>
-      </Grid>
+  useEffect(() => {
+    axios
+      .get(`${BASE_URL}/class/${classId}/students`, config)
+      .then((res) => {
+        setData(res.data);
+      })
+      .then((res) => dispatch(setClassStudent(res.data)))
+      .catch((err) => {
+        console.error("Failed to fetch students:", err);
+      });
+  }, [classId]);
+  const User = ({ image, name, email }) => (
+    <MKBox
+      display="flex"
+      alignItems="center"
+      lineHeight={1}
+      sx={{ userselect: "none", cursor: "pointer" }}
+    >
+      <MKAvatar src={image} name={name} size="md" />
+      <MKBox ml={1} lineHeight={1}>
+        <MKTypography display="block" variant="button" fontWeight="medium">
+          {name}
+        </MKTypography>
+        <MKTypography variant="caption">{email}</MKTypography>
+      </MKBox>
     </MKBox>
   );
-};
 
-export default StudentsList;
+  User.propTypes = {
+    image: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    email: PropTypes.string.isRequired,
+  };
+
+  const rows = data
+    ? data.map((user) => ({
+        user: <User image={userImg} name={user.username} email={user.email} />,
+        gender: (
+          <MKTypography component="div" variant="caption" color="text" fontWeight="medium">
+            {user.gender ? "Nam" : "Nữ"}
+          </MKTypography>
+        ),
+        status: (
+          <MKTypography component="div" variant="caption" color="text" fontWeight="medium">
+            {user.status}
+          </MKTypography>
+        ),
+        rollNumber: (
+          <MKBox ml={-1}>
+            <MKBadge
+              badgeContent={user.rollNumber || "0000000"}
+              color="success"
+              variant="gradient"
+              size="sm"
+            />
+          </MKBox>
+        ),
+        isleader: (
+          <MKTypography component="div" color="text" size="0.25rem">
+            {user.isLeader ? <Icon sx={{ color: "yellow" }}>star</Icon> : null}
+          </MKTypography>
+        ),
+        group: (
+          <MKTypography component="div" variant="caption" color="text" fontWeight="medium">
+            {user.groupName}
+          </MKTypography>
+        ),
+      }))
+    : [];
+
+  return {
+    columns: [
+      { Header: "người dùng", accessor: "user", width: "32%", align: "left" },
+      { Header: "giới tính", accessor: "gender", align: "center" },
+      { Header: "mã sinh viên", accessor: "rollNumber", align: "center" },
+      { Header: "nhóm trưởng", accessor: "isleader", align: "center" },
+      { Header: "nhóm", accessor: "group", align: "center" },
+    ],
+
+    rows: rows,
+  };
+}

@@ -3,11 +3,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { setActivePopup } from "app/slices/activeSlice";
 import MKButton from "components/MKButton";
 import "../../sections/featuers/components/FeaturesOne/studentList.css";
+import { useParams } from "react-router-dom";
+import StarBorderIcon from "@mui/icons-material/StarBorder";
 
 const GroupMembers = () => {
   const dispatch = useDispatch();
   const { group: groupDetails } = useSelector((state) => state.group);
   const { userLogin } = useSelector((state) => state.user);
+  const { groupId } = useParams();
 
   return (
     <Box
@@ -26,30 +29,42 @@ const GroupMembers = () => {
             elevation={3}
             style={{
               padding: "20px",
-              marginBottom: "20px",
+              marginBottom: "40px",
               boxShadow: "0 0.5px 4px 1px rgba(0, 0, 0, 0.1)",
               borderRadius: "8px",
               position: "relative",
+              backgroundColor: "#00000008",
+              border: "1px solid rgb(216, 215, 215)",
             }}
           >
-            <Typography variant="h6" component="div" sx={{ fontWeight: "bold", marginBottom: 1 }}>
+            <Typography
+              variant="h6"
+              sx={{
+                marginBottom: 1,
+                fontFamily: "inherit",
+                fontSize: "1.25rem",
+                fontWeight: "600",
+              }}
+            >
               {groupDetails.project[0]?.name}
             </Typography>
-            <Typography variant="body2">{groupDetails.project[0]?.description}</Typography>
-            {userLogin?.isLeader &&
-              userLogin?.groupId?.[0]?._id === userLogin?.groupId?.[0]?._id && (
-                <MKButton
-                  onClick={() => dispatch(setActivePopup(true))}
-                  sx={{
-                    position: "absolute",
-                    bottom: 0,
-                    right: 0,
-                    margin: "8px",
-                  }}
-                >
-                  Cập nhật dự án
-                </MKButton>
-              )}
+            <hr style={{ marginBottom: "5px" }}></hr>
+            <Typography sx={{ fontFamily: "sans-serif", fontSize: ".9em" }}>
+              {groupDetails.project[0]?.description}
+            </Typography>
+            {userLogin?.isLeader && userLogin?.groupId === groupId && (
+              <MKButton
+                onClick={() => dispatch(setActivePopup(true))}
+                sx={{
+                  position: "absolute",
+                  bottom: 0,
+                  right: 0,
+                  margin: "8px",
+                }}
+              >
+                Cập nhật dự án
+              </MKButton>
+            )}
           </Box>
         ) : (
           ""
@@ -60,57 +75,133 @@ const GroupMembers = () => {
           style={{
             boxShadow: "0 0.5px 4px 1px rgba(0, 0, 0, 0.1)",
             borderRadius: "8px",
+            border: "1px solid rgb(216, 215, 215)",
           }}
         >
-          <Typography variant="h6" sx={{ marginBottom: 1, pt: 2, pl: 2 }}>
-            {groupDetails?.name} ({groupDetails?.userCount} Học sinh)
+          <Typography
+            variant="h6"
+            sx={{
+              pt: 2,
+              pl: 2,
+              pb: 2,
+              backgroundColor: "#00000008",
+              fontFamily: "inherit",
+              fontSize: "1.25rem",
+              fontWeight: "600",
+              borderBottom: " 1px  solid rgb(216, 215, 215)",
+            }}
+          >
+            <Typography variant="h6" gutterBottom>
+              {groupDetails?.name}
+              <Typography variant="h6" component="span" color="primary" sx={{ ml: 1 }}>
+                ({groupDetails?.userCount} Students)
+              </Typography>
+            </Typography>
           </Typography>
-          <List dense sx={{ padding: "20px" }}>
-            {groupDetails?.members
-              ? groupDetails?.members.map((member) => (
-                  <ListItem key={member.username}>
-                    {member.avatar ? (
-                      <Avatar alt={member.username} src={member.avatar} />
-                    ) : (
-                      <Avatar>{member.username.charAt(0)}</Avatar>
-                    )}
-                    <ListItemText
-                      primary={
-                        <Typography style={{ fontFamily: "inherit" }}>{member.username}</Typography>
-                      }
-                      secondary={
-                        <Typography variant="body2" style={{ color: "#666", fontStyle: "italic" }}>
-                          {member.email}
-                        </Typography>
-                      }
-                      style={{ marginLeft: "16px" }}
-                    />
-                  </ListItem>
-                ))
-              : ""}
+          <List
+            sx={{
+              padding: "20px",
+              bgcolor: "background.paper",
+              borderRadius: "10px",
+              boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+            }}
+          >
+            {groupDetails?.members?.map((member) => (
+              <ListItem
+                key={member.username}
+                sx={{
+                  "&:not(:last-child)": {
+                    mb: 2,
+                    borderBottom: "1px solid #eee",
+                  },
+                  p: 2,
+                  borderRadius: "8px",
+                  transition: "background-color 0.3s",
+                  "&:hover": {
+                    bgcolor: "rgba(0, 0, 0, 0.03)",
+                    cursor: "pointer",
+                  },
+                }}
+              >
+                <Avatar
+                  alt={member.username}
+                  src={member.avatar}
+                  sx={{
+                    width: 48,
+                    height: 48,
+                    marginRight: 2,
+                    bgcolor: "secondary.main",
+                    color: "white",
+                  }}
+                >
+                  {member.avatar ? null : member.username.charAt(0)}
+                </Avatar>
+                <ListItemText
+                  primary={
+                    <Typography sx={{ fontFamily: "inherit", fontWeight: "medium" }}>
+                      {member.username}
+                    </Typography>
+                  }
+                  secondary={
+                    <Typography
+                      variant="body2"
+                      sx={{ color: "text.secondary", fontStyle: "italic" }}
+                    >
+                      {member.email}
+                    </Typography>
+                  }
+                  sx={{ marginLeft: "16px" }}
+                />
+                <Typography sx={{ fontFamily: "inherit", fontWeight: "medium" }}>
+                  {member.isLeader && <StarBorderIcon color="warning" sx={{ ml: "auto" }} />}
+                </Typography>
+              </ListItem>
+            ))}
           </List>
         </Box>
       </Box>
 
-      <Box marginTop={2} sx={{ width: "30%" }}>
+      <Box marginTop={1} sx={{ width: "30%" }}>
         {groupDetails.mentorDetails && groupDetails.mentorDetails.length > 0 && (
           <Box
-            elevation={3}
             sx={{
-              padding: 2,
+              padding: 3,
               textAlign: "center",
               marginBottom: 2,
-              boxShadow: "0 0.5px 4px 1px rgba(0, 0, 0, 0.1)",
+              boxShadow: "0 2px 10px rgba(0, 0, 0, 0.15)",
+              borderRadius: "12px",
+              border: "1px solid rgba(225, 225, 225, 0.6)",
+              backgroundColor: "white",
+              transition: "transform 0.3s ease-in-out",
+              "&:hover": {
+                transform: "scale(1.05)",
+              },
             }}
           >
             <Avatar
               src={groupDetails.mentorDetails[0].image}
-              sx={{ width: 56, height: 56, marginX: "auto" }}
+              sx={{
+                width: 80,
+                height: 80,
+                marginX: "auto",
+                marginBottom: 2,
+              }}
             />
-            <Typography variant="subtitle1">{groupDetails.mentorDetails[0].username}</Typography>
-            <Typography variant="body2">{groupDetails.mentorDetails[0].email}</Typography>
-            <Typography variant="body2">{groupDetails.mentorDetails[0].phoneNumber}</Typography>
-            <Typography variant="body2">{groupDetails.mentorDetails[0].degree}</Typography>
+            <Typography variant="h6" sx={{ fontFamily: "inherit", fontWeight: "bold" }}>
+              {groupDetails.mentorDetails[0].username}
+            </Typography>
+            <Typography
+              variant="body2"
+              sx={{ color: "text.secondary", fontStyle: "italic", marginBottom: 1 }}
+            >
+              {groupDetails.mentorDetails[0].email}
+            </Typography>
+            <Typography variant="body2" sx={{ color: "text.secondary" }}>
+              {groupDetails.mentorDetails[0].phoneNumber}
+            </Typography>
+            <Typography variant="caption" sx={{ color: "text.primary" }}>
+              {groupDetails.mentorDetails[0].degree}
+            </Typography>
           </Box>
         )}
       </Box>

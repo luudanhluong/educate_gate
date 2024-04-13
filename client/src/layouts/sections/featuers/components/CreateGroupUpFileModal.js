@@ -7,14 +7,18 @@ import MKTypography from "components/MKTypography";
 import axios from "axios";
 import { BASE_URL } from "utilities/initialValue";
 import { setActivePopupCreateGroupFromExcel } from "app/slices/activeSlice";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const CreateGroupFromExcelPopup = () => {
   const dispatch = useDispatch();
   const { active_create_group_excel } = useSelector((state) => state.active);
   const selectedClassId = useSelector((state) => state.classOnerTeacher.classId);
   const [file, setFile] = useState(null);
-  const isActivePopup = () =>
+
+  const isActivePopup = () => {
     dispatch(setActivePopupCreateGroupFromExcel(!active_create_group_excel));
+  };
 
   const handleFileChange = (event) => {
     setFile(event.target.files[0]);
@@ -22,7 +26,7 @@ const CreateGroupFromExcelPopup = () => {
 
   const handleSubmit = async () => {
     if (!selectedClassId || !file) {
-      alert("Please upload a file.");
+      toast.error("Hãy chọn file của bạn!.");
       return;
     }
 
@@ -36,11 +40,11 @@ const CreateGroupFromExcelPopup = () => {
           "Content-Type": "multipart/form-data",
         },
       });
-      alert("Groups created successfully!");
+      toast.success("Nhóm được tạo thành công!");
       isActivePopup();
     } catch (error) {
-      console.error("Error creating groups:", error);
-      alert("Error creating groups.");
+      console.error("Lỗi trong việc tạo nhóm.:", error);
+      toast.error("Lỗi trong việc tạo nhóm.");
     }
   };
 
@@ -53,9 +57,19 @@ const CreateGroupFromExcelPopup = () => {
       <Slide direction="down" in={active_create_group_excel} timeout={500}>
         <Grid width={500} position="relative" item xs={12} md={6}>
           <Card>
-            <MKBox variant="gradient" textAlign="center" p={2} mb={1}>
+            <MKBox
+              variant="gradient"
+              bgColor="info"
+              borderRadius="lg"
+              coloredShadow="info"
+              mx={2}
+              mt={-1}
+              p={2}
+              mb={1}
+              textAlign="center"
+            >
               <MKTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-                Create Groups from Excel
+                Tạo Nhóm Bằng Excel
               </MKTypography>
               <MKBox
                 onClick={isActivePopup}
@@ -79,17 +93,20 @@ const CreateGroupFromExcelPopup = () => {
               </MKBox>
             </MKBox>
             <MKBox p={2}>
-              <MKTypography variant="subtitle1" gutterBottom>
-                Selected Class: {selectedClassId}
-              </MKTypography>
               <input
                 type="file"
                 accept=".xlsx"
                 onChange={handleFileChange}
                 style={{ display: "block", marginTop: "20px" }}
               />
-              <MKButton onClick={handleSubmit} variant="contained" color="primary" fullWidth mt={2}>
-                Create Groups
+              <MKButton
+                onClick={handleSubmit}
+                variant="gradient"
+                color="info"
+                fullWidth
+                sx={{ marginTop: "30px" }}
+              >
+                Tạo Nhóm
               </MKButton>
             </MKBox>
           </Card>

@@ -14,7 +14,7 @@ import { setGroup } from "app/slices/groupSlice";
 import { useParams } from "react-router-dom";
 import { setCategories } from "app/slices/categorySlice";
 import { setActivePopup } from "app/slices/activeSlice";
-import bgImage from "assets/images/city-profile.jpg";
+import bgImage from "assets/images/group.png";
 import Card from "@mui/material/Card";
 
 const GroupDetail = () => {
@@ -31,23 +31,18 @@ const GroupDetail = () => {
       Authorization: `Bearer ${jwt}`,
     },
   };
-  console.log(userLogin?.groupId?.[0]?._id);
-  useEffect(() => {
-    console.log(`${BASE_URL}/group/${groupId}`);
-    axios
-      .get(`${BASE_URL}/group/${groupId}`, config)
-      .then((res) => dispatch(setGroup(res.data[0])))
-      .catch((err) => console.log(err));
-    // dispatch(setProjectCategories([]));
-  }, [groupId, dispatch]);
+  console.log(groupId);
 
   useEffect(() => {
-    console.log(`${BASE_URL}/group/${userLogin?.groupId?.[0]?._id}`);
+    console.log(`Fetching data for group ID: ${groupId}`);
     axios
-      .get(`${BASE_URL}/group/${userLogin?.groupId?.[0]?._id}`, config)
-      .then((res) => dispatch(setGroup(res.data[0])))
+      .get(`${BASE_URL}/group/${groupId}`, config)
+      .then((res) => {
+        console.log("Group data:", res.data);
+        dispatch(setGroup(res.data[0]));
+      })
       .catch((err) => console.log(err));
-  }, [userLogin?.groupId?.[0]?._id, dispatch]);
+  }, [groupId, dispatch]);
 
   useEffect(() => {
     axios
@@ -87,16 +82,12 @@ const GroupDetail = () => {
     <>
       <DefaultNavbar routes={routes} />
       {active_popup && <UpdateProject />}
-      <MKBox bgColor="white">
+      <MKBox bgColor="#00000008">
         <MKBox
           minHeight="25rem"
           width="100%"
           sx={{
-            backgroundImage: ({ functions: { linearGradient, rgba }, palette: { gradients } }) =>
-              `${linearGradient(
-                rgba(gradients.dark.main, 0.8),
-                rgba(gradients.dark.state, 0.8)
-              )}, url(${bgImage})`,
+            backgroundImage: `url(${bgImage})`,
             backgroundSize: "cover",
             backgroundPosition: "center",
             display: "grid",
@@ -105,13 +96,17 @@ const GroupDetail = () => {
         />
         <Card
           sx={{
+            width: "86%",
+            marginLeft: "auto",
+            marginRight: "auto",
             p: 2,
-            mx: { xs: 2, lg: 3 },
+
             mt: -8,
             mb: 4,
+
             backgroundColor: ({ palette: { white }, functions: { rgba } }) => rgba(white.main, 0.8),
             backdropFilter: "saturate(200%) blur(30px)",
-            boxShadow: ({ boxShadows: { xxl } }) => xxl,
+            boxShadow: ({ boxShadows: { xxxl } }) => xxxl,
           }}
         >
           <GroupMembers />

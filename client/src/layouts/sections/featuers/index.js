@@ -3,7 +3,7 @@ import MKBox from "components/MKBox";
 import Grid from "@mui/material/Grid";
 import { useDispatch, useSelector } from "react-redux";
 import ListOfGroups from "./components/FeaturesOne/listOfGroup";
-import StudentOfClassesList from "./components/FeaturesOne/listOfStudent";
+// import StudentOfClassesList from "./components/FeaturesOne/listOfStudent";
 import axios from "axios";
 // import TeacherDefaultNavbar from "./TeacherAction";
 import DefaultNavbar from "Navbars/DefaultNavbar";
@@ -16,19 +16,24 @@ import getParams from "utilities/getParams";
 import { useLocation } from "react-router-dom";
 import { setClassStudent } from "app/slices/classOnerTeacherSlice";
 import { setGroups } from "app/slices/groupSlice";
+import FullDataTable from "Tables/DataTableStudent";
+import listOfStudent from "../featuers/components/FeaturesOne/listOfStudent";
 
 const TeacherFunction = () => {
   const dispatch = useDispatch();
   const url = useLocation();
   const params = getParams(3, url.pathname);
+  const { columns, rows } = listOfStudent();
   const jwt = localStorage.getItem("jwt");
   const { active } = useSelector((state) => state.active);
+
   const config = {
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${jwt}`,
     },
   };
+
   useEffect(() => {
     axios
       .get(BASE_URL + "/user/profile", config)
@@ -42,6 +47,7 @@ const TeacherFunction = () => {
       .then((res) => dispatch(setClassStudent(res.data)))
       .catch((err) => console.log(err));
   }, [params, dispatch]);
+
   useEffect(() => {
     axios
       .get(`${BASE_URL}/group/${params}/groups`, config)
@@ -53,11 +59,11 @@ const TeacherFunction = () => {
     <>
       <DefaultNavbar routes={routes} />
       <TemporaryMatching />
-      <MKBox pt={{ xs: 12, sm: 10 }} height="100vh" display="flex" justifyContent="center">
+      <MKBox pt={{ xs: 12, sm: 12 }} height="100vh" display="flex" justifyContent="center">
         <Grid container width="100%" mx={"4rem"} display="flex" justifyContent="center">
           {/* <Grid
             item
-            xs={12}
+            xs={12} 
             md={2}
             height="80%"
             sx={{
@@ -69,11 +75,11 @@ const TeacherFunction = () => {
           >
             <TeacherDefaultNavbar transparent />
           </Grid> */}
-          <Grid item xs={12} md={10}>
+          <Grid item xs={10} md={12}>
             {active != 2 ? (
-              <MKBox p={0} display="flex" flexDirection="column">
+              <MKBox display="flex" flexDirection="column">
                 <ListOfGroups />
-                <StudentOfClassesList />
+                <FullDataTable table={{ columns, rows }} />
               </MKBox>
             ) : (
               <MKBox>

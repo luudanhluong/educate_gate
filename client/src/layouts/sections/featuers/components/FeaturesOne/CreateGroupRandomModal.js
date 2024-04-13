@@ -66,19 +66,26 @@ const CreateGroupModal = () => {
       .then(() => {
         axios
           .get(`${BASE_URL}/group/${selectedClassId}/groups`, config)
-          .then((res) => dispatch(setGroups(res.data)))
+          .then((res) => {
+            dispatch(setGroups(res.data));
+            axios
+              .get(`${BASE_URL}/class/${selectedClassId}/students`)
+              .then((res) => {
+                dispatch(setClassStudent(res.data));
+                toast.success("Tạo nhóm thành công");
+                handleClosePopup();
+              })
+              .catch((error) => console.log(error.message));
+          })
           .catch((error) => console.log(error.message));
-        axios
-          .get(`${BASE_URL}/class/${selectedClassId}/students`)
-          .then((res) => dispatch(setClassStudent(res.data)))
-          .catch((error) => console.log(error.message));
-
-        toast.success("Tạo nhóm thành công");
-        handleClosePopup();
       })
       .catch((error) => {
         console.error("Error creating groups:", error);
-        toast.error("Có lỗi xảy ra khi tạo nhóm!");
+        if (error.response && error.response.data.error) {
+          toast.error(error.response.data.error);
+        } else {
+          toast.error("Có lỗi xảy ra khi tạo nhóm!");
+        }
       });
   };
 
@@ -96,28 +103,33 @@ const CreateGroupModal = () => {
             <Card>
               <MKBox
                 variant="gradient"
-                textAlign="center"
+                bgColor="info"
+                borderRadius="lg"
+                coloredShadow="info"
+                mx={2}
+                mt={-1}
                 p={2}
-                mb={2}
-                sx={{ backgroundColor: "#2196f3", borderRadius: "4px 4px 0 0" }}
+                mb={1}
+                textAlign="center"
               >
                 <MKTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-                  Tạo nhóm
+                  Tạo Nhóm Ngẫu Nhiên
                 </MKTypography>
                 <MKBox
                   onClick={handleClosePopup}
                   position="absolute"
                   right={0}
                   fontSize={24}
+                  top="50%"
                   sx={{
                     transform: "translateY(-50%)",
                     "&:hover": {
-                      backgroundColor: "rgba(255,255,255,0.5)",
+                      backgroundColor: "rgba(0,0,0,0.5)",
                       borderRadius: "50%",
                       color: "#FFF",
                     },
                     lineHeight: 1,
-                    padding: "5px",
+                    padding: "5px 5px 2px",
                     cursor: "pointer",
                   }}
                 >
@@ -148,8 +160,8 @@ const CreateGroupModal = () => {
                       </FormControl>
                       <MKButton
                         type="submit"
-                        variant="contained"
-                        color="primary"
+                        variant="gradient"
+                        color="info"
                         sx={{ marginTop: "30px" }}
                         fullWidth
                       >
@@ -166,5 +178,4 @@ const CreateGroupModal = () => {
     </Modal>
   );
 };
-
 export default CreateGroupModal;

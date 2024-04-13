@@ -36,8 +36,14 @@ const createRandomGroups = async (req, res) => {
   const { classId, numberOfGroups } = req.body;
   try {
     let users = await User.find({ classId }).exec();
-    users = users.sort(() => 0.5 - Math.random());
 
+    if (numberOfGroups > users.length) {
+      return res
+        .status(400)
+        .json({ error: "Số nhóm không được lớn hơn số học sinh trong lớp" });
+    }
+
+    users = users.sort(() => 0.5 - Math.random());
     const baseGroupSize = Math.floor(users.length / numberOfGroups);
     const numLargerGroups = users.length % numberOfGroups;
     const groups = [];
