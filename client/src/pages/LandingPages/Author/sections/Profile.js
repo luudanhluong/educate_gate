@@ -22,8 +22,6 @@ function Profile() {
   const { username, phoneNumber, classId, gender, email, Dob, menteeCount, degree } =
     userLogin || {};
   const { preName, code, suffName } = classId || {};
-  console.log("Change Password Popup State:", active_change_password);
-  console.log("Change Password Popup :", active_popup);
 
   return (
     <MKBox component="section" py={{ xs: 6, sm: 12 }}>
@@ -186,12 +184,12 @@ function Profile() {
             </Grid>
             <MKBox sx={{ position: "absolute", bottom: 0, right: 0, display: "flex", gap: "10px" }}>
               <MKButton onClick={() => dispatch(setActivePopup(!active_popup))}>
-                Edit Profile
+                Chỉnh sửa thông tin cá nhân
               </MKButton>
               <MKButton
                 onClick={() => dispatch(setActivePopupChangePassword(!active_change_password))}
               >
-                Change Password
+                Đổi mật khẩu
               </MKButton>
             </MKBox>
           </Grid>

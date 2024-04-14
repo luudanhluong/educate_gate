@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import axios from "axios";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup";
-import { Card, Container, Modal, Slide } from "@mui/material";
+import { Card, Grid, Modal, Slide } from "@mui/material";
 import MKBox from "components/MKBox";
 import MKButton from "components/MKButton";
 import MKInput from "components/MKInput";
@@ -65,7 +65,7 @@ const ChangePassword = () => {
       aria-describedby="modal-modal-description"
     >
       <Slide direction="down" in={true} timeout={500}>
-        <Container>
+        <Grid width={500} position="relative" item xs={12} md={6}>
           <Card>
             <MKBox
               variant="gradient"
@@ -166,7 +166,7 @@ const ChangePassword = () => {
               </Formik>
             </MKBox>
           </Card>
-        </Container>
+        </Grid>
       </Slide>
     </Modal>
   );
