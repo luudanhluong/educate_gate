@@ -1,23 +1,6 @@
-// import React, { useEffect, useState } from "react";
 import MKBox from "components/MKBox";
-// // import Grid from "@mui/material/Grid";
-// import { useDispatch, useSelector } from "react-redux";
-// import "./studentList.css";
-// import { Icon } from "@mui/material";
-// import CreateGroupModal from "./CreateGroupRandomModal";
-// import CreateGroupFromExcelPopup from "../CreateGroupUpFileModal";
-// import {
-//   setActivePopupCreateGroup,
-//   setActivePopupCreateGroupFromExcel,
-// } from "app/slices/activeSlice";
-// import getParams from "utilities/getParams";
-// import { useLocation } from "react-router-dom";
-// import { setClassId } from "app/slices/classOnerTeacherSlice";
-// import MKButton from "components/MKButton";
 import MKTypography from "components/MKTypography";
 import PropTypes from "prop-types";
-
-// Images
 import userImg from "assets/images/user.jpg";
 import MKBadge from "components/MKBadge";
 import MKAvatar from "components/MKAvatar";
@@ -26,9 +9,9 @@ import { BASE_URL } from "utilities/initialValue";
 import getParams from "utilities/getParams";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
-import Icon from "@mui/icons-material/Star";
 import { setClassStudent } from "app/slices/classOnerTeacherSlice";
 import { useDispatch } from "react-redux";
+import StarBorderIcon from "@mui/icons-material/StarBorder";
 
 export default function data() {
   const dispatch = useDispatch();
@@ -102,7 +85,7 @@ export default function data() {
         ),
         isleader: (
           <MKTypography component="div" color="text" size="0.25rem">
-            {user.isLeader ? <Icon sx={{ color: "yellow" }}>star</Icon> : null}
+            {user.isLeader ? <StarBorderIcon color="warning" sx={{ ml: "auto" }} /> : null}
           </MKTypography>
         ),
         group: (

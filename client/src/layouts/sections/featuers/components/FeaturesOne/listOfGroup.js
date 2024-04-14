@@ -26,12 +26,13 @@ const ListOfGroups = () => {
   return (
     <Box
       sx={{
+        mt: 2,
         marginLeft: "16px",
         marginBottom: "10px",
         display: "flex",
         flexWrap: "wrap",
         justifyContent: "space-between",
-        gap: 1,
+        gap: "30px",
       }}
     >
       {groupData.map((group) => (
@@ -40,7 +41,7 @@ const ListOfGroups = () => {
           sx={{
             display: "flex",
             flexDirection: "column",
-            width: "calc(100%/3 - 18px)",
+            width: "calc(100%/3 - 80px)",
             height: 166,
             borderRadius: "16px",
             boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
