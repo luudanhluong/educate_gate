@@ -10,16 +10,21 @@ import MKButton from "components/MKButton";
 import { setActivePopup } from "app/slices/activeSlice";
 import getDate from "utilities/getDate";
 import { Icon, Container, Grid } from "@mui/material";
+import { setActivePopupChangePassword } from "app/slices/activeSlice";
 
 function Profile() {
   const dispatch = useDispatch();
   const { userLogin } = useSelector((state) => state.user);
   const { active_popup } = useSelector((state) => state.active);
+  const { active_change_password } = useSelector((state) => state.active);
   const { data: categories } = useSelector((state) => state.category.categories);
   const { data: mentorCategories } = useSelector((state) => state.category.mentorCategories);
   const { username, phoneNumber, classId, gender, email, Dob, menteeCount, degree } =
     userLogin || {};
   const { preName, code, suffName } = classId || {};
+  console.log("Change Password Popup State:", active_change_password);
+  console.log("Change Password Popup :", active_popup);
+
   return (
     <MKBox component="section" py={{ xs: 6, sm: 12 }}>
       <Container>
@@ -179,24 +184,16 @@ function Profile() {
                 )}
               </Grid>
             </Grid>
-            <MKButton
-              onClick={() => dispatch(setActivePopup(!active_popup))}
-              id={"btn-edit-profile"}
-              sx={{
-                position: "absolute",
-                bottom: 0,
-                right: 0,
-                textDecoration: "underline",
-                color: "#1A73E8",
-                textTransform: "none",
-                fontWeight: "400",
-                "&:hover": {
-                  textDecoration: "underline",
-                },
-              }}
-            >
-              Edit Profile
-            </MKButton>
+            <MKBox sx={{ position: "absolute", bottom: 0, right: 0, display: "flex", gap: "10px" }}>
+              <MKButton onClick={() => dispatch(setActivePopup(!active_popup))}>
+                Edit Profile
+              </MKButton>
+              <MKButton
+                onClick={() => dispatch(setActivePopupChangePassword(!active_change_password))}
+              >
+                Change Password
+              </MKButton>
+            </MKBox>
           </Grid>
         </Grid>
       </Container>

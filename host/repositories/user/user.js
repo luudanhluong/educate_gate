@@ -277,6 +277,17 @@ const getUserBySmtId = async (smtId, role) => {
     throw new Error(error.message);
   }
 };
+
+const comparePassword = async (inputPassword, savedPassword) => {
+  return await bcrypt.compare(inputPassword, savedPassword);
+};
+
+const updateUserPassword = async (userId, newPassword) => {
+  const saltRounds = 10;
+  const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
+  await User.findByIdAndUpdate(userId, { password: hashedPassword });
+};
+
 export default {
   createNewUser,
   loginUser,
@@ -289,4 +300,6 @@ export default {
   updateUsers,
   getUserBySmtId,
   updateUser,
+  comparePassword,
+  updateUserPassword,
 };
