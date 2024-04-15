@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import Semester from "../../models/semesterModel.js";
 
 const createNewSemester = async (name) => {

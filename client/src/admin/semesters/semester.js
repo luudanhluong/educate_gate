@@ -18,7 +18,9 @@ const Semester = () => {
   const { data: semesters } = useSelector((state) => state.semester.semesters);
   const isActivePopup = (actions) => dispatch(setActivePopup(actions));
   const initialValue =
-    active_popup.type === "update" ? (semester?._id && semester) || semesters?.[0] : { name: "" };
+    active_popup.type === "update"
+      ? semesters?.find((s) => s._id === semester?._id) || semesters?.[0]
+      : { name: "" };
   const jwt = localStorage.getItem("jwt");
   const config = {
     headers: {
@@ -147,6 +149,7 @@ const Semester = () => {
                       {active_popup.type === "update" && (
                         <MKButton
                           onClick={() => deleteSemester(values)}
+                          disabled={values.status !== "Upcoming"}
                           sx={{
                             background: "#1A73E8",
                             marginTop: "6px",

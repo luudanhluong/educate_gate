@@ -36,6 +36,7 @@ const deleteClass = async (req, res, next) => {
 const getClass = async (req, res, next) => {
   try {
     const { id } = req.params;
+    console.log(id);
     const result = await classDAO.getClass(id);
     res.send(result);
   } catch (error) {
@@ -58,7 +59,7 @@ const getClasses = async (req, res, next) => {
     res.status(500).json({ error: error.message });
   }
 };
-const addStuentdInClass = async (req, res, next) => {
+const addStudentInClass = async (req, res, next) => {
   try {
     const result = await classDAO.addStudentInClasses(4, "InActive");
     res.send(result);
@@ -66,13 +67,13 @@ const addStuentdInClass = async (req, res, next) => {
     next(error);
   }
 };
-const getStudentInClass = async (req, res) => {
+const getStudentInClass = async (req, res, next) => {
   try {
     const { classId } = req.params;
     const students = await classDAO.getStudentsInClass(classId);
-    res.status(200).json(students);
+    res.send(students);
   } catch (error) {
-    res.status(500).json(error.message);
+    next(error);
   }
 };
 const getClassById = async (req, res) => {
@@ -105,7 +106,7 @@ export default {
   getStudentInClass,
   getClassById,
   getClassesByUserId,
-  addStuentdInClass,
+  addStudentInClass,
   createClass,
   getClass,
   deleteClass,

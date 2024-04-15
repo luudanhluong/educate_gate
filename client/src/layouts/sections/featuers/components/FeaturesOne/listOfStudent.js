@@ -1,110 +1,76 @@
-import MKBox from "components/MKBox";
-import MKTypography from "components/MKTypography";
-import PropTypes from "prop-types";
-import userImg from "assets/images/user.jpg";
-import MKBadge from "components/MKBadge";
-import MKAvatar from "components/MKAvatar";
 import { useEffect, useState } from "react";
-import { BASE_URL } from "utilities/initialValue";
-import getParams from "utilities/getParams";
+import {
+  setActivePopupCreateGroupFromExcel,
+  setActivePopupCreateGroup,
+} from "app/slices/activeSlice";
+import MKBox from "components/MKBox";
+import MKButton from "components/MKButton";
+import Tables from "layouts/tables/user-list-table";
+import CreateGroupModal from "layouts/sections/featuers/components/FeaturesOne/CreateGroupRandomModal";
+import CreateGroupFromExcelPopup from "layouts/sections/featuers/components/CreateGroupUpFileModal";
+import { setClassId } from "app/slices/classOnerTeacherSlice";
+import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
-import axios from "axios";
-import { setClassStudent } from "app/slices/classOnerTeacherSlice";
-import { useDispatch } from "react-redux";
-import StarBorderIcon from "@mui/icons-material/StarBorder";
+import getParams from "utilities/getParams";
+import ExcelJS from "exceljs";
+import saveAs from "file-saver";
 
-export default function data() {
+const ListOfStudent = () => {
   const dispatch = useDispatch();
-  const [data, setData] = useState([]);
-  const location = useLocation();
-  const classId = getParams(3, location.pathname);
-  const jwt = localStorage.getItem("jwt");
-  const config = {
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${jwt}`,
-    },
+  const url = useLocation();
+  const classId = getParams(3, url.pathname);
+  const { active_create_group, active_create_group_excel } = useSelector((state) => state.active);
+  const [showCreateGroupButtons, setShowCreateGroupButtons] = useState(false);
+
+  const handleRandomGroup = () => {
+    dispatch(setActivePopupCreateGroup(true));
   };
+
+  const handleExcelGroup = () => {
+    dispatch(setActivePopupCreateGroupFromExcel(true));
+  };
+  const classStudent = useSelector((state) => state.user.users);
 
   useEffect(() => {
-    axios
-      .get(`${BASE_URL}/class/${classId}/students`, config)
-      .then((res) => {
-        setData(res.data);
-      })
-      .then((res) => dispatch(setClassStudent(res.data)))
-      .catch((err) => {
-        console.error("Failed to fetch students:", err);
-      });
-  }, [classId]);
-  const User = ({ image, name, email }) => (
-    <MKBox
-      display="flex"
-      alignItems="center"
-      lineHeight={1}
-      sx={{ userselect: "none", cursor: "pointer" }}
-    >
-      <MKAvatar src={image} name={name} size="md" />
-      <MKBox ml={1} lineHeight={1}>
-        <MKTypography display="block" variant="button" fontWeight="medium">
-          {name}
-        </MKTypography>
-        <MKTypography variant="caption">{email}</MKTypography>
-      </MKBox>
-    </MKBox>
-  );
+    if (classId) {
+      dispatch(setClassId(classId));
+    }
+  }, [classId, dispatch]);
 
-  User.propTypes = {
-    image: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    email: PropTypes.string.isRequired,
+  useEffect(() => {
+    const allWithoutGroup = classStudent?.data?.every(
+      (student) => student.groupName === "Chưa có nhóm"
+    );
+    setShowCreateGroupButtons(allWithoutGroup);
+  }, [classStudent]);
+  const handleExportExcel = () => {
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet("Danh_sach_hoc_sinh");
+    classStudent.forEach((row) => {
+      const { email, memberCode, rollNumber, username, gender } = row;
+      worksheet.addRow([email, memberCode, rollNumber, username, gender ? "nam" : "nữ"]);
+    });
+    const fileName = "Danh_sach_hoc_sinh.xlsx";
+    workbook.xlsx.writeBuffer().then(function (buffer) {
+      saveAs(new Blob([buffer], { type: "application/octet-stream" }), fileName);
+    });
   };
-
-  const rows = data
-    ? data.map((user) => ({
-        user: <User image={userImg} name={user.username} email={user.email} />,
-        gender: (
-          <MKTypography component="div" variant="caption" color="text" fontWeight="medium">
-            {user.gender ? "Nam" : "Nữ"}
-          </MKTypography>
-        ),
-        status: (
-          <MKTypography component="div" variant="caption" color="text" fontWeight="medium">
-            {user.status}
-          </MKTypography>
-        ),
-        rollNumber: (
-          <MKBox ml={-1}>
-            <MKBadge
-              badgeContent={user.rollNumber || "0000000"}
-              color="success"
-              variant="gradient"
-              size="sm"
-            />
+  return (
+    <>
+      {showCreateGroupButtons && (
+        <>
+          <MKBox px={"14px"} my={1} display="flex" justifyContent="end" gap="1.5rem">
+            <MKButton onClick={handleExportExcel}>Tải file</MKButton>
+            <MKButton onClick={handleRandomGroup}>Tạo Nhóm Ngẫu Nhiên</MKButton>
+            <MKButton onClick={handleExcelGroup}>Tạo Nhóm Bằng Excel</MKButton>
           </MKBox>
-        ),
-        isleader: (
-          <MKTypography component="div" color="text" size="0.25rem">
-            {user.isLeader ? <StarBorderIcon color="warning" sx={{ ml: "auto" }} /> : null}
-          </MKTypography>
-        ),
-        group: (
-          <MKTypography component="div" variant="caption" color="text" fontWeight="medium">
-            {user.groupName}
-          </MKTypography>
-        ),
-      }))
-    : [];
+        </>
+      )}
+      {active_create_group && <CreateGroupModal />}
+      {active_create_group_excel && <CreateGroupFromExcelPopup />}
+      <Tables />
+    </>
+  );
+};
 
-  return {
-    columns: [
-      { Header: "người dùng", accessor: "user", width: "32%", align: "left" },
-      { Header: "giới tính", accessor: "gender", align: "center" },
-      { Header: "mã sinh viên", accessor: "rollNumber", align: "center" },
-      { Header: "nhóm trưởng", accessor: "isleader", align: "center" },
-      { Header: "nhóm", accessor: "group", align: "center" },
-    ],
-
-    rows: rows,
-  };
-}
+export default ListOfStudent;

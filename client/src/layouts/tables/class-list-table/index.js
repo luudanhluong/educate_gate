@@ -34,7 +34,7 @@ function Tables() {
       .catch((error) => console.log(error));
   const handleAddStudentInList = () => {
     axios
-      .get(`${BASE_URL}/class/add_student_in_classs`, config)
+      .get(`${BASE_URL}/class/add_student_in_class`, config)
       .then(() => getClassInfo())
       .catch((error) => console.log(error));
   };

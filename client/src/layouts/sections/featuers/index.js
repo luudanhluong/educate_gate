@@ -12,7 +12,7 @@ import { setUserLogin, setUsers } from "app/slices/userSlice";
 import getParams from "utilities/getParams";
 import { useLocation } from "react-router-dom";
 import { setGroups } from "app/slices/groupSlice";
-import Tables from "layouts/tables/user-list-table";
+import ListOfStudent from "./components/FeaturesOne/listOfStudent";
 
 const TeacherFunction = () => {
   const dispatch = useDispatch();
@@ -56,7 +56,7 @@ const TeacherFunction = () => {
           <Grid item xs={10} md={12}>
             <MKBox display="flex" flexDirection="column">
               <ListOfGroups />
-              <Tables />
+              <ListOfStudent />
             </MKBox>
           </Grid>
         </Grid>

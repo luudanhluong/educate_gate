@@ -15,7 +15,7 @@ projectCategoryRouter.post(
   projectCategoryController.createProjectCategory
 );
 projectCategoryRouter.delete(
-  "/delete/:id",
+  "/:id",
   verifyAccessToken,
   projectCategoryController.deleteProjectCategorybyId
 );

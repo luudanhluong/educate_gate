@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import PropTypes from "prop-types";
 import { useTable, usePagination, useGlobalFilter, useSortBy } from "react-table";
 import Table from "@mui/material/Table";
@@ -9,20 +9,8 @@ import MKBox from "components/MKBox";
 import DataTableHeadCell from "Tables/DataTableHeadCell";
 import DataTableBodyCell from "Tables/DataTableBodyCell";
 import MKTypography from "components/MKTypography";
-import { setActivePopupCreateGroup } from "app/slices/activeSlice";
-import { setActivePopupCreateGroupFromExcel } from "app/slices/activeSlice";
-import { setClassId } from "app/slices/classOnerTeacherSlice";
-import { useDispatch, useSelector } from "react-redux";
-import { useLocation } from "react-router-dom";
-import getParams from "utilities/getParams";
-import MKButton from "components/MKButton";
-import CreateGroupModal from "layouts/sections/featuers/components/FeaturesOne/CreateGroupRandomModal";
-import CreateGroupFromExcelPopup from "layouts/sections/featuers/components/CreateGroupUpFileModal";
 
 function DataTable({ table, isSorted, noEndBorder }) {
-  const dispatch = useDispatch();
-  const url = useLocation();
-  const classId = getParams(3, url.pathname);
   const columns = useMemo(() => table.columns, [table]);
   const data = useMemo(() => table.rows, [table]);
   const tableInstance = useTable(
@@ -32,46 +20,11 @@ function DataTable({ table, isSorted, noEndBorder }) {
     usePagination
   );
   const { getTableProps, getTableBodyProps, headerGroups, prepareRow, rows, page } = tableInstance;
-  const classStudent = useSelector((state) => state.user.users);
-  const { active_create_group, active_create_group_excel } = useSelector((state) => state.active);
-  const [showCreateGroupButtons, setShowCreateGroupButtons] = useState(false);
-
-  useEffect(() => {
-    if (classId) {
-      dispatch(setClassId(classId));
-    }
-  }, [classId, dispatch]);
-
-  useEffect(() => {
-    const allWithoutGroup =
-      classStudent?.data?.length > 0 &&
-      classStudent.data.every((student) => student.groupName === "Chưa có nhóm");
-
-    setShowCreateGroupButtons(allWithoutGroup);
-  }, [classStudent]);
-
-  const handleRandomGroup = () => {
-    dispatch(setActivePopupCreateGroup(true));
-  };
-
-  const handleExcelGroup = () => {
-    dispatch(setActivePopupCreateGroupFromExcel(true));
-  };
 
   return (
     <TableContainer
       sx={{ boxShadow: "none", overflowX: "unset", paddingBottom: "3rem", position: "relative" }}
     >
-      {showCreateGroupButtons && (
-        <>
-          <MKBox px={"14px"} my={1} display="flex" justifyContent="end" gap="1.5rem">
-            <MKButton onClick={handleRandomGroup}>Tạo Nhóm Ngẫu Nhiên</MKButton>
-            <MKButton onClick={handleExcelGroup}>Tạo Nhóm Bằng Excel</MKButton>
-          </MKBox>
-        </>
-      )}
-      {active_create_group && <CreateGroupModal />}
-      {active_create_group_excel && <CreateGroupFromExcelPopup />}
       <Table {...getTableProps()}>
         <MKBox component="thead">
           {headerGroups.map((headerGroup, key) => (

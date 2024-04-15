@@ -3,12 +3,13 @@ import groupDAO from "../../repositories/group/index.js";
 import projectDAO from "../../repositories/project/project.js";
 import userDAO from "../../repositories/user/index.js";
 
-const getGroupById = async (req, res) => {
+const getGroupById = async (req, res, next) => {
   try {
     const { id } = req.params;
-    res.status(200).json(await groupDAO.getGroupById(id));
+    console.log(id);
+    res.send(await groupDAO.getGroupById(id));
   } catch (error) {
-    res.status(500).json(error.message);
+    next(error);
   }
 };
 

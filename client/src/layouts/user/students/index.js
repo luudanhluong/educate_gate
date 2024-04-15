@@ -9,7 +9,6 @@ import GroupMembers from "./GroupMember";
 import { setUserLogin } from "app/slices/userSlice";
 import { setProject } from "app/slices/projectSlice";
 import { setProjectCategories } from "app/slices/projectSlice";
-import routes from "routes";
 import { setGroup } from "app/slices/groupSlice";
 import { useLocation } from "react-router-dom";
 import { setCategories } from "app/slices/categorySlice";
@@ -17,6 +16,7 @@ import { setActivePopup } from "app/slices/activeSlice";
 import bgImage from "assets/images/group.png";
 import Card from "@mui/material/Card";
 import getParams from "utilities/getParams";
+import Routes from "routes";
 
 const GroupDetail = () => {
   const dispatch = useDispatch();
@@ -35,13 +35,9 @@ const GroupDetail = () => {
   };
 
   useEffect(() => {
-    console.log(`Fetching data for group ID: ${groupId}`);
     axios
       .get(`${BASE_URL}/group/${groupId}`, config)
-      .then((res) => {
-        console.log("Group data:", res.data);
-        dispatch(setGroup(res.data[0]));
-      })
+      .then((res) => dispatch(setGroup(res.data[0])))
       .catch((err) => console.log(err));
   }, [groupId, dispatch]);
 
@@ -53,10 +49,6 @@ const GroupDetail = () => {
     axios
       .get(`${BASE_URL}/category`, config)
       .then((res) => dispatch(setCategories(res.data)))
-      .catch((err) => console.log(err));
-    axios
-      .get(BASE_URL + "/user/profile", config)
-      .then((res) => dispatch(setUserLogin(res.data)))
       .catch((err) => console.log(err));
   }, [dispatch]);
 
@@ -70,18 +62,13 @@ const GroupDetail = () => {
         .get(`${BASE_URL}/project_category/${group.project[0]?._id}`, config)
         .then((res) => dispatch(setProjectCategories(res.data)))
         .catch((err) => console.log(err.message));
-
-      axios
-        .get(`${BASE_URL}/user/profile`, config)
-        .then((res) => dispatch(setUserLogin(res.data)))
-        .catch((err) => console.log(err));
     }
     dispatch(setActivePopup(false));
   }, [dispatch, jwt, userId, group, groupId]);
 
   return (
     <>
-      <DefaultNavbar routes={routes} />
+      <DefaultNavbar routes={Routes} />
       {active_popup && <UpdateProject />}
       <MKBox bgColor="#00000008">
         <MKBox
@@ -101,10 +88,8 @@ const GroupDetail = () => {
             marginLeft: "auto",
             marginRight: "auto",
             p: 2,
-
             mt: -8,
             mb: 4,
-
             backgroundColor: ({ palette: { white }, functions: { rgba } }) => rgba(white.main, 0.8),
             backdropFilter: "saturate(200%) blur(30px)",
             boxShadow: ({ boxShadows: { xxxl } }) => xxxl,

@@ -19,6 +19,24 @@ const getGroupById = async (id) => {
       },
       {
         $lookup: {
+          from: "projectcategories",
+          localField: "project._id",
+          foreignField: "projectId",
+          as: "projectcategories",
+        },
+      },
+      {
+        $lookup: {
+          from: "categories",
+          localField: "projectcategories.categoryId",
+          foreignField: "_id",
+          as: "projectcategories",
+        },
+      },
+      { $unwind: "$project" },
+      { $project: { projectId: 0 } },
+      {
+        $lookup: {
           from: "users",
           localField: "_id",
           foreignField: "groupId",
@@ -38,7 +56,23 @@ const getGroupById = async (id) => {
           from: "users",
           localField: "matched.mentorId",
           foreignField: "_id",
-          as: "mentorDetails",
+          as: "mentor",
+        },
+      },
+      {
+        $lookup: {
+          from: "mentorcategories",
+          localField: "matched.mentorId",
+          foreignField: "userId",
+          as: "mentorcategories",
+        },
+      },
+      {
+        $lookup: {
+          from: "categories",
+          localField: "mentorcategories.categoryId",
+          foreignField: "_id",
+          as: "mentorcategories",
         },
       },
       {
@@ -46,8 +80,8 @@ const getGroupById = async (id) => {
           userCount: { $size: "$members" },
         },
       },
+      { $project: { matched: 0 } },
     ]);
-
     return group;
   } catch (error) {
     throw new Error(error.message);
@@ -64,21 +98,30 @@ const getGroupMembers = async (groupId) => {
 };
 const getGroupsByClassId = async (classId) => {
   try {
-    const groups = await Group.aggregate([
-      {
-        $lookup: {
-          from: "matcheds",
-          localField: "_id",
-          foreignField: "groupId",
-          as: "matched",
-        },
-      },
+    const result = await Group.aggregate([
+      { $match: { classId: new mongoose.Types.ObjectId(classId) } },
       {
         $lookup: {
           from: "projects",
           localField: "projectId",
           foreignField: "_id",
           as: "project",
+        },
+      },
+      {
+        $lookup: {
+          from: "projectcategories",
+          localField: "project._id",
+          foreignField: "projectId",
+          as: "projectcategories",
+        },
+      },
+      {
+        $lookup: {
+          from: "categories",
+          localField: "projectcategories.categoryId",
+          foreignField: "_id",
+          as: "projectcategories",
         },
       },
       {
@@ -90,21 +133,77 @@ const getGroupsByClassId = async (classId) => {
         },
       },
       {
-        $lookup: {
-          from: "users",
-          localField: "matched.mentorId",
-          foreignField: "_id",
-          as: "mentorDetails",
-        },
-      },
-      { $match: { classId: new mongoose.Types.ObjectId(classId) } },
-      {
         $addFields: {
           userCount: { $size: "$userCount" },
         },
       },
+      {
+        $lookup: {
+          from: "matcheds",
+          localField: "_id",
+          foreignField: "groupId",
+          as: "matched",
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "matched.mentorId",
+          foreignField: "_id",
+          as: "matched",
+        },
+      },
+      {
+        $lookup: {
+          from: "mentorcategories",
+          localField: "matched._id",
+          foreignField: "userId",
+          as: "matchedMentorcategories",
+        },
+      },
+      {
+        $lookup: {
+          from: "categories",
+          localField: "matchedMentorcategories.categoryId",
+          foreignField: "_id",
+          as: "matchedMentorcategories",
+        },
+      },
+      {
+        $lookup: {
+          from: "temporarymatchings",
+          localField: "group._id",
+          foreignField: "groupId",
+          as: "matching",
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "matching.mentorId",
+          foreignField: "_id",
+          as: "matching",
+        },
+      },
+      {
+        $lookup: {
+          from: "mentorcategories",
+          localField: "matching._id",
+          foreignField: "userId",
+          as: "matchingMentorcategories",
+        },
+      },
+      {
+        $lookup: {
+          from: "categories",
+          localField: "matchingMentorcategories.categoryId",
+          foreignField: "_id",
+          as: "matchingMentorcategories",
+        },
+      },
     ]);
-    return groups;
+
+    return result;
   } catch (error) {
     throw new Error(error.message);
   }

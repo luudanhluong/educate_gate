@@ -7,13 +7,16 @@ import PropTypes from "prop-types";
 import userImg from "assets/images/user.jpg";
 import MKAvatar from "components/MKAvatar";
 import { useDispatch, useSelector } from "react-redux";
-import { setSmtDet } from "app/slices/semesterSlice";
 import MKButton from "components/MKButton";
+import axios from "axios";
+import { BASE_URL } from "utilities/initialValue";
+import { setUsersInSmt } from "app/slices/semesterSlice";
 
 export default function data() {
   const dispatch = useDispatch();
   const { data } = useSelector((state) => state.semester.usersInSmt);
   const { role } = useSelector((state) => state.user);
+  const { pageNo, limit } = useSelector((state) => state.utilities);
   const { data: semesters } = useSelector((state) => state.semester.semesters);
   const { semester } = useSelector((state) => state.semester);
   const User = ({ image, name, email }) => (
@@ -53,15 +56,36 @@ export default function data() {
     </MKBox>
   );
   const Action = ({ smtDet }) => {
-    const status = semester?.status || semesters?.[0]?.status;
+    const status =
+      semesters?.find((s) => s._id === semester?._id)?.status || semesters?.[0]?.status;
+    const jwt = localStorage.getItem("jwt");
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${jwt}`,
+      },
+    };
+    const skip = pageNo * limit;
     const handleDelete = () => {
-      if (status === "Upcoming") dispatch(setSmtDet(smtDet));
+      if (status === "Upcoming")
+        axios
+          .delete(`${BASE_URL}/semester_detail/${smtDet?._id}`, config)
+          .then(() =>
+            axios
+              .get(
+                `${BASE_URL}/semester_detail/${smtDet?.semesterId}/semester/${role}/users?skip=${skip}`,
+                config
+              )
+              .then((res) => dispatch(setUsersInSmt(res.data)))
+              .catch((err) => console.log(err))
+          )
+          .catch((err) => console.log(err));
     };
     return (
       <MKBox>
         <MKButton
           onClick={handleDelete}
-          disabled={status === "Upcoming"}
+          disabled={status !== "Upcoming"}
           sx={{ textTransform: "none" }}
         >
           Xóa

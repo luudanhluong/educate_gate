@@ -3,7 +3,6 @@ import groupController from "../../controllers/groupController/index.js";
 import { verifyAccessToken } from "../../utilities/jwt.js";
 
 const groupRouter = express.Router();
-// groupRouter.get("/:groupId/members", groupController.groupDetail);
 groupRouter.get("/:id", verifyAccessToken, groupController.getGroupById);
 groupRouter.get(
   "/:classId/groups",

@@ -49,21 +49,7 @@ const Semesters = () => {
         .then((res) => dispatch(setUsersInSmt(res.data)))
         .catch((err) => console.log(err));
   }, [dispatch, semester, semesters, role, pageNo, active_popup]);
-  useEffect(() => {
-    if (smtDet?._id)
-      axios
-        .delete(`${BASE_URL}/semester_detail/${smtDet?._id}`, config)
-        .then(() =>
-          axios
-            .get(
-              `${BASE_URL}/semester_detail/${smtDet?.semesterId}/semester/${role}/users?skip=${skip}`,
-              config
-            )
-            .then((res) => dispatch(setUsersInSmt(res.data)))
-            .catch((err) => console.log(err))
-        )
-        .catch((err) => console.log(err));
-  }, [dispatch, smtDet]);
+  useEffect(() => {}, [dispatch, smtDet]);
   useEffect(() => {
     dispatch(setPageNo(0));
   }, [dispatch, role]);

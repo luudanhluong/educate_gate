@@ -10,17 +10,7 @@ import { BASE_URL } from "utilities/initialValue";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import {
-  AppBar,
-  FormControl,
-  Icon,
-  MenuItem,
-  Modal,
-  Select,
-  Slide,
-  Tab,
-  Tabs,
-} from "@mui/material";
+import { AppBar, FormControl, MenuItem, Modal, Select, Slide, Tab, Tabs } from "@mui/material";
 import { setActive } from "app/slices/activeSlice";
 import { setclasses } from "app/slices/classSlice";
 import MKButton from "components/MKButton";
@@ -50,7 +40,10 @@ function AddClassList() {
   useEffect(() => {
     axios
       .get(`${BASE_URL}/teacher/inactive`, config)
-      .then((res) => setTeachers(res.data))
+      .then((res) => {
+        setTeachers(res.data);
+        console.log(res.data);
+      })
       .catch((error) => console.log(error));
   }, []);
   useEffect(() => {
@@ -85,6 +78,7 @@ function AddClassList() {
       .post(BASE_URL + "/class/create_new_classes", active === 0 ? values : fileValue, config)
       .then(() => getClassInfo())
       .catch((error) => console.error(error.message));
+    isActivePopup();
   };
   return (
     <Modal
@@ -93,194 +87,173 @@ function AddClassList() {
       sx={{ display: "grid", placeItems: "center", overflow: "auto" }}
     >
       <Slide direction="down" in={active_popup} timeout={500}>
-        <Card id={"add_list_classes"} className="pop-up" position="absolute" p={0}>
-          <MKBox
-            width={"400px"}
-            variant="gradient"
-            bgColor="info"
-            borderRadius="lg"
-            coloredShadow="info"
-            mx={2}
-            mt={-3}
-            p={1}
-            mb={2}
-            textAlign="center"
-          >
-            <MKBox position="relative">
+        <Grid minWidth={"50%"} position="relative" item xs={12} md={6}>
+          <Card position="absolute" p={0}>
+            <MKBox
+              variant="gradient"
+              bgColor="info"
+              borderRadius="lg"
+              coloredShadow="info"
+              mx={2}
+              mt={-2}
+              p={2}
+              mb={1}
+              textAlign="center"
+            >
               <MKTypography variant="h4" fontWeight="medium" color="white" my={1}>
                 Tạo danh sách Lớp học
               </MKTypography>
-              <MKBox
-                onClick={isActivePopup}
-                position="absolute"
-                right={0}
-                fontSize={24}
-                top="50%"
-                sx={{
-                  transform: "translateY(-50%)",
-                  "&:hover": {
-                    backgroundColor: "rgba(0,0,0,0.5)",
-                    borderRadius: "50%",
-                    color: "#FFF",
-                  },
-                  lineHeight: 1,
-                  padding: "5px 5px 2px",
-                  cursor: "pointer",
-                }}
-              >
-                <Icon>clear</Icon>
+            </MKBox>
+            <MKBox px={3}>
+              <Grid item xs={12}>
+                <AppBar position="static">
+                  <Tabs value={active} onChange={handleTabType}>
+                    <Tab
+                      icon={
+                        <MKBox
+                          component="i"
+                          color="dark"
+                          mr={1.25}
+                          sx={{ fontSize: ({ typography: { size } }) => size.sm }}
+                          className="fas fa-desktop"
+                        />
+                      }
+                      label="Thêm"
+                    />
+                    <Tab
+                      icon={
+                        <MKBox
+                          component="i"
+                          color="dark"
+                          mr={1.25}
+                          sx={{ fontSize: ({ typography: { size } }) => size.sm }}
+                          className="fas fa-code"
+                        />
+                      }
+                      label="Thêm từ File(.xlsx)"
+                    />
+                  </Tabs>
+                </AppBar>
+              </Grid>
+            </MKBox>
+            <MKBox pt={2} pb={3} px={3}>
+              <MKBox mb={2}>
+                <Formik
+                  initialValues={formValues}
+                  onSubmit={(values) => handleSubmit(values)}
+                  validationSchema={initialValues}
+                >
+                  {({ values, errors, touched, handleChange }) => (
+                    <Form style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+                      {active === 0 ? (
+                        <>
+                          <MKBox>
+                            <Field
+                              fullWidth
+                              component={MKInput}
+                              value={values.className}
+                              label="Nhập tên của lớp"
+                              type="text"
+                              onChange={handleChange}
+                              name="className"
+                              className={`${touched.className && errors.className && "error"}`}
+                              id="className"
+                            />
+                            <ErrorMessage
+                              name="className"
+                              component="div"
+                              className="lg_error_message"
+                            />
+                          </MKBox>
+                          <MKBox>
+                            <Field
+                              fullWidth
+                              component={MKInput}
+                              label="Giới hạn của sinh viên trong 1 lớp"
+                              type="text"
+                              value={values.limitStudent}
+                              onChange={handleChange}
+                              name="limitStudent"
+                              className={`${
+                                touched.limitStudent && errors.limitStudent && "error"
+                              }`}
+                              id="limitStudent"
+                            />
+                            <ErrorMessage
+                              name="limitStudent"
+                              component="div"
+                              className="lg_error_message"
+                            />
+                          </MKBox>
+                          <MKBox>
+                            <FormControl fullWidth>
+                              <Select
+                                name="teacherId"
+                                onChange={handleChange}
+                                className={`${touched.className && errors.className && "error"}`}
+                                sx={{ padding: "0.75rem !important" }}
+                                value={values.teacherId || " "}
+                              >
+                                <MenuItem value={" "}>Chọn giáo viên cho lớp học</MenuItem>
+                                {teachers?.map((s) => (
+                                  <MenuItem key={s._id} value={s._id}>
+                                    {s.username}
+                                  </MenuItem>
+                                ))}
+                              </Select>
+                            </FormControl>
+                            <ErrorMessage
+                              name="teacherId"
+                              component="div"
+                              className="lg_error_message"
+                            />
+                          </MKBox>
+                        </>
+                      ) : (
+                        <MKBox>
+                          <Field
+                            fullWidth
+                            component={MKInput}
+                            label="Tải tệp của bạn"
+                            type="file"
+                            variant="standard"
+                            InputLabelProps={{ shrink: true }}
+                            name="file"
+                            className={`${touched.file && errors.file && "error"}`}
+                            accept=".xls, .xlsx"
+                            id="file"
+                            onChange={(event) => {
+                              handleChange(event);
+                              readeFile(event, setFileValue);
+                            }}
+                          />
+                          <ErrorMessage name="file" component="div" className="lg_error_message" />
+                        </MKBox>
+                      )}
+                      <MKButton
+                        type="submit"
+                        sx={{
+                          background: "#1A73E8",
+                          marginTop: "16px",
+                          color: "#FFFFFF",
+                          width: "100%",
+                          "&:hover": {
+                            backgroundColor: "#1865ca !important",
+                          },
+                          "&:focus:not(:hover)": {
+                            backgroundColor: "#1865ca",
+                          },
+                        }}
+                      >
+                        Tạo
+                      </MKButton>
+                    </Form>
+                  )}
+                </Formik>
               </MKBox>
             </MKBox>
-          </MKBox>
-          <MKBox px={3}>
-            <Grid item xs={12}>
-              <AppBar position="static">
-                <Tabs value={active} onChange={handleTabType}>
-                  <Tab
-                    icon={
-                      <MKBox
-                        component="i"
-                        color="dark"
-                        mr={1.25}
-                        sx={{ fontSize: ({ typography: { size } }) => size.sm }}
-                        className="fas fa-desktop"
-                      />
-                    }
-                    label="Thêm"
-                  />
-                  <Tab
-                    icon={
-                      <MKBox
-                        component="i"
-                        color="dark"
-                        mr={1.25}
-                        sx={{ fontSize: ({ typography: { size } }) => size.sm }}
-                        className="fas fa-code"
-                      />
-                    }
-                    label="Thêm từ File(.xlsx)"
-                  />
-                </Tabs>
-              </AppBar>
-            </Grid>
-          </MKBox>
-          <MKBox pt={2} pb={3} px={3}>
-            <MKBox mb={2}>
-              <Formik
-                initialValues={formValues}
-                onSubmit={(values) => {
-                  handleSubmit(values);
-                }}
-                validationSchema={initialValues}
-              >
-                {({ values, errors, touched, handleChange }) => (
-                  <Form style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-                    {active === 0 ? (
-                      <>
-                        <MKBox>
-                          <Field
-                            fullWidth
-                            component={MKInput}
-                            value={values.className}
-                            label="Nhập tên của lớp"
-                            type="text"
-                            onChange={handleChange}
-                            name="className"
-                            className={`${touched.className && errors.className && "error"}`}
-                            id="className"
-                          />
-                          <ErrorMessage
-                            name="className"
-                            component="div"
-                            className="lg_error_message"
-                          />
-                        </MKBox>
-                        <MKBox>
-                          <Field
-                            fullWidth
-                            component={MKInput}
-                            label="Giới hạn của sinh viên trong 1 lớp"
-                            type="text"
-                            value={values.limitStudent}
-                            onChange={handleChange}
-                            name="limitStudent"
-                            className={`${touched.limitStudent && errors.limitStudent && "error"}`}
-                            id="limitStudent"
-                          />
-                          <ErrorMessage
-                            name="limitStudent"
-                            component="div"
-                            className="lg_error_message"
-                          />
-                        </MKBox>
-                        <MKBox>
-                          <FormControl fullWidth>
-                            <Select
-                              name="teacherId"
-                              onChange={handleChange}
-                              className={`${touched.className && errors.className && "error"}`}
-                              sx={{ padding: "0.75rem !important" }}
-                              value={values.teacherId || " "}
-                            >
-                              <MenuItem value={" "}>Chọn giáo viên cho lớp học</MenuItem>
-                              {teachers?.map((s) => (
-                                <MenuItem key={s._id} value={s._id}>
-                                  {s.username}
-                                </MenuItem>
-                              ))}
-                            </Select>
-                          </FormControl>
-                          <ErrorMessage
-                            name="teacherId"
-                            component="div"
-                            className="lg_error_message"
-                          />
-                        </MKBox>
-                      </>
-                    ) : (
-                      <MKBox>
-                        <Field
-                          fullWidth
-                          component={MKInput}
-                          label="Tải tệp của bạn"
-                          type="file"
-                          variant="standard"
-                          InputLabelProps={{ shrink: true }}
-                          name="file"
-                          className={`${touched.file && errors.file && "error"}`}
-                          accept=".xls, .xlsx"
-                          id="file"
-                          onChange={(event) => {
-                            handleChange(event);
-                            readeFile(event, setFileValue);
-                          }}
-                        />
-                        <ErrorMessage name="file" component="div" className="lg_error_message" />
-                      </MKBox>
-                    )}
-                    <MKButton
-                      type="submit"
-                      sx={{
-                        background: "#1A73E8",
-                        marginTop: "16px",
-                        color: "#FFFFFF",
-                        width: "100%",
-                        "&:hover": {
-                          backgroundColor: "#1865ca !important",
-                        },
-                        "&:focus:not(:hover)": {
-                          backgroundColor: "#1865ca",
-                        },
-                      }}
-                    >
-                      Tạo
-                    </MKButton>
-                  </Form>
-                )}
-              </Formik>
-            </MKBox>
-          </MKBox>
-        </Card>
+          </Card>
+        </Grid>
       </Slide>
     </Modal>
   );

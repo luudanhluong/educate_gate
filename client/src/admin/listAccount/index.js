@@ -13,6 +13,7 @@ import { Autocomplete } from "@mui/material";
 import MKInput from "components/MKInput";
 import { setActivePopup } from "app/slices/activeSlice";
 import { setLimit } from "app/slices/utilitiesSlice";
+import MKButton from "components/MKButton";
 
 function ListAccount() {
   const dispatch = useDispatch();
@@ -20,6 +21,7 @@ function ListAccount() {
   const { pageNo, limit } = useSelector((state) => state.utilities);
   const { filterRole, searchValue, sort, delUser } = useSelector((state) => state.user);
   const skip = pageNo * limit;
+  console.log(limit);
   const jwt = localStorage.getItem("jwt");
   const config = {
     headers: {
@@ -27,26 +29,21 @@ function ListAccount() {
       authorization: `Bearer ${jwt}`,
     },
   };
-  useEffect(() => {
+  const getUser = () =>
     axios
       .get(
         `${BASE_URL}/admins/users?item=createdAt&order=${sort}&skip=${skip}&limit=${limit}&role=${filterRole}&search=${searchValue}`
       )
       .then((res) => dispatch(setUsers(res.data)))
       .catch((err) => console.log(err));
+  useEffect(() => {
+    getUser();
   }, [dispatch, filterRole, searchValue, sort, pageNo]);
   useEffect(() => {
     if (delUser?._id) {
       axios
         .delete(`${BASE_URL}/admins/${delUser?._id}/user`, config)
-        .then(() =>
-          axios
-            .get(
-              `${BASE_URL}/admins/users?item=createdAt&order=${sort}&skip=${skip}&limit=${limit}&role=${filterRole}&search=${searchValue}`
-            )
-            .then((res) => dispatch(setUsers(res.data)))
-            .catch((err) => console.log(err))
-        )
+        .then(() => getUser())
         .catch((err) => console.log(err));
     }
   }, [dispatch, delUser]);
@@ -65,7 +62,7 @@ function ListAccount() {
     dispatch(setSearchValue(""));
     dispatch(setActivePopup(false));
     dispatch(setSort(-1));
-    dispatch(setUsers({}));
+    dispatch(setUsers({ data: [], total: 0 }));
     dispatch(setFilterRole(0));
     dispatch(setPageNo(0));
     dispatch(setLimit(10));
@@ -96,25 +93,13 @@ function ListAccount() {
                       p={3}
                       sx={{ gap: "0.5rem" }}
                     >
-                      <MKBox
-                        fontWeight="bold"
-                        className="pointer"
-                        id={"btn_add_new_list_user"}
-                        py={1}
-                        px={2}
-                        sx={{
-                          "&:hover": {
-                            backgroundColor: "rgba(0,0,0,0.1)",
-                            borderRadius: "6px",
-                          },
-                          "&:active": {
-                            backgroundColor: "rgba(0,0,0,0.2)",
-                          },
-                          userSelect: "none",
-                        }}
-                        onClick={() => dispatch(setActivePopup(true))}
-                      >
-                        Tạo người dùng
+                      <MKBox>
+                        <MKButton
+                          onClick={() => dispatch(setActivePopup(true))}
+                          sx={{ textTransform: "none" }}
+                        >
+                          Tạo người dùng
+                        </MKButton>
                       </MKBox>
                       <MKBox display="flex" alignItems="center">
                         <Autocomplete

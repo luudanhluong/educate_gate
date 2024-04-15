@@ -74,7 +74,6 @@ const ViewGroups = ({ teacherId }) => {
         .catch((err) => checkError(err, navigate));
   };
   const handleSaveMatched = (gid, uid) => {
-    console.log({ groupId: gid, mentorId: uid });
     axios
       .post(`${BASE_URL}/matched`, { groupId: gid, mentorId: uid }, config)
       .then(() => getAllGroups())

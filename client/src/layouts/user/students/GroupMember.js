@@ -1,4 +1,4 @@
-import { List, ListItem, ListItemText, Typography, Avatar, Box } from "@mui/material";
+import { List, ListItem, ListItemText, Avatar, Box } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { setActivePopup } from "app/slices/activeSlice";
 import MKButton from "components/MKButton";
@@ -6,6 +6,8 @@ import "../../sections/featuers/components/FeaturesOne/studentList.css";
 import { useLocation } from "react-router-dom";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import getParams from "utilities/getParams";
+import MKTypography from "components/MKTypography";
+import MKBox from "components/MKBox";
 
 const GroupMembers = () => {
   const dispatch = useDispatch();
@@ -13,7 +15,6 @@ const GroupMembers = () => {
   const groupId = getParams(2, url.pathname);
   const { group: groupDetails } = useSelector((state) => state.group);
   const { userLogin } = useSelector((state) => state.user);
-
   return (
     <Box
       sx={{
@@ -26,7 +27,7 @@ const GroupMembers = () => {
       }}
     >
       <Box sx={{ width: "65%", marginRight: 2, marginTop: 1 }}>
-        {groupDetails?.project ? (
+        {groupDetails?.project && (
           <Box
             elevation={3}
             style={{
@@ -39,7 +40,7 @@ const GroupMembers = () => {
               border: "1px solid rgb(216, 215, 215)",
             }}
           >
-            <Typography
+            <MKTypography
               variant="h6"
               sx={{
                 marginBottom: 1,
@@ -48,12 +49,29 @@ const GroupMembers = () => {
                 fontWeight: "600",
               }}
             >
-              {groupDetails.project[0]?.name}
-            </Typography>
+              Tên dự án: {groupDetails?.project?.name}
+            </MKTypography>
             <hr style={{ marginBottom: "5px" }}></hr>
-            <Typography sx={{ fontFamily: "sans-serif", fontSize: ".9em" }}>
-              {groupDetails.project[0]?.description}
-            </Typography>
+            {groupDetails?.projectcategories?.length > 0 && (
+              <MKBox display="flex" gap="0.5rem">
+                <MKTypography fontSize=".825rem" color="text" fontWeight="medium">
+                  Lĩnh vực:
+                </MKTypography>
+                <MKTypography fontSize=".825rem" color="text">
+                  {groupDetails?.projectcategories?.map((c) => c.name)?.join(", ")}
+                </MKTypography>
+              </MKBox>
+            )}
+            {groupDetails?.project?.description && (
+              <MKBox display="flex" gap="0.5rem">
+                <MKTypography fontSize=".825rem" color="text" fontWeight="medium">
+                  Mô tả dự án:
+                </MKTypography>
+                <MKTypography fontSize=".825rem" color="text">
+                  {groupDetails?.project?.description}
+                </MKTypography>
+              </MKBox>
+            )}
             {userLogin?.isLeader && userLogin?.groupId[0]?._id === groupId && (
               <MKButton
                 onClick={() => dispatch(setActivePopup(true))}
@@ -69,10 +87,7 @@ const GroupMembers = () => {
               </MKButton>
             )}
           </Box>
-        ) : (
-          ""
         )}
-
         <Box
           elevation={3}
           style={{
@@ -81,26 +96,25 @@ const GroupMembers = () => {
             border: "1px solid rgb(216, 215, 215)",
           }}
         >
-          <Typography
+          <MKTypography
             variant="h6"
             sx={{
               pt: 2,
               pl: 2,
               pb: 2,
               backgroundColor: "#00000008",
-              fontFamily: "inherit",
-              fontSize: "1.25rem",
+              fontSize: "0.925rem",
               fontWeight: "600",
               borderBottom: " 1px  solid rgb(216, 215, 215)",
             }}
           >
-            <Typography variant="h6" gutterBottom>
+            <MKTypography variant="h6" gutterBottom>
               {groupDetails?.name}
-              <Typography variant="h6" component="span" color="primary" sx={{ ml: 1 }}>
+              <MKTypography variant="h6" component="span" color="primary" sx={{ ml: 1 }}>
                 ({groupDetails?.userCount} Students)
-              </Typography>
-            </Typography>
-          </Typography>
+              </MKTypography>
+            </MKTypography>
+          </MKTypography>
           <List
             sx={{
               padding: "20px",
@@ -141,23 +155,20 @@ const GroupMembers = () => {
                 </Avatar>
                 <ListItemText
                   primary={
-                    <Typography sx={{ fontFamily: "inherit", fontWeight: "medium" }}>
+                    <MKTypography fontWeight="medium" fontSize="0.925rem">
                       {member.username}
-                    </Typography>
+                    </MKTypography>
                   }
                   secondary={
-                    <Typography
-                      variant="body2"
-                      sx={{ color: "text.secondary", fontStyle: "italic" }}
-                    >
-                      {member.email}
-                    </Typography>
+                    <MKTypography variant="body2" color="text" fontSize="0.825rem">
+                      <i>{member.email}</i>
+                    </MKTypography>
                   }
                   sx={{ marginLeft: "16px" }}
                 />
-                <Typography sx={{ fontFamily: "inherit", fontWeight: "medium" }}>
+                <MKTypography sx={{ fontFamily: "inherit", fontWeight: "medium" }}>
                   {member.isLeader && <StarBorderIcon color="warning" sx={{ ml: "auto" }} />}
-                </Typography>
+                </MKTypography>
               </ListItem>
             ))}
           </List>
@@ -165,7 +176,7 @@ const GroupMembers = () => {
       </Box>
 
       <Box marginTop={1} sx={{ width: "30%" }}>
-        {groupDetails.mentorDetails && groupDetails.mentorDetails.length > 0 && (
+        {groupDetails?.mentor?.length > 0 && (
           <Box
             sx={{
               padding: 3,
@@ -182,7 +193,7 @@ const GroupMembers = () => {
             }}
           >
             <Avatar
-              src={groupDetails.mentorDetails[0].image}
+              src={groupDetails?.mentor?.[0].image}
               sx={{
                 width: 80,
                 height: 80,
@@ -190,21 +201,24 @@ const GroupMembers = () => {
                 marginBottom: 2,
               }}
             />
-            <Typography variant="h6" sx={{ fontFamily: "inherit", fontWeight: "bold" }}>
-              {groupDetails.mentorDetails[0].username}
-            </Typography>
-            <Typography
+            <MKTypography variant="h6" sx={{ fontFamily: "inherit", fontWeight: "bold" }}>
+              {groupDetails?.mentor?.[0].username}
+            </MKTypography>
+            <MKTypography
               variant="body2"
               sx={{ color: "text.secondary", fontStyle: "italic", marginBottom: 1 }}
             >
-              {groupDetails.mentorDetails[0].email}
-            </Typography>
-            <Typography variant="body2" sx={{ color: "text.secondary" }}>
-              {groupDetails.mentorDetails[0].phoneNumber}
-            </Typography>
-            <Typography variant="caption" sx={{ color: "text.primary" }}>
-              {groupDetails.mentorDetails[0].degree}
-            </Typography>
+              {groupDetails?.mentor?.[0].email}
+            </MKTypography>
+            <MKTypography variant="body2" sx={{ color: "text.secondary" }}>
+              {groupDetails?.mentor?.[0].phoneNumber}
+            </MKTypography>
+            <MKTypography variant="body2" sx={{ color: "text.secondary" }}>
+              {groupDetails?.mentorcategories?.map((c) => c.name)?.join(", ")}
+            </MKTypography>
+            <MKTypography variant="caption" sx={{ color: "text.primary" }}>
+              {groupDetails?.mentor?.[0].degree}
+            </MKTypography>
           </Box>
         )}
       </Box>

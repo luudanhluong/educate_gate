@@ -200,7 +200,15 @@ const getUserByRole = async (role, status) => {
           as: "semesterdetail",
         },
       },
-      { $match: { semesterdetail: [] } },
+      {
+        $lookup: {
+          from: "semesters",
+          localField: "semesterdetail.semesterId",
+          foreignField: "_id",
+          as: "semesterdetail",
+        },
+      },
+      { $match: { "semesterdetail.status": "Upcoming" } },
     ];
     return await User.aggregate(pipline);
   } catch (error) {

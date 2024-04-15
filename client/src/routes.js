@@ -62,13 +62,13 @@ function Routes() {
   }, [userLogin, dispatch, pageNo, limit]);
   let result = [
     {
-      name: "pages",
+      name: "Trang",
       icon: <Icon>dashboard</Icon>,
       columns: 1,
       rowsPerColumn: 2,
       collapse: [
         {
-          name: "landing pages",
+          name: "Thông tin",
           collapse: [
             {
               name: "about us",
@@ -127,7 +127,7 @@ function Routes() {
   }
   if (userLogin?.role === 1) {
     result.push({
-      name: "người quản lý",
+      name: "Quản lý",
       dropdown: true,
       icon: <Icon>article</Icon>,
       description: "Xem tất cả",
