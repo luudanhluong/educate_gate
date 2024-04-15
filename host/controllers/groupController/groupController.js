@@ -122,12 +122,27 @@ const countGroupGetMatched = async (req, res, next) => {
     next(error);
   }
 };
+const getAllTemMatching = async (req, res, next) => {
+  try {
+    const { gid } = req.params;
+    const { search, skip, limit } = req.query;
+    res.send(
+      await groupDAO.getAllTempMatchingByGId(gid, {
+        search,
+        skip: Number.parseInt(skip) || 0,
+        limit: Number.parseInt(limit) || 10,
+      })
+    );
+  } catch (error) {
+    next(error);
+  }
+};
 export default {
-  // groupDetail,
   getGroupById,
   getGroupsByClass,
   createRandomGroups,
   createGroupsFromExcel,
   checkGroupsExistController,
   countGroupGetMatched,
+  getAllTemMatching,
 };

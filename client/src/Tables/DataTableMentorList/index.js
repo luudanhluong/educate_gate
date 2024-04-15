@@ -13,24 +13,25 @@ import MKInput from "components/MKInput";
 import DataTableHeadCell from "Tables/DataTableHeadCell";
 import DataTableBodyCell from "Tables/DataTableBodyCell";
 import { useDispatch, useSelector } from "react-redux";
-import { Icon } from "@mui/material";
-import MKPagination from "components/MKPagination";
-import { setPageNo, setMentorChoice, setSearchValue } from "app/slices/temporaryMatching";
 import MKButton from "components/MKButton";
 import axios from "axios";
 import { BASE_URL } from "utilities/initialValue";
 import { setActivePopup } from "app/slices/activeSlice";
 import { setGroups } from "app/slices/groupSlice";
+import Pagination from "pagination";
+import { setMentorChoice } from "app/slices/temporaryMatching";
+import { setSearch } from "app/slices/utilitiesSlice";
+import MKTypography from "components/MKTypography";
 
 function DataTable({ table, isSorted, noEndBorder }) {
-  const {
-    data: listTemporaryMaching,
-    count,
-    limit,
-  } = useSelector((state) => state.temporaryMatching.temporaryMatching);
-  const { pageNo, mentorChoice } = useSelector((state) => state.temporaryMatching);
+  const { data: listTemporaryMaching, total } = useSelector(
+    (state) => state.temporaryMatching.temporaryMatching
+  );
+  const { group } = useSelector((state) => state.group);
+  const { mentorChoice } = useSelector((state) => state.temporaryMatching);
+  const { pageNo, limit } = useSelector((state) => state.utilities);
   const { classId } = useSelector((state) => state.classOnerTeacher);
-  let qttPage = count ? Math.ceil(count / limit) : 0;
+  let qttPage = total ? Math.ceil(total / limit) : 0;
   const columns = useMemo(() => table.columns, [table]);
   const data = useMemo(() => table.rows, [table]);
   const dispatch = useDispatch();
@@ -49,13 +50,9 @@ function DataTable({ table, isSorted, noEndBorder }) {
   );
   const { getTableProps, getTableBodyProps, headerGroups, prepareRow, rows, page } = tableInstance;
   const handleChoiceMentor = () => {
-    if (mentorChoice._id) {
+    if (mentorChoice?._id && group?._id) {
       axios
-        .post(
-          `${BASE_URL}/matched`,
-          { mentorId: mentorChoice.mentorId[0]?._id, groupId: mentorChoice?.groupId },
-          config
-        )
+        .post(`${BASE_URL}/matched`, { mentorId: mentorChoice?._id, groupId: group?._id }, config)
         .then(() =>
           axios
             .get(`${BASE_URL}/group/${classId}/groups`, config)
@@ -95,7 +92,7 @@ function DataTable({ table, isSorted, noEndBorder }) {
             placeholder="Search email..."
             size="small"
             fullWidth
-            onChange={({ currentTarget }) => dispatch(setSearchValue(currentTarget.value))}
+            onChange={({ currentTarget }) => dispatch(setSearch(currentTarget.value))}
           />
         </MKBox>
       </MKBox>
@@ -143,41 +140,20 @@ function DataTable({ table, isSorted, noEndBorder }) {
           })}
         </TableBody>
       </Table>
-      {qttPage > 1 ? (
-        <MKBox
-          position="absolute"
-          display="flex"
-          gap="0.5rem"
-          sx={{
-            left: "50%",
-            transform: "translateX(-50%)",
-            bottom: "6px",
-            overflow: "auto",
-          }}
-        >
-          <MKPagination item onClick={() => (pageNo > 0 ? dispatch(setPageNo(pageNo - 1)) : null)}>
-            <Icon>keyboard_arrow_left</Icon>
-          </MKPagination>
-          {Array.from({ length: qttPage }, (_, index) => (
-            <MKPagination key={index}>
-              <MKPagination
-                active={index === pageNo}
-                onClick={() => dispatch(setPageNo(index))}
-                item
-              >
-                {index + 1}
-              </MKPagination>
-            </MKPagination>
-          ))}
-          <MKPagination
-            item
-            onClick={() => (qttPage - 1 > pageNo ? dispatch(setPageNo(pageNo + 1)) : null)}
+      {qttPage > 1 && <Pagination pageNo={pageNo} qttPage={qttPage} />}
+      {rows.length === 0 && (
+        <MKBox lineHeight={1} textAlign="center">
+          <MKTypography
+            mt="1rem"
+            display="block"
+            variant="caption"
+            color="text"
+            fontSize="1rem"
+            fontWeight="medium"
           >
-            <Icon>keyboard_arrow_right</Icon>
-          </MKPagination>
+            Không có người dùng nào...
+          </MKTypography>
         </MKBox>
-      ) : (
-        ""
       )}
     </TableContainer>
   );

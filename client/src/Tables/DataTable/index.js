@@ -22,7 +22,7 @@ function DataTable({ table, isSorted, noEndBorder }) {
     useSortBy,
     usePagination
   );
-  const { getTableProps, getTableBodyProps, headerGroups, prepareRow, rows, page } = tableInstance;
+  const { getTableProps, getTableBodyProps, headerGroups, prepareRow, rows } = tableInstance;
 
   return (
     <TableContainer
@@ -66,7 +66,7 @@ function DataTable({ table, isSorted, noEndBorder }) {
           })}
         </TableBody>
       </Table>
-      {page.length === 0 && (
+      {rows.length === 0 && (
         <MKBox lineHeight={1} textAlign="center">
           <MKTypography
             mt="1rem"

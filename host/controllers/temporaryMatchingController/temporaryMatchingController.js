@@ -1,29 +1,27 @@
 import temporaryMatching from "../../repositories/temporaryMatching/index.js";
 
-const getAllTempararyMatching = async (req, res) => {
-  const token = req.headers["authorization"];
-  if (!token) return res.status(401).send("Access denied");
+const getAllTemporaryMatching = async (req, res, next) => {
   try {
     const { gid } = req.params;
     const { search, skip, limit } = req.query;
-    res.status(200).json(
-      await temporaryMatching.getAllTempararyMatching(gid, {
+    res.send(
+      await temporaryMatching.getAllTemporaryMatching(gid, {
         search,
         skip: Number.parseInt(skip) || 0,
         limit: Number.parseInt(limit) || 10,
       })
     );
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    next(error);
   }
 };
-const addTempararyMatchingByGid = async (req, res, next) => {
+const addTemporaryMatchingByGid = async (req, res, next) => {
   try {
     const { gid } = req.params;
-    res.send(await temporaryMatching.addTempararyMatchingByGid(gid));
+    res.send(await temporaryMatching.addTemporaryMatchingByGid(gid));
   } catch (error) {
     next(error);
   }
 };
 
-export default { getAllTempararyMatching, addTempararyMatchingByGid };
+export default { getAllTemporaryMatching, addTemporaryMatchingByGid };
