@@ -1,6 +1,7 @@
 import semesterDAO from "../../repositories/semester/index.js";
 import userDAO from "../../repositories/user/index.js";
 import semesterDetails from "../../repositories/semesterDetails/semesterDetails.js";
+import classDAO from "../../repositories/class/index.js";
 
 const getAllSemesters = async (req, res, next) => {
   try {
@@ -30,14 +31,23 @@ const updateSemester = async (req, res, next) => {
     const { status, name } = req.body;
     const { id } = req.params;
     let listUsersId = [];
+    let user;
     const listSmtDet = await semesterDetails.getSmtDetailsBySmtId(id);
     for (const smtDet of listSmtDet) {
       listUsersId.push(smtDet.userId);
+      user = await userDAO.findUserById(smtDet?.userId);
+      if (user?.role === 2)
+        if (status === "Ongoing")
+          await classDAO.updateClassStatus(user?._id, "Active");
+        else await classDAO.updateClassStatus(user?._id, "InActive");
     }
-    if (status === "Ongoing") await userDAO.updateUsers(listUsersId, "Active");
-    else if (status === "Upcoming")
+    if (status === "Ongoing") {
+      await userDAO.updateUsers(listUsersId, "Active");
+    } else if (status === "Upcoming") {
       await userDAO.updateUsers(listUsersId, "InActive");
-    else await userDAO.updateUsers(listUsersId, "Disabled");
+    } else {
+      await userDAO.updateUsers(listUsersId, "Disabled");
+    }
     res.send(await semesterDAO.updateSemester(id, { status, name }));
   } catch (error) {
     next(error);

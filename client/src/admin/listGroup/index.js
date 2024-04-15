@@ -41,10 +41,10 @@ const Groups = () => {
   return (
     <MKBox display="flex" flexDirection="column" sx={{ gap: "6rem" }}>
       <DefaultNavbar routes={routes} />
-      <Grid item container>
-        <Grid item xs={10} mx="auto">
+      <Grid item container-fluid>
+        <Grid item sm={10} mx="auto">
           <MKBox sx={{ display: "flex", alignItems: "center", height: "100%", gap: "1.5rem" }}>
-            <MKBox height="100%" width="100%">
+            <MKBox height="100%" width="95%" mx="auto">
               <MKBox
                 display="flex"
                 maxWidth="50%"

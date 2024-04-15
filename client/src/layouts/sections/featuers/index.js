@@ -26,6 +26,7 @@ const TeacherFunction = () => {
     },
   };
   useEffect(() => {
+    dispatch(setUsers({}));
     axios
       .get(BASE_URL + "/user/profile", config)
       .then((res) => dispatch(setUserLogin(res.data)))

@@ -8,6 +8,7 @@ import userImg from "assets/images/user.jpg";
 import MKAvatar from "components/MKAvatar";
 import { useDispatch, useSelector } from "react-redux";
 import { setSmtDet } from "app/slices/semesterSlice";
+import MKButton from "components/MKButton";
 
 export default function data() {
   const dispatch = useDispatch();
@@ -57,14 +58,14 @@ export default function data() {
       if (status === "Upcoming") dispatch(setSmtDet(smtDet));
     };
     return (
-      <MKBox
-        onClick={handleDelete}
-        sx={{ cursor: "pointer" }}
-        color={`${status === "Upcoming" ? "text" : "secondary"}`}
-        fontWeight="medium"
-        fontSize="0.725rem"
-      >
-        Xóa
+      <MKBox>
+        <MKButton
+          onClick={handleDelete}
+          disabled={status === "Upcoming"}
+          sx={{ textTransform: "none" }}
+        >
+          Xóa
+        </MKButton>
       </MKBox>
     );
   };

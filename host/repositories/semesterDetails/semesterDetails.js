@@ -32,7 +32,7 @@ const getUserInSemester = async (smtId, role, skip) => {
       {
         $lookup: {
           from: "classes",
-          localField: "_id",
+          localField: "userId._id",
           foreignField: "teacherId",
           as: "classes",
         },

@@ -65,6 +65,7 @@ function ListAccount() {
     dispatch(setSearchValue(""));
     dispatch(setActivePopup(false));
     dispatch(setSort(-1));
+    dispatch(setUsers({}));
     dispatch(setFilterRole(0));
     dispatch(setPageNo(0));
     dispatch(setLimit(10));

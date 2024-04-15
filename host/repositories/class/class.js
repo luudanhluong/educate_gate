@@ -209,6 +209,16 @@ const getClassesByUserId = async (userId) => {
     throw new Error(error.message);
   }
 };
+const updateClassStatus = async (teacherId, status) => {
+  try {
+    return await Class.updateMany(
+      { teacherId: { $in: teacherId } },
+      { $set: { status } }
+    );
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
 export default {
   createNewListClass,
   getClasses,
@@ -219,4 +229,5 @@ export default {
   deleteClass,
   addStudentInClasses,
   createNewClass,
+  updateClassStatus,
 };

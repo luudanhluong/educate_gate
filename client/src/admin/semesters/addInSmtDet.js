@@ -26,6 +26,7 @@ import {
 import Tables from "layouts/tables/users-without-smt-list-table";
 import { useEffect, useState } from "react";
 import { setUsersInSmt } from "app/slices/semesterSlice";
+import MKTypography from "components/MKTypography";
 
 const AddInSmtDet = () => {
   const dispatch = useDispatch();
@@ -167,7 +168,9 @@ const AddInSmtDet = () => {
           </MKBox>
           <MKBox display="flex" gap="2rem" mx="1rem">
             <MKBox>
-              <MKButton onClick={handleAddInSmtDet}>Lưu</MKButton>
+              <MKButton disabled={semesters?.length === 0} onClick={handleAddInSmtDet}>
+                Lưu
+              </MKButton>
             </MKBox>
             <MKBox mx={2} mb={1} minWidth="10rem">
               <FormControl fullWidth>
@@ -186,8 +189,20 @@ const AddInSmtDet = () => {
               </FormControl>
             </MKBox>
           </MKBox>
+          <MKBox>{semesters?.length > 0 && <Tables />}</MKBox>
           <MKBox>
-            <Tables />
+            {semesters?.length === 0 && (
+              <MKTypography
+                variant="h4"
+                textAlign="center"
+                fontSize="0.925rem"
+                fontWeight="medium"
+                color="text"
+                my={1}
+              >
+                <em>Hiện không có học kỳ nào để thêm...</em>
+              </MKTypography>
+            )}
           </MKBox>
         </Card>
       </Slide>

@@ -157,7 +157,7 @@ const ViewGroups = ({ teacherId }) => {
               </Typography>
               {username}
               <Typography as={"span"} fontSize={"0.825rem"} sx={{ color: "#000" }}>
-                <em>{label ? `(${label})` : ""}</em>
+                <em>{label && `(${label})`}</em>
               </Typography>
             </Typography>
             <Typography
