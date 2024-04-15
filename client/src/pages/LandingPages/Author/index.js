@@ -14,9 +14,12 @@ import { setUserLogin } from "app/slices/userSlice";
 import { setActivePopup } from "app/slices/activeSlice";
 import { setCategories, setMentorCategories } from "app/slices/categorySlice";
 import EditProfile from "./sections/EditProfile";
+import { checkError } from "utilities/auth";
+import { useNavigate } from "react-router-dom";
 
 function Author() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const jwt = localStorage.getItem("jwt");
   const config = {
     headers: {
@@ -31,7 +34,7 @@ function Author() {
     axios
       .get(BASE_URL + "/user/profile", config)
       .then((res) => dispatch(setUserLogin(res.data)))
-      .catch((err) => console.log(err));
+      .catch((err) => checkError(err, navigate));
   }, [dispatch]);
   useEffect(() => {
     axios

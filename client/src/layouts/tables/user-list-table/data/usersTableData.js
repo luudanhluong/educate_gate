@@ -10,9 +10,12 @@ import MKAvatar from "components/MKAvatar";
 import { useDispatch, useSelector } from "react-redux";
 import getDate from "utilities/getDate";
 import { setDelUser } from "app/slices/userSlice";
+import StarBorderIcon from "@mui/icons-material/StarBorder";
 
 export default function data() {
   const { data } = useSelector((state) => state.user.users);
+  console.log(data);
+  const { userLogin } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const User = ({ image, name, email }) => (
     <MKBox
@@ -55,8 +58,9 @@ export default function data() {
     email: PropTypes.string.isRequired,
   };
 
-  const rows = data
-    ? data.map((user) => ({
+  const rows =
+    data?.map((user) => {
+      let result = {
         user: <User image={userImg} name={user.username} email={user.email} />,
         gender: (
           <MKTypography component="div" variant="caption" color="text" fontWeight="medium">
@@ -78,25 +82,51 @@ export default function data() {
             />
           </MKBox>
         ),
-        onboard: (
-          <MKTypography component="span" variant="caption" color="text" fontWeight="medium">
-            {getDate(user.createdAt)}
-          </MKTypography>
-        ),
-        action: <Action user={user} />,
-      }))
-    : [];
-
-  return {
-    columns: [
-      { Header: "người dùng", accessor: "user", width: "32%", align: "left" },
-      { Header: "trạng thái", accessor: "status", align: "center" },
-      { Header: "giới tính", accessor: "gender", align: "center" },
-      { Header: "mã sinh viên", accessor: "rollNumber", align: "center" },
+      };
+      if (userLogin?.role === 1)
+        result = {
+          ...result,
+          action: <Action user={user} />,
+          onboard: (
+            <MKTypography component="span" variant="caption" color="text" fontWeight="medium">
+              {getDate(user.createdAt)}
+            </MKTypography>
+          ),
+        };
+      else
+        result = {
+          ...result,
+          isleader: (
+            <MKTypography component="div" color="text" size="0.25rem">
+              {user.isLeader && <StarBorderIcon color="warning" sx={{ ml: "auto" }} />}
+            </MKTypography>
+          ),
+          group: (
+            <MKTypography component="div" variant="caption" color="text" fontWeight="medium">
+              {user.groupName}
+            </MKTypography>
+          ),
+        };
+      return result;
+    }) || [];
+  let columns = [
+    { Header: "người dùng", accessor: "user", width: "32%", align: "left" },
+    { Header: "trạng thái", accessor: "status", align: "center" },
+    { Header: "giới tính", accessor: "gender", align: "center" },
+    { Header: "mã sinh viên", accessor: "rollNumber", align: "center" },
+  ];
+  if (userLogin?.role === 1)
+    columns.push(
       { Header: "onboard", accessor: "onboard", align: "center" },
-      { Header: "hành động", accessor: "action", align: "center" },
-    ],
-
+      { Header: "hành động", accessor: "action", align: "center" }
+    );
+  else
+    columns.push(
+      { Header: "nhóm trưởng", accessor: "isleader", align: "center" },
+      { Header: "tên nhóm", accessor: "group", align: "center" }
+    );
+  return {
+    columns: columns,
     rows: rows,
   };
 }

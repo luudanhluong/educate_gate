@@ -121,7 +121,7 @@ function Routes() {
   }
   if (userLogin?.role === 1) {
     result.push({
-      name: "admins",
+      name: "người quản lý",
       dropdown: true,
       icon: <Icon>article</Icon>,
       description: "Xem tất cả",

@@ -26,7 +26,7 @@ const app = express();
 dotnv.config();
 app.use(cors());
 app.use(json());
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 9999;
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "./uploads/");

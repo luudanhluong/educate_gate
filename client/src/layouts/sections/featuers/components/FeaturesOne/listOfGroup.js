@@ -27,12 +27,13 @@ const ListOfGroups = () => {
     <Box
       sx={{
         mt: 2,
-        marginLeft: "16px",
-        marginBottom: "10px",
+        // marginLeft: "16px",
+        marginBottom: "20px",
         display: "flex",
         flexWrap: "wrap",
+        flexDirection: "row",
         justifyContent: "space-between",
-        gap: "30px",
+        gap: "1.5rem",
       }}
     >
       {groupData.map((group) => (
@@ -41,7 +42,7 @@ const ListOfGroups = () => {
           sx={{
             display: "flex",
             flexDirection: "column",
-            width: "calc(100%/3 - 80px)",
+            width: "calc(100%/3 - 30px)",
             height: 166,
             borderRadius: "16px",
             boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
@@ -63,29 +64,13 @@ const ListOfGroups = () => {
             <Typography variant="subtitle1" fontWeight="bold" fontSize={"0.925rem"}>
               Nhóm: {group.name}
             </Typography>
-            {group.project.length > 0 ? (
+            {group?.project?.length > 0 && (
               <Typography variant="body2" sx={{ fontSize: "0.8rem" }}>
                 Dự án: {group.project[0]?.name}
               </Typography>
-            ) : (
-              <MKBox
-                pb="3px"
-                sx={{
-                  flex: 1,
-                  cursor: "pointer",
-                  textDecoration: "underline",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-                color="white"
-                fontSize={"0.825rem"}
-              >
-                <em>Hãy cập nhật dự án của bạn</em>
-              </MKBox>
             )}
           </Box>
-          {group.mentorDetails?.length > 0 ? (
+          {group?.mentorDetails?.length > 0 ? (
             <Box
               sx={{
                 p: 1.3,
@@ -104,8 +89,8 @@ const ListOfGroups = () => {
                 }}
               >
                 <Avatar
-                  src={group.mentorDetails[0]?.image}
-                  alt={group.mentorDetails[0]?.name}
+                  src={group?.mentorDetails[0]?.image}
+                  alt={group?.mentorDetails[0]?.name}
                   sx={{ height: "30px", width: "30px", mr: 1 }}
                 />
                 <MKBox sx={{ width: "calc(100% - 54px)" }}>
@@ -117,7 +102,7 @@ const ListOfGroups = () => {
                     color="textSecondary"
                     noWrap
                   >
-                    {group.mentorDetails[0]?.username}
+                    {group?.mentorDetails[0]?.username}
                   </Typography>
                   <Typography
                     fontFamily={"Roboto, Helvetica, Arial,sans-serif"}
@@ -127,7 +112,7 @@ const ListOfGroups = () => {
                     color="textSecondary"
                     noWrap
                   >
-                    {group.mentorDetails[0]?.email}
+                    {group?.mentorDetails[0]?.email}
                   </Typography>
                 </MKBox>
               </Box>
@@ -166,13 +151,13 @@ const ListOfGroups = () => {
             }}
           >
             <Typography fontSize={"0.825rem"} variant="body2">
-              {group.userCount} Thành viên
+              {group?.userCount} Thành viên
             </Typography>
             <Typography
               variant="body2"
               fontSize={"0.725rem"}
               sx={{ cursor: "pointer", textDecoration: "underline" }}
-              onClick={() => handleGroupDetailClick(group._id)}
+              onClick={() => handleGroupDetailClick(group?._id)}
             >
               <em>Chi tiết nhóm</em>
             </Typography>

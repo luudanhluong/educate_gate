@@ -1,25 +1,17 @@
-// @mui material components
 import Grid from "@mui/material/Grid";
-
-// Material Kit 2 React components
 import MKBox from "components/MKBox";
-
-// Images
-// import bgImage from "assets/images/bg-sign-in-basic.jpeg";
 import DefaultNavbar from "Navbars/DefaultNavbar";
 import Tables from "layouts/tables/user-list-table";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { BASE_URL } from "utilities/initialValue";
-import { setUsers } from "app/slices/userSlice";
 import AddListAccount from "./addListAccount";
-import { setFilterRole } from "app/slices/userSlice";
-import { setSearchValue } from "app/slices/userSlice";
-import { setSort } from "app/slices/userSlice";
-import { setActivePopup } from "app/slices/activeSlice";
+import { setSearchValue, setSort, setFilterRole, setUsers, setPageNo } from "app/slices/userSlice";
 import routes from "routes";
-import { setPageNo } from "app/slices/utilitiesSlice";
+import { Autocomplete } from "@mui/material";
+import MKInput from "components/MKInput";
+import { setActivePopup } from "app/slices/activeSlice";
 
 function ListAccount() {
   const dispatch = useDispatch();
@@ -57,6 +49,17 @@ function ListAccount() {
         .catch((err) => console.log(err));
     }
   }, [dispatch, delUser]);
+
+  const userType = [
+    { name: "Học sinh", role: 4 },
+    { name: "Người hướng dẫn", role: 3 },
+    { name: "Giáo viên", role: 2 },
+    { name: "Quản trị viên", role: 1 },
+  ];
+
+  const onSearchChange = (value) => {
+    dispatch(setSearchValue(value));
+  };
   useEffect(() => {
     dispatch(setSearchValue(""));
     dispatch(setActivePopup(false));
@@ -83,6 +86,59 @@ function ListAccount() {
                   height="100%"
                 >
                   <Grid item xs={12} width="100%" height="100%" p={0}>
+                    <MKBox
+                      display="flex"
+                      justifyContent="space-between"
+                      alignItems="center"
+                      p={3}
+                      sx={{ gap: "0.5rem" }}
+                    >
+                      <MKBox
+                        fontWeight="bold"
+                        className="pointer"
+                        id={"btn_add_new_list_user"}
+                        py={1}
+                        px={2}
+                        sx={{
+                          "&:hover": {
+                            backgroundColor: "rgba(0,0,0,0.1)",
+                            borderRadius: "6px",
+                          },
+                          "&:active": {
+                            backgroundColor: "rgba(0,0,0,0.2)",
+                          },
+                          userSelect: "none",
+                        }}
+                        onClick={() => dispatch(setActivePopup(true))}
+                      >
+                        Tạo người dùng
+                      </MKBox>
+                      <MKBox display="flex" alignItems="center">
+                        <Autocomplete
+                          disableClearable
+                          options={userType}
+                          getOptionLabel={(option) => option.name}
+                          onChange={(e, value) => {
+                            dispatch(setFilterRole(value.role));
+                            dispatch(setPageNo(0));
+                          }}
+                          size="small"
+                          isOptionEqualToValue={(option, value) => option.role === value.role}
+                          sx={{ width: "12rem" }}
+                          renderInput={(params) => <MKInput {...params} label="Lọc theo vai trò" />}
+                        />
+                      </MKBox>
+                      <MKBox width="16rem" ml="auto">
+                        <MKInput
+                          placeholder="Search email..."
+                          size="small"
+                          fullWidth
+                          onChange={({ currentTarget }) => {
+                            onSearchChange(currentTarget.value);
+                          }}
+                        />
+                      </MKBox>
+                    </MKBox>
                     <Tables />
                   </Grid>
                 </Grid>

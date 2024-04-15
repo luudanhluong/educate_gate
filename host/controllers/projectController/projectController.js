@@ -1,8 +1,6 @@
 import projectDAO from "../../repositories/project/index.js";
 
 const updateProject = async (req, res) => {
-  const token = req.headers["authorization"];
-  if (!token) return res.status(401).send("Access denied");
   try {
     const { id } = req.params;
     const { name, description } = req.body;
