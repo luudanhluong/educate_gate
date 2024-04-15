@@ -13,7 +13,6 @@ const ListOfGroups = () => {
   const { active_popup } = useSelector((state) => state.active);
   const isActivePopup = () => dispatch(setActivePopup(!active_popup));
   const navigate = useNavigate();
-  console.log(groups);
   const handleGroupDetailClick = (groupId) => {
     navigate(`/group/${groupId}/members`);
   };

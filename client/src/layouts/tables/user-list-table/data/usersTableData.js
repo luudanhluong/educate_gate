@@ -14,7 +14,6 @@ import StarBorderIcon from "@mui/icons-material/StarBorder";
 
 export default function data() {
   const { data } = useSelector((state) => state.user.users);
-  console.log(data);
   const { userLogin } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const User = ({ image, name, email }) => (

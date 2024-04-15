@@ -41,7 +41,7 @@ function DataTable({ table, isSorted, noEndBorder }) {
       dispatch(setClassId(classId));
     }
   }, [classId, dispatch]);
-  console.log(classStudent);
+
   useEffect(() => {
     const allWithoutGroup =
       classStudent?.data?.length > 0 &&
