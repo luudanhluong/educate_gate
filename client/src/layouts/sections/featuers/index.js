@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import MKBox from "components/MKBox";
 import Grid from "@mui/material/Grid";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import ListOfGroups from "./components/FeaturesOne/listOfGroup";
 import axios from "axios";
 import DefaultNavbar from "Navbars/DefaultNavbar";
@@ -12,14 +12,12 @@ import { setUserLogin, setUsers } from "app/slices/userSlice";
 import getParams from "utilities/getParams";
 import { useLocation } from "react-router-dom";
 import { setGroups } from "app/slices/groupSlice";
-import ViewGroups from "ViewGroups";
 import Tables from "layouts/tables/user-list-table";
 
 const TeacherFunction = () => {
   const dispatch = useDispatch();
   const url = useLocation();
   const params = getParams(3, url.pathname);
-  const { active } = useSelector((state) => state.active);
   const jwt = localStorage.getItem("jwt");
   const config = {
     headers: {
@@ -55,16 +53,10 @@ const TeacherFunction = () => {
       <MKBox pt={{ xs: 12, sm: 12 }} height="100vh" display="flex" justifyContent="center">
         <Grid container width="100%" mx={"4rem"} display="flex" justifyContent="center">
           <Grid item xs={10} md={12}>
-            {active != 2 ? (
-              <MKBox display="flex" flexDirection="column">
-                <ListOfGroups />
-                <Tables />
-              </MKBox>
-            ) : (
-              <MKBox>
-                <ViewGroups />
-              </MKBox>
-            )}
+            <MKBox display="flex" flexDirection="column">
+              <ListOfGroups />
+              <Tables />
+            </MKBox>
           </Grid>
         </Grid>
       </MKBox>

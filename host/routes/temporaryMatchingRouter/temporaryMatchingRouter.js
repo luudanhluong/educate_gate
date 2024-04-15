@@ -7,12 +7,12 @@ const temporaryMatchingRouter = express.Router();
 temporaryMatchingRouter.get(
   "/:gid/group",
   verifyAccessToken,
-  temporaryMatchingController.getAllTempararyMatching
+  temporaryMatchingController.getAllTemporaryMatching
 );
 temporaryMatchingRouter.post(
   "/:gid/group",
   verifyAccessToken,
-  temporaryMatchingController.addTempararyMatchingByGid
+  temporaryMatchingController.addTemporaryMatchingByGid
 );
 
 export default temporaryMatchingRouter;

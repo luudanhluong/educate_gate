@@ -15,6 +15,8 @@ import MKTypography from "components/MKTypography";
 import Pagination from "pagination";
 import ExcelJS from "exceljs";
 import saveAs from "file-saver";
+import { checkError } from "utilities/auth";
+import TemporaryMatching from "layouts/sections/featuers/components/FeaturesOne/listTemporaryMaching";
 
 const ViewGroups = ({ teacherId }) => {
   const dispatch = useDispatch();
@@ -39,17 +41,17 @@ const ViewGroups = ({ teacherId }) => {
       axios
         .get(`${BASE_URL}/teacher/${teacherId}/suggest`, config)
         .then(() => getAllGroups())
-        .catch((err) => console.log(err));
+        .catch((err) => checkError(err, navigate));
   }, [dispatch, active_popup, teacherId, pageNo]);
   const getAllGroups = () => {
     axios
       .get(`${BASE_URL}/teacher/${teacherId}/groups?skip=${skip}&limit=${limit}`, config)
       .then((res) => dispatch(setAllGroup(res.data)))
-      .catch((err) => console.log(err));
+      .catch((err) => checkError(err, navigate));
     axios
       .get(`${BASE_URL}/group/${teacherId}/teacher`, config)
       .then((res) => setQttMatched(res.data))
-      .catch((err) => console.log(err));
+      .catch((err) => checkError(err, navigate));
   };
   useEffect(() => {
     if (teacherId) getAllGroups();
@@ -62,50 +64,61 @@ const ViewGroups = ({ teacherId }) => {
       axios
         .get(`${BASE_URL}/teacher/${teacherId}/suggest`, config)
         .then(() => getAllGroups())
-        .catch((err) => console.log(err));
+        .catch((err) => checkError(err, navigate));
   };
   const handleClickSaveAll = () => {
     if (teacherId)
       axios
         .get(`${BASE_URL}/matched/${teacherId}/teacher`, config)
         .then(() => getAllGroups())
-        .catch((err) => console.log(err));
+        .catch((err) => checkError(err, navigate));
   };
   const handleSaveMatched = (gid, uid) => {
+    console.log({ groupId: gid, mentorId: uid });
     axios
-      .post(`${BASE_URL}/matched`, { groupId: gid, userId: uid }, config)
+      .post(`${BASE_URL}/matched`, { groupId: gid, mentorId: uid }, config)
       .then(() => getAllGroups())
-      .catch((err) => console.log(err));
+      .catch((err) => checkError(err, navigate));
   };
   const handleClickViewTemporaryMatching = (group, mid) => {
-    axios
-      .post(`${BASE_URL}/temporary_matching/${group?._id}/group`, config)
-      .then(() => {
-        isActivePopup();
-      })
-      .catch((err) => console.log(err));
+    isActivePopup();
     dispatch(setGroup(group));
     dispatch(setDefaultMentor(mid));
   };
-  console.log(allGroups);
   const handleExportExcel = () => {
     const workbook = new ExcelJS.Workbook();
-    const worksheet = workbook.addWorksheet("Danh_sach_hoc_sinh");
+    const worksheet = workbook.addWorksheet("Danh_sach_matched");
     allGroups?.forEach((row) => {
-      const { className, project, teacher, members } = row;
-      members?.forEach((member) => {
-        worksheet.addRow([
-          className,
-          member.rollNumber,
-          member.memberCode,
-          member.email,
-          member.username,
-          teacher.username,
-          project.name,
-        ]);
-      });
+      const { className, project, teacher, members, matched } = row;
+      worksheet.addRow([
+        "ClassName",
+        "RollNumber",
+        "MemberCode",
+        "Email",
+        "Username",
+        "Teacher",
+        "Project",
+        "Acc Mentor",
+        "PhoneNumber",
+        "Email",
+      ]);
+      if (matched.length > 0)
+        members?.forEach((member) => {
+          worksheet.addRow([
+            className,
+            member.rollNumber,
+            member.memberCode,
+            member.email,
+            member.username,
+            teacher.username,
+            project.name,
+            matched?.[0]?.username,
+            matched?.[0]?.phoneNumber,
+            matched?.[0]?.email,
+          ]);
+        });
     });
-    const fileName = "Danh_sach_hoc_sinh.xlsx";
+    const fileName = "Danh_sach_matched.xlsx";
     workbook.xlsx.writeBuffer().then(function (buffer) {
       saveAs(new Blob([buffer], { type: "application/octet-stream" }), fileName);
     });
@@ -185,31 +198,29 @@ const ViewGroups = ({ teacherId }) => {
   };
   return (
     <>
+      <TemporaryMatching />
       <MKBox px={"14px"} my={1} display="flex" justifyContent="end" gap="1.5rem">
-        <MKBox display="flex" alignItems="center" lineHeight="1" fontSize="0.925rem" gap="0.5rem">
-          <MKButton
-            onClick={handleExportExcel}
-            as="span"
-            fontWeight="medium"
-            sx={{ textTransform: "none" }}
-          >
-            Tải file
-          </MKButton>
-        </MKBox>
-        <MKBox display="flex" alignItems="center" lineHeight="1" fontSize="0.925rem" gap="0.5rem">
+        <MKButton onClick={handleExportExcel} sx={{ textTransform: "none" }}>
+          Tải file
+        </MKButton>
+        <MKBox mb="3px" display="flex" alignItems="center" fontSize="0.825rem" gap="0.5rem">
           <MKTypography as="span" fontWeight="medium">
             Được ghép:
           </MKTypography>
           <MKTypography as="span">{formatNumber(qttMatched || 0)}</MKTypography>
         </MKBox>
-        <MKBox display="flex" alignItems="center" lineHeight="1" fontSize="0.925rem" gap="0.5rem">
+        <MKBox mb="3px" display="flex" alignItems="center" fontSize="0.825rem" gap="0.5rem">
           <MKTypography as="span" fontWeight="medium">
             Tổng:
           </MKTypography>
           <MKTypography as="span">{formatNumber(total || 0)}</MKTypography>
         </MKBox>
-        <MKButton onClick={handleClickSuggest}>Gợi ý</MKButton>
-        <MKButton onClick={handleClickSaveAll}>Lưu tất cả</MKButton>
+        <MKButton onClick={handleClickSuggest} sx={{ textTransform: "none" }}>
+          Gợi ý
+        </MKButton>
+        <MKButton onClick={handleClickSaveAll} sx={{ textTransform: "none" }}>
+          Lưu tất cả
+        </MKButton>
       </MKBox>
       <Box
         pb="3rem"
@@ -259,8 +270,8 @@ const ViewGroups = ({ teacherId }) => {
                   Tên nhóm: {g.group?.name}
                 </Typography>
                 <MKButton
-                  disabled={g.matched?.length > 0}
-                  onClick={() => handleSaveMatched(g.group?._id, g.matching[0]?._id)}
+                  disabled={g.matched?.length > 0 || g.matching?.length === 0}
+                  onClick={() => handleSaveMatched(g.group?._id, g.matching?.[0]?._id)}
                   sx={{ minHeight: "0", padding: "0" }}
                 >
                   Lưu
@@ -273,7 +284,7 @@ const ViewGroups = ({ teacherId }) => {
                 Lĩnh vực: {g.projectcategories?.map((p) => p.name).join(", ")}
               </Typography>
             </Box>
-            {g.matching.length > 0 ? (
+            {g.matching.length > 0 && (
               <>
                 <Mentor
                   username={g.matching[0]?.username}
@@ -297,7 +308,8 @@ const ViewGroups = ({ teacherId }) => {
                   <em>Xem</em>
                 </Typography>
               </>
-            ) : (
+            )}
+            {g.matching.length === 0 && g.matched.length === 0 && (
               <Typography
                 as={"span"}
                 fontSize={"0.725rem"}
@@ -306,7 +318,7 @@ const ViewGroups = ({ teacherId }) => {
                 alignItems={"center"}
                 sx={{ color: "#000", p: 1.3, flexGrow: 1, display: "flex", alignItems: "center" }}
               >
-                {g.matched.length === 0 && <em>Chưa tìm thấy người hướng dẫn phù hợp</em>}
+                <em>Chưa tìm thấy người hướng dẫn phù hợp</em>
               </Typography>
             )}
             {g.matched.length > 0 && (
@@ -328,7 +340,7 @@ const ViewGroups = ({ teacherId }) => {
               }}
             >
               <Typography fontSize={"0.825rem"} variant="body2">
-                {g.userCount} Thành viên
+                {g?.members?.length} Thành viên
               </Typography>
               <Typography
                 variant="body2"

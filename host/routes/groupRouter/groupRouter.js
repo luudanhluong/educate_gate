@@ -30,4 +30,9 @@ groupRouter.post(
   verifyAccessToken,
   groupController.createGroupsFromExcel
 );
+groupRouter.get(
+  "/:gid/group",
+  verifyAccessToken,
+  groupController.getAllTemMatching
+);
 export default groupRouter;

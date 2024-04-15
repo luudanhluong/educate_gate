@@ -20,13 +20,16 @@ import { setAllGroup } from "app/slices/groupSlice";
 import { setClassList } from "app/slices/classSlice";
 import GroupsAdmin from "layouts/admin/list-groups";
 import CategoriesAdmin from "layouts/admin/list-categories";
-import ViewGroups from "ViewGroups";
+import { setLimit } from "app/slices/utilitiesSlice";
+import ListGroups from "layouts/sections/featuers/components/FeaturesOne/viewListGroups";
 
 function Routes() {
   const dispatch = useDispatch();
   const { classList } = useSelector((state) => state.class);
   const { userLogin } = useSelector((state) => state.user);
-  const { allGroups } = useSelector((state) => state.group);
+  const { data: allGroups } = useSelector((state) => state.group.allGroups);
+  const { pageNo, limit } = useSelector((state) => state.utilities);
+  const skip = pageNo * limit;
   const jwt = localStorage.getItem("jwt");
   const config = {
     headers: {
@@ -35,6 +38,7 @@ function Routes() {
     },
   };
   useEffect(() => {
+    dispatch(setLimit(24));
     if (jwt)
       axios
         .get(BASE_URL + "/user/profile", config)
@@ -42,11 +46,6 @@ function Routes() {
         .catch((err) => console.log(err.message));
   }, [dispatch]);
   useEffect(() => {
-    if (userLogin.role === 2 && jwt)
-      axios
-        .get(`${BASE_URL}/teacher/${userLogin?._id}/groups`, config)
-        .then((res) => dispatch(setAllGroup(res.data)))
-        .catch((err) => console.log(err));
     if (userLogin?._id && jwt) {
       axios
         .get(`${BASE_URL}/class/${userLogin?._id}/user`, config)
@@ -54,6 +53,13 @@ function Routes() {
         .catch((err) => console.log(err.message));
     }
   }, [userLogin, dispatch]);
+  useEffect(() => {
+    if (userLogin.role === 2 && jwt)
+      axios
+        .get(`${BASE_URL}/teacher/${userLogin?._id}/groups?skip=${skip}`, config)
+        .then((res) => dispatch(setAllGroup(res.data)))
+        .catch((err) => console.log(err));
+  }, [userLogin, dispatch, pageNo, limit]);
   let result = [
     {
       name: "pages",
@@ -111,12 +117,12 @@ function Routes() {
       component: <GroupDetail />,
     });
   }
-  if (allGroups?.length > 0 && userLogin?.role === 2) {
+  if (userLogin?.role === 2 && allGroups?.length > 0) {
     result.push({
       name: "Nhóm",
       dropdown: false,
       route: `/presentation/groups`,
-      component: <ViewGroups teacherId={userLogin?._id} />,
+      component: <ListGroups />,
     });
   }
   if (userLogin?.role === 1) {

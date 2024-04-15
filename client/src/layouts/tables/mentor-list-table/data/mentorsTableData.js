@@ -45,6 +45,16 @@ export default function data() {
       <MKTypography variant="caption">{description}</MKTypography>
     </MKBox>
   );
+  const MentorCategories = ({ categories }) => (
+    <MKBox lineHeight={1} textAlign="left">
+      <MKTypography variant="caption">{categories?.map((c) => c.name)?.join(", ")}</MKTypography>
+    </MKBox>
+  );
+  const MentorCount = ({ count }) => (
+    <MKBox lineHeight={1} textAlign="left">
+      <MKTypography variant="caption">{count}</MKTypography>
+    </MKBox>
+  );
   const Gender = ({ sex }) => (
     <MKTypography component="div" variant="caption" color="text" fontWeight="medium">
       {sex ? "Nam" : "Nữ"}
@@ -63,21 +73,22 @@ export default function data() {
   Details.propTypes = {
     description: PropTypes.string.isRequired,
   };
+  MentorCategories.propTypes = {
+    categories: PropTypes.string.isRequired,
+  };
+  MentorCount.propTypes = {
+    count: PropTypes.string.isRequired,
+  };
   Gender.propTypes = {
     sex: PropTypes.bool.isRequired,
   };
   const rows = data?.map((item) => ({
     choice: <Choice name="mentor" value={item} />,
-    user: (
-      <User
-        image={userImg}
-        id={item.mentorId[0]._id}
-        name={item.mentorId[0].username}
-        email={item.mentorId[0].email}
-      />
-    ),
-    gender: <Gender sex={item.mentorId[0] ? item.mentorId[0].gender : ""} />,
-    degree: <Details description={item.mentorId[0] ? item.mentorId[0].degree : ""} />,
+    user: <User image={userImg} id={item?._id} name={item?.username} email={item?.email} />,
+    gender: <Gender sex={item?.gender} />,
+    categories: <MentorCategories categories={item?.mentorcategories} />,
+    degree: <Details description={item?.degree} />,
+    count: <MentorCount count={item?.menteeCount} />,
   }));
 
   return {
@@ -85,6 +96,8 @@ export default function data() {
       { accessor: "choice", width: "0px", align: "left" },
       { Header: "Người hướng dẫn", accessor: "user", align: "left" },
       { Header: "giới tính", accessor: "gender", width: "15%", align: "center" },
+      { Header: "Lĩnh vực", accessor: "categories", width: "auto", align: "left" },
+      { Header: "giới hạn", accessor: "count", width: "auto", align: "center" },
       { Header: "kinh nghiẹm", accessor: "degree", width: "auto", align: "left" },
     ],
     rows: rows,

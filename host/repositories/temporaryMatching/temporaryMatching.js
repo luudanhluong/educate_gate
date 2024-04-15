@@ -5,12 +5,8 @@ import User from "../../models/userModel.js";
 import shuffleArray from "../../utilities/shuffleArray.js";
 import Matched from "../../models/matchedModel.js";
 
-const getAllTempararyMatching = async (gId, { search, skip, limit }) => {
+const getAllTempMatchingByGId = async (gId, { search, skip, limit }) => {
   try {
-    let query = { groupId: new mongoose.Types.ObjectId(gId) };
-    if (search && search.length > 0) {
-      query["mentorId.email"] = { $regex: search, $options: "i" };
-    }
     let pipeline = [
       {
         $match: { groupId: new mongoose.Types.ObjectId(gId) },
@@ -23,19 +19,22 @@ const getAllTempararyMatching = async (gId, { search, skip, limit }) => {
           as: "mentorId",
         },
       },
-      { $match: query },
     ];
+    if (search && search.length > 0)
+      pipeline.push({
+        $match: { "mentorId.email": { $regex: search, $options: "i" } },
+      });
     const result = await TemporaryMatching.aggregate(pipeline)
       .skip(skip)
       .limit(limit);
     const count = await TemporaryMatching.countDocuments({ groupId: gId });
-    return { data: result, count, limit, skip };
+    return { data: result, total: count };
   } catch (error) {
     throw new Error(error.message);
   }
 };
 
-const addTempararyMatchingByGid = async (gid) => {
+const addTempMatchingByGid = async (gid) => {
   try {
     await TemporaryMatching.deleteMany({ groupId: gid });
     const groupMatchings = await Group.aggregate([
@@ -151,6 +150,6 @@ const addTempararyMatchingByGid = async (gid) => {
 };
 
 export default {
-  getAllTempararyMatching,
-  addTempararyMatchingByGid,
+  getAllTempMatchingByGId,
+  addTempMatchingByGid,
 };

@@ -109,7 +109,7 @@ function DataTable({ table, isSorted, noEndBorder }) {
           })}
         </TableBody>
       </Table>
-      {page.length === 0 && (
+      {rows.length === 0 && (
         <MKBox lineHeight={1} textAlign="center">
           <MKTypography
             mt="1rem"
