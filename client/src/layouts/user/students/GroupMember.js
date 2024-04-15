@@ -3,14 +3,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { setActivePopup } from "app/slices/activeSlice";
 import MKButton from "components/MKButton";
 import "../../sections/featuers/components/FeaturesOne/studentList.css";
-import { useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
+import getParams from "utilities/getParams";
 
 const GroupMembers = () => {
   const dispatch = useDispatch();
+  const url = useLocation();
+  const groupId = getParams(2, url.pathname);
   const { group: groupDetails } = useSelector((state) => state.group);
   const { userLogin } = useSelector((state) => state.user);
-  const { groupId } = useParams();
 
   return (
     <Box
@@ -52,14 +54,15 @@ const GroupMembers = () => {
             <Typography sx={{ fontFamily: "sans-serif", fontSize: ".9em" }}>
               {groupDetails.project[0]?.description}
             </Typography>
-            {userLogin?.isLeader && userLogin?.groupId === groupId && (
+            {userLogin?.isLeader && userLogin?.groupId[0]?._id === groupId && (
               <MKButton
                 onClick={() => dispatch(setActivePopup(true))}
                 sx={{
                   position: "absolute",
-                  bottom: 0,
+                  bottom: 29,
                   right: 0,
                   margin: "8px",
+                  backgroundColor: "#00000001",
                 }}
               >
                 Cập nhật dự án

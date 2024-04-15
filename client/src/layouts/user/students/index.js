@@ -11,19 +11,21 @@ import { setProject } from "app/slices/projectSlice";
 import { setProjectCategories } from "app/slices/projectSlice";
 import routes from "routes";
 import { setGroup } from "app/slices/groupSlice";
-import { useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { setCategories } from "app/slices/categorySlice";
 import { setActivePopup } from "app/slices/activeSlice";
 import bgImage from "assets/images/group.png";
 import Card from "@mui/material/Card";
+import getParams from "utilities/getParams";
 
 const GroupDetail = () => {
   const dispatch = useDispatch();
+  const url = useLocation();
+  const groupId = getParams(2, url.pathname);
   const jwt = localStorage.getItem("jwt");
   const { userLogin } = useSelector((state) => state.user);
   const { group } = useSelector((state) => state.group);
   const { active_popup } = useSelector((state) => state.active);
-  const { groupId } = useParams();
   const { _id: userId } = userLogin || {};
   const config = {
     headers: {
@@ -31,7 +33,6 @@ const GroupDetail = () => {
       Authorization: `Bearer ${jwt}`,
     },
   };
-  console.log(groupId);
 
   useEffect(() => {
     console.log(`Fetching data for group ID: ${groupId}`);
