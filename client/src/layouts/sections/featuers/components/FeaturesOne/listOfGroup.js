@@ -1,4 +1,3 @@
-import React, { useState, useEffect } from "react";
 import { Typography, Box, Avatar } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -9,19 +8,14 @@ import "./studentList.css";
 
 const ListOfGroups = () => {
   const dispatch = useDispatch();
-  const [groupData, setGroupData] = useState([]);
   const groups = useSelector((state) => state.group.groups);
   const { userLogin } = useSelector((state) => state.user);
   const { active_popup } = useSelector((state) => state.active);
   const isActivePopup = () => dispatch(setActivePopup(!active_popup));
   const navigate = useNavigate();
-
   const handleGroupDetailClick = (groupId) => {
     navigate(`/group/${groupId}/members`);
   };
-  useEffect(() => {
-    setGroupData(groups);
-  }, [groups]);
 
   return (
     <Box
@@ -36,7 +30,7 @@ const ListOfGroups = () => {
         gap: "1.5rem",
       }}
     >
-      {groupData.map((group) => (
+      {groups.map((group) => (
         <Box
           key={group._id}
           sx={{

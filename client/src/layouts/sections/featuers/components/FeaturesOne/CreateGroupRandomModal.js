@@ -22,7 +22,7 @@ import { setActivePopupCreateGroup } from "app/slices/activeSlice";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { setGroups } from "app/slices/groupSlice";
-import { setClassStudent } from "app/slices/classOnerTeacherSlice";
+import { setUsers } from "app/slices/userSlice";
 
 const CreateGroupModal = () => {
   const dispatch = useDispatch();
@@ -69,9 +69,9 @@ const CreateGroupModal = () => {
           .then((res) => {
             dispatch(setGroups(res.data));
             axios
-              .get(`${BASE_URL}/class/${selectedClassId}/students`)
+              .get(`${BASE_URL}/class/${selectedClassId}/students`, config)
               .then((res) => {
-                dispatch(setClassStudent(res.data));
+                dispatch(setUsers({ data: res.data }));
                 toast.success("Tạo nhóm thành công");
                 handleClosePopup();
               })
@@ -86,6 +86,9 @@ const CreateGroupModal = () => {
         } else {
           toast.error("Có lỗi xảy ra khi tạo nhóm!");
         }
+      })
+      .finally(() => {
+        handleClosePopup();
       });
   };
 
