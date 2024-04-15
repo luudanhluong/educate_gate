@@ -59,7 +59,7 @@ const GroupMembers = () => {
                 onClick={() => dispatch(setActivePopup(true))}
                 sx={{
                   position: "absolute",
-                  bottom: 29,
+                  top: 0,
                   right: 0,
                   margin: "8px",
                   backgroundColor: "#00000001",
