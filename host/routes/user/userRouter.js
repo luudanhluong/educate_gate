@@ -19,4 +19,6 @@ user.patch(
 );
 user.post("/login", userController.getUserLogin);
 user.post("/register", userController.addNewUser);
+user.post("/change_password", verifyAccessToken, userController.changePassword);
+
 export default user;

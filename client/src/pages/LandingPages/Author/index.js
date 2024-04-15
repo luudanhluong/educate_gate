@@ -2,8 +2,8 @@ import Card from "@mui/material/Card";
 import MKBox from "components/MKBox";
 import DefaultNavbar from "Navbars/DefaultNavbar";
 import Profile from "pages/LandingPages/Author/sections/Profile";
-import Posts from "pages/LandingPages/Author/sections/Posts";
-import Footer from "pages/LandingPages/Author/sections/Footer";
+// import Posts from "pages/LandingPages/Author/sections/Posts";
+// import Footer from "pages/LandingPages/Author/sections/Footer";
 import routes from "routes";
 import bgImage from "assets/images/city-profile.jpg";
 import { useEffect } from "react";
@@ -16,6 +16,7 @@ import { setCategories, setMentorCategories } from "app/slices/categorySlice";
 import EditProfile from "./sections/EditProfile";
 import { checkError } from "utilities/auth";
 import { useNavigate } from "react-router-dom";
+import ChangePassword from "./sections/ChangePassword";
 
 function Author() {
   const dispatch = useDispatch();
@@ -29,6 +30,8 @@ function Author() {
   };
   const { userLogin } = useSelector((state) => state.user);
   const { active_popup } = useSelector((state) => state.active);
+  const active_change_password = useSelector((state) => state.active.active_change_password);
+
   const { _id: id } = userLogin || {};
   useEffect(() => {
     axios
@@ -52,6 +55,8 @@ function Author() {
     <>
       <DefaultNavbar routes={routes} brand="Education Gate" transparent light sticky />
       {active_popup ? <EditProfile /> : ""}
+      {active_change_password ? <ChangePassword /> : ""}
+
       <MKBox bgColor="white">
         <MKBox
           minHeight="25rem"
@@ -80,10 +85,10 @@ function Author() {
           }}
         >
           <Profile />
-          <Posts />
+          {/* <Posts /> */}
         </Card>
         {/* <Contact /> */}
-        <Footer />
+        {/* <Footer /> */}
       </MKBox>
     </>
   );

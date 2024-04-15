@@ -88,6 +88,35 @@ const getUserBySmtId = async (req, res, next) => {
     next(error);
   }
 };
+
+const changePassword = async (req, res) => {
+  const userId = req.payload._id;
+  const { oldPassword, newPassword } = req.body;
+
+  try {
+    const user = await userDAO.findUserById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const isMatch = await userDAO.comparePassword(oldPassword, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: "Mật khẩu cũ sai" });
+    }
+
+    if (newPassword.length < 6) {
+      return res
+        .status(400)
+        .json({ message: "New password must be longer than 6 characters" });
+    }
+
+    await userDAO.updateUserPassword(userId, newPassword);
+    res.status(200).json({ message: "Password successfully updated" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 export default {
   addNewUser,
   getUserLogin,
@@ -96,4 +125,5 @@ export default {
   getUserWithoutSmt,
   pmtUser,
   getUserBySmtId,
+  changePassword,
 };

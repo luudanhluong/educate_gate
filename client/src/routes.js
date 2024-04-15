@@ -75,7 +75,7 @@ function Routes() {
               component: <ContactUs />,
             },
             {
-              name: "author",
+              name: "Tài khoản",
               route: "/pages/landing-pages/author",
               component: <Author />,
             },
