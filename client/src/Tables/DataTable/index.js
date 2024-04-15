@@ -46,7 +46,7 @@ function DataTable({ table, isSorted, noEndBorder }) {
           ))}
         </MKBox>
         <TableBody {...getTableBodyProps()}>
-          {page.map((row, key) => {
+          {rows.map((row, key) => {
             prepareRow(row);
             return (
               <TableRow key={key} {...row.getRowProps()}>

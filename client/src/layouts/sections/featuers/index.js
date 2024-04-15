@@ -27,7 +27,6 @@ const TeacherFunction = () => {
       Authorization: `Bearer ${jwt}`,
     },
   };
-
   useEffect(() => {
     axios
       .get(BASE_URL + "/user/profile", config)

@@ -119,7 +119,7 @@ function Tables() {
             <MKBox height={"100%"}>
               <DataTable table={{ columns, rows }} />
             </MKBox>
-            {qttPage > 1 && <Pagination pageNo={pageNo} qttPage={qttPage} />}
+            {qttPage > 1 && limit > 0 && <Pagination pageNo={pageNo} qttPage={qttPage} />}
           </Card>
         </Grid>
       </Grid>
