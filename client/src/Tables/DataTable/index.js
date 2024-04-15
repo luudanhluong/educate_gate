@@ -44,8 +44,9 @@ function DataTable({ table, isSorted, noEndBorder }) {
   console.log(classStudent);
   useEffect(() => {
     const allWithoutGroup =
-      classStudent.length > 0 &&
-      classStudent.every((student) => student.groupName === "Chưa có nhóm");
+      classStudent?.data?.length > 0 &&
+      classStudent.data.every((student) => student.groupName === "Chưa có nhóm");
+
     setShowCreateGroupButtons(allWithoutGroup);
   }, [classStudent]);
 
@@ -109,7 +110,7 @@ function DataTable({ table, isSorted, noEndBorder }) {
           })}
         </TableBody>
       </Table>
-      {rows.length === 0 && (
+      {page.length === 0 && (
         <MKBox lineHeight={1} textAlign="center">
           <MKTypography
             mt="1rem"
