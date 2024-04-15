@@ -87,7 +87,6 @@ const ViewGroups = ({ teacherId }) => {
     dispatch(setGroup(group));
     dispatch(setDefaultMentor(mid));
   };
-  console.log(allGroups);
   const handleExportExcel = () => {
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet("Danh_sach_hoc_sinh");
