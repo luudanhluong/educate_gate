@@ -118,6 +118,30 @@ const getGroupsByTeacherId = async (teacherId, skip) => {
         },
       },
       {
+        $lookup: {
+          from: "users",
+          localField: "teacherId",
+          foreignField: "_id",
+          as: "teacher",
+        },
+      },
+      { $project: { teacherId: 0 } },
+      {
+        $unwind: "$teacher",
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "group._id",
+          foreignField: "groupId",
+          as: "members",
+        },
+      },
+      { $project: { teacherId: 0 } },
+      {
+        $unwind: "$teacher",
+      },
+      {
         $sort: { "group.name": 1 },
       },
     ])

@@ -12,6 +12,7 @@ import routes from "routes";
 import { Autocomplete } from "@mui/material";
 import MKInput from "components/MKInput";
 import { setActivePopup } from "app/slices/activeSlice";
+import { setLimit } from "app/slices/utilitiesSlice";
 
 function ListAccount() {
   const dispatch = useDispatch();
@@ -66,6 +67,7 @@ function ListAccount() {
     dispatch(setSort(-1));
     dispatch(setFilterRole(0));
     dispatch(setPageNo(0));
+    dispatch(setLimit(10));
   }, [dispatch]);
 
   return (

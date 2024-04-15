@@ -13,6 +13,8 @@ import { setActivePopup } from "app/slices/activeSlice";
 import { setDefaultMentor } from "app/slices/userSlice";
 import MKTypography from "components/MKTypography";
 import Pagination from "pagination";
+import ExcelJS from "exceljs";
+import saveAs from "file-saver";
 
 const ViewGroups = ({ teacherId }) => {
   const dispatch = useDispatch();
@@ -85,6 +87,29 @@ const ViewGroups = ({ teacherId }) => {
     dispatch(setGroup(group));
     dispatch(setDefaultMentor(mid));
   };
+  console.log(allGroups);
+  const handleExportExcel = () => {
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet("Danh_sach_hoc_sinh");
+    allGroups?.forEach((row) => {
+      const { className, project, teacher, members } = row;
+      members?.forEach((member) => {
+        worksheet.addRow([
+          className,
+          member.rollNumber,
+          member.memberCode,
+          member.email,
+          member.username,
+          teacher.username,
+          project.name,
+        ]);
+      });
+    });
+    const fileName = "Danh_sach_hoc_sinh.xlsx";
+    workbook.xlsx.writeBuffer().then(function (buffer) {
+      saveAs(new Blob([buffer], { type: "application/octet-stream" }), fileName);
+    });
+  };
   const Mentor = ({ image, username, email, mentorcategories, label }) => {
     return (
       <Box
@@ -131,8 +156,8 @@ const ViewGroups = ({ teacherId }) => {
               noWrap
             >
               <Typography as={"span"} fontSize={"0.825rem"} fontWeight={"500"}>
-                Email:{" "}
-              </Typography>{" "}
+                Email:
+              </Typography>
               {email}
             </Typography>
             <Typography
@@ -142,8 +167,8 @@ const ViewGroups = ({ teacherId }) => {
               color="textSecondary"
             >
               <Typography as={"span"} fontSize={"0.825rem"} fontWeight={"500"}>
-                Lĩnh vực:{" "}
-              </Typography>{" "}
+                Lĩnh vực:
+              </Typography>
               {mentorcategories?.map((p) => p.name).join(", ")}
             </Typography>
           </MKBox>
@@ -162,14 +187,24 @@ const ViewGroups = ({ teacherId }) => {
     <>
       <MKBox px={"14px"} my={1} display="flex" justifyContent="end" gap="1.5rem">
         <MKBox display="flex" alignItems="center" lineHeight="1" fontSize="0.925rem" gap="0.5rem">
+          <MKButton
+            onClick={handleExportExcel}
+            as="span"
+            fontWeight="medium"
+            sx={{ textTransform: "none" }}
+          >
+            Tải file
+          </MKButton>
+        </MKBox>
+        <MKBox display="flex" alignItems="center" lineHeight="1" fontSize="0.925rem" gap="0.5rem">
           <MKTypography as="span" fontWeight="medium">
-            Số nhóm được ghép:
+            Được ghép:
           </MKTypography>
           <MKTypography as="span">{formatNumber(qttMatched || 0)}</MKTypography>
         </MKBox>
         <MKBox display="flex" alignItems="center" lineHeight="1" fontSize="0.925rem" gap="0.5rem">
           <MKTypography as="span" fontWeight="medium">
-            Tổng nhóm:
+            Tổng:
           </MKTypography>
           <MKTypography as="span">{formatNumber(total || 0)}</MKTypography>
         </MKBox>
