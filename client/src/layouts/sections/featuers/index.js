@@ -13,6 +13,7 @@ import getParams from "utilities/getParams";
 import { useLocation } from "react-router-dom";
 import { setGroups } from "app/slices/groupSlice";
 import ListOfStudent from "./components/FeaturesOne/listOfStudent";
+import { setClass } from "app/slices/classSlice";
 
 const TeacherFunction = () => {
   const dispatch = useDispatch();
@@ -25,6 +26,12 @@ const TeacherFunction = () => {
       Authorization: `Bearer ${jwt}`,
     },
   };
+  useEffect(() => {
+    axios
+      .get(`${BASE_URL}/class/${params}`, config)
+      .then((res) => dispatch(setClass(res.data)))
+      .catch((err) => console.log(err));
+  }, [params, dispatch]);
   useEffect(() => {
     dispatch(setUsers({}));
     axios

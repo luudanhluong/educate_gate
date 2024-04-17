@@ -11,34 +11,6 @@ const createProject = async (projectData) => {
 const updateProject = async (id, project) => {
   try {
     const result = await Project.findByIdAndUpdate(id, project);
-    // const group = await Group.findOne({ projectId: id });
-    // const matched = await Matched.findOne({ groupId: group._id });
-    // if (!matched) {
-    //   const listProjectCategories = await ProjectCategory.find({
-    //     projectId: result._id,
-    //   });
-    //   const listCategoryId = listProjectCategories.map((c) => c.categoryId);
-    //   await TemporaryMatching.deleteMany({ groupId: group._id });
-    //   const mentorCategories = await MentorCategory.find({
-    //     categoryId: { $in: listCategoryId },
-    //   });
-    //   const userIds = [];
-    //   mentorCategories.map(async (c) => {
-    //     if (!userIds.includes(c.userId.toString())) {
-    //       userIds.push(c.userId.toString());
-    //       const user = await User.findById(c.userId);
-    //       const matchedQtt = await Matched.countDocuments({
-    //         mentorId: c.userId,
-    //       });
-    //       if (user?.menteeCount > matchedQtt) {
-    //         await TemporaryMatching.create({
-    //           groupId: group._id,
-    //           mentorId: c.userId,
-    //         });
-    //       }
-    //     }
-    //   });
-    // }
     return result;
   } catch (error) {
     throw new Error(error.message);

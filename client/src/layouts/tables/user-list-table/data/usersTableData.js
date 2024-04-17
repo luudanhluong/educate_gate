@@ -84,6 +84,11 @@ export default function data() {
       };
       if (userLogin?.role === 1)
         result = {
+          id: (
+            <MKTypography component="span" variant="caption" color="text" fontWeight="medium">
+              {user._id}
+            </MKTypography>
+          ),
           ...result,
           action: <Action user={user} />,
           onboard: (
@@ -110,16 +115,17 @@ export default function data() {
     }) || [];
   let columns = [
     { Header: "người dùng", accessor: "user", width: "32%", align: "left" },
-    { Header: "trạng thái", accessor: "status", align: "center" },
     { Header: "giới tính", accessor: "gender", align: "center" },
     { Header: "mã sinh viên", accessor: "rollNumber", align: "center" },
   ];
-  if (userLogin?.role === 1)
+  if (userLogin?.role === 1) {
+    columns.unshift({ Header: "mã", accessor: "id", align: "center" });
     columns.push(
+      { Header: "trạng thái", accessor: "status", align: "center" },
       { Header: "onboard", accessor: "onboard", align: "center" },
       { Header: "hành động", accessor: "action", align: "center" }
     );
-  else
+  } else
     columns.push(
       { Header: "nhóm trưởng", accessor: "isleader", align: "center" },
       { Header: "tên nhóm", accessor: "group", align: "center" }

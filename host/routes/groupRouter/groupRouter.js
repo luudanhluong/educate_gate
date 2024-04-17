@@ -19,6 +19,11 @@ groupRouter.post(
   verifyAccessToken,
   groupController.createRandomGroups
 );
+groupRouter.post(
+  "/:id/class/create_groups_from_file",
+  verifyAccessToken,
+  groupController.createGroupsFromExcel
+);
 groupRouter.get(
   "/checkGroupsExist/:classId",
   verifyAccessToken,

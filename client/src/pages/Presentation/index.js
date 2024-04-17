@@ -30,11 +30,34 @@ import footerRoutes from "footer.routes";
 
 // Images
 import bgImage from "assets/images/bg-presentation.jpg";
+import axios from "axios";
+import { BASE_URL } from "utilities/initialValue";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { setUserLogin } from "app/slices/userSlice";
+import { checkError } from "utilities/auth";
+import { useNavigate } from "react-router-dom";
 
 function Presentation() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const jwt = localStorage.getItem("jwt");
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${jwt}`,
+    },
+  };
+
+  useEffect(() => {
+    axios
+      .get(`${BASE_URL}/user/profile`, config)
+      .then((res) => dispatch(setUserLogin(res.data)))
+      .catch((err) => checkError(err, navigate));
+  }, [dispatch]);
   return (
     <>
-      <DefaultNavbar routes={routes} brand="Education Gate" transparent light />
+      <DefaultNavbar routes={routes} brand="Startup Gate" transparent light />
       <MKBox
         minHeight="75vh"
         width="100%"

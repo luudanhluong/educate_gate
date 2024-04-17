@@ -355,6 +355,13 @@ const getAllTempMatchingByGId = async (gId, { search, skip, limit }) => {
   }
 };
 
+const updateGroup = async (id, value) => {
+  try {
+    return await Group.findByIdAndUpdate(id, value);
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
 export default {
   getGroupById,
   getGroupMembers,
@@ -366,4 +373,5 @@ export default {
   checkGroupsExist,
   countGroupGetMatched,
   getAllTempMatchingByGId,
+  updateGroup,
 };

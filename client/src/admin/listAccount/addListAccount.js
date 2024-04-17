@@ -83,9 +83,7 @@ function AddListAccount() {
             <MKBox mb={2}>
               <Formik
                 initialValues={formValues}
-                onSubmit={(values) => {
-                  handleSubmit(values);
-                }}
+                onSubmit={(values) => handleSubmit(values)}
                 validationSchema={initialValues}
               >
                 {({ errors, touched, handleChange }) => (
