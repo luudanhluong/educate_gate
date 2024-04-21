@@ -21,8 +21,7 @@ function Profile() {
   const { data: mentorCategories } = useSelector((state) => state.category.mentorCategories);
   const { username, phoneNumber, classId, gender, email, Dob, menteeCount, degree } =
     userLogin || {};
-  const { preName, code, suffName } = classId || {};
-
+  console.log(userLogin);
   return (
     <MKBox component="section" py={{ xs: 6, sm: 12 }}>
       <Container>
@@ -72,7 +71,7 @@ function Profile() {
                 )}
               </MKBox>
               <Grid container display={"flex"} flexDirection={"column"} gap={"1rem"} py={2}>
-                {classId && (
+                {classId?.length > 0 && (
                   <MKBox>
                     <MKTypography component="span" variant="body2" fontWeight="bold">
                       Lớp:&nbsp;
@@ -83,9 +82,7 @@ function Profile() {
                       color="text"
                       sx={{ fontWeight: "400" }}
                     >
-                      {preName}
-                      {code}
-                      {suffName ? "-" + suffName : ""}
+                      {classId?.[0]?.className}
                     </MKTypography>
                   </MKBox>
                 )}
