@@ -12,6 +12,7 @@ import MKButton from "components/MKButton";
 import { checkError } from "utilities/auth";
 import { setGroups } from "app/slices/groupSlice";
 import getParams from "utilities/getParams";
+import MKTypography from "components/MKTypography";
 
 const ListOfGroups = () => {
   const dispatch = useDispatch();
@@ -22,6 +23,7 @@ const ListOfGroups = () => {
   const { userLogin } = useSelector((state) => state.user);
   const { active_popup } = useSelector((state) => state.active);
   const isActivePopup = () => dispatch(setActivePopup(!active_popup));
+  console.log(groups);
   const jwt = localStorage.getItem("jwt");
   const config = {
     headers: {
@@ -156,13 +158,23 @@ const ListOfGroups = () => {
             <MKBox display={"flex"} justifyContent="space-between">
               <Typography
                 flex={1}
+                as="div"
                 sx={{ color: "#fff" }}
                 variant="subtitle1"
-                fontWeight="bold"
-                fontSize={"0.925rem"}
+                width="80%"
                 className="truncate"
               >
-                Tên nhóm: {group.name}
+                <MKTypography
+                  as="span"
+                  color="white"
+                  fontWeight="bold"
+                  sx={{ fontSize: "0.925rem", mr: "4px" }}
+                >
+                  Tên: {group.name}
+                </MKTypography>
+                <MKTypography as="span" color="white" sx={{ fontSize: "0.925rem" }}>
+                  <i>({group.class?.className})</i>
+                </MKTypography>
               </Typography>
               <MKButton
                 disabled={group.matched?.length > 0 || group.matching?.length === 0}

@@ -2,33 +2,20 @@
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
-
-// Material Kit 2 React components
 import MKBox from "components/MKBox";
 import MKTypography from "components/MKTypography";
 import MKSocialButton from "components/MKSocialButton";
-
-// Material Kit 2 React examples
 import DefaultFooter from "examples/Footers/DefaultFooter";
-import FilledInfoCard from "examples/Cards/InfoCards/FilledInfoCard";
 import DefaultNavbar from "Navbars/DefaultNavbar";
-
-// Presentation page sections
-import Counters from "pages/Presentation/sections/Counters";
-import Information from "pages/Presentation/sections/Information";
-import DesignBlocks from "pages/Presentation/sections/DesignBlocks";
-import Pages from "pages/Presentation/sections/Pages";
-import Testimonials from "pages/Presentation/sections/Testimonials";
-import Download from "pages/Presentation/sections/Download";
-
-// Presentation page components
-import BuiltByDevelopers from "pages/Presentation/components/BuiltByDevelopers";
-
-// Routes
+// import FilledInfoCard from "examples/Cards/InfoCards/FilledInfoCard";
+// import Counters from "pages/Presentation/sections/Counters";
+// import Information from "pages/Presentation/sections/Information";
+// import DesignBlocks from "pages/Presentation/sections/DesignBlocks";
+// import Pages from "pages/Presentation/sections/Pages";
+// import BuiltByDevelopers from "pages/Presentation/components/BuiltByDevelopers";
+// import Testimonials from "pages/Presentation/sections/Testimonials";
 import routes from "routes";
 import footerRoutes from "footer.routes";
-
-// Images
 import bgImage from "assets/images/bg-presentation.jpg";
 import axios from "axios";
 import { BASE_URL } from "utilities/initialValue";
@@ -108,14 +95,14 @@ function Presentation() {
           boxShadow: ({ boxShadows: { xxl } }) => xxl,
         }}
       >
-        <Counters />
+        {/* <Counters />
         <Information />
         <DesignBlocks />
         <Pages />
         <Container sx={{ mt: 6 }}>
           <BuiltByDevelopers />
-        </Container>
-        <Container>
+        </Container> */}
+        {/* <Container>
           <Grid container spacing={3}>
             <Grid item xs={12} lg={4}>
               <FilledInfoCard
@@ -158,9 +145,8 @@ function Presentation() {
               />
             </Grid>
           </Grid>
-        </Container>
-        <Testimonials />
-        <Download />
+        </Container> */}
+        {/* <Testimonials /> */}
         <MKBox pt={18} pb={6}>
           <Container>
             <Grid container spacing={3}>

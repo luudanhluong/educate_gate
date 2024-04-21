@@ -102,6 +102,14 @@ const getGroupsByClassId = async (classId) => {
       { $match: { classId: new mongoose.Types.ObjectId(classId) } },
       {
         $lookup: {
+          from: "classes",
+          localField: "classId",
+          foreignField: "_id",
+          as: "class",
+        },
+      },
+      {
+        $lookup: {
           from: "projects",
           localField: "projectId",
           foreignField: "_id",
@@ -201,6 +209,7 @@ const getGroupsByClassId = async (classId) => {
           as: "matchingMentorcategories",
         },
       },
+      { $unwind: "$class" },
     ]);
 
     return result;
