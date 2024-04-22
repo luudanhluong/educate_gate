@@ -87,20 +87,21 @@ const ViewGroups = ({ teacherId }) => {
   const handleExportExcel = () => {
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet("Danh_sach_matched");
+    const columnNames = [
+      "ClassName",
+      "RollNumber",
+      "MemberCode",
+      "Email",
+      "Username",
+      "Teacher",
+      "Project",
+      "Acc Mentor",
+      "PhoneNumber",
+      "Email",
+    ];
+    worksheet.addRow(columnNames);
     allGroups?.forEach((row) => {
       const { className, project, teacher, members, matched } = row;
-      worksheet.addRow([
-        "ClassName",
-        "RollNumber",
-        "MemberCode",
-        "Email",
-        "Username",
-        "Teacher",
-        "Project",
-        "Acc Mentor",
-        "PhoneNumber",
-        "Email",
-      ]);
       if (matched.length > 0)
         members?.forEach((member) => {
           worksheet.addRow([
@@ -116,6 +117,13 @@ const ViewGroups = ({ teacherId }) => {
             matched?.[0]?.email,
           ]);
         });
+    });
+    columnNames.forEach((header, index) => {
+      const column = worksheet.getColumn(index + 1);
+      column.eachCell((cell) => {
+        const length = String(cell.value).length;
+        column.width = Math.max(column.width || 0, length + 2);
+      });
     });
     const fileName = "Danh_sach_matched.xlsx";
     workbook.xlsx.writeBuffer().then(function (buffer) {
@@ -260,13 +268,23 @@ const ViewGroups = ({ teacherId }) => {
               <MKBox display={"flex"} justifyContent="space-between">
                 <Typography
                   flex={1}
+                  as="div"
                   sx={{ color: "#fff" }}
                   variant="subtitle1"
-                  fontWeight="bold"
-                  fontSize={"0.925rem"}
+                  width="80%"
                   className="truncate"
                 >
-                  Tên nhóm: {g.group?.name}
+                  <MKTypography
+                    as="span"
+                    color="white"
+                    fontWeight="bold"
+                    sx={{ fontSize: "0.925rem", mr: "4px" }}
+                  >
+                    Tên: {g.group?.name}
+                  </MKTypography>
+                  <MKTypography as="span" color="white" sx={{ fontSize: "0.925rem" }}>
+                    <i>({g.className})</i>
+                  </MKTypography>
                 </Typography>
                 <MKButton
                   disabled={g.matched?.length > 0 || g.matching?.length === 0}
@@ -279,7 +297,7 @@ const ViewGroups = ({ teacherId }) => {
               <Typography variant="body2" sx={{ fontSize: "0.8rem" }}>
                 Ten dự án: {g.project?.name}
               </Typography>
-              <Typography variant="body2" sx={{ fontSize: "0.8rem" }}>
+              <Typography variant="body2" sx={{ fontSize: "0.8rem" }} className="truncate">
                 Lĩnh vực: {g.projectcategories?.map((p) => p.name).join(", ")}
               </Typography>
             </Box>

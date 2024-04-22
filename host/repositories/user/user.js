@@ -260,12 +260,9 @@ const updateUsers = async (listUser, status) => {
 };
 const updateUser = async (query, user) => {
   try {
-    await User.updateMany(
-      { query },
-      {
-        $set: user,
-      }
-    );
+    return await User.updateMany(query, {
+      $set: user,
+    });
   } catch (error) {
     throw new Error(error.message);
   }
@@ -295,13 +292,28 @@ const getUserBySmtId = async (smtId, role) => {
 };
 
 const comparePassword = async (inputPassword, savedPassword) => {
-  return await bcrypt.compare(inputPassword, savedPassword);
+  try {
+    return await bcrypt.compare(inputPassword, savedPassword);
+  } catch (error) {
+    throw new Error(error.message);
+  }
 };
 
 const updateUserPassword = async (userId, newPassword) => {
-  const saltRounds = 10;
-  const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
-  await User.findByIdAndUpdate(userId, { password: hashedPassword });
+  try {
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
+    await User.findByIdAndUpdate(userId, { password: hashedPassword });
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+const findUser = async (query) => {
+  try {
+    return await User.findOne(query);
+  } catch (error) {
+    throw new Error(error.message);
+  }
 };
 
 export default {
@@ -318,4 +330,5 @@ export default {
   updateUser,
   comparePassword,
   updateUserPassword,
+  findUser,
 };

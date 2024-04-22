@@ -7,6 +7,7 @@ const initialValue = {
   deleteClass: {},
   editClass: {},
   pageNo: 0,
+  class: {},
 };
 const classSlice = createSlice({
   name: "class",
@@ -33,6 +34,9 @@ const classSlice = createSlice({
     setEditClass: (state, action) => {
       state.editClass = action.payload;
     },
+    setClass: (state, action) => {
+      state.class = action.payload;
+    },
   },
 });
 
@@ -45,5 +49,6 @@ export const {
   setClassList,
   setdeleteClass,
   setEditClass,
+  setClass,
 } = actions;
 export default reducer;

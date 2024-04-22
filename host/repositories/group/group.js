@@ -102,6 +102,14 @@ const getGroupsByClassId = async (classId) => {
       { $match: { classId: new mongoose.Types.ObjectId(classId) } },
       {
         $lookup: {
+          from: "classes",
+          localField: "classId",
+          foreignField: "_id",
+          as: "class",
+        },
+      },
+      {
+        $lookup: {
           from: "projects",
           localField: "projectId",
           foreignField: "_id",
@@ -201,6 +209,7 @@ const getGroupsByClassId = async (classId) => {
           as: "matchingMentorcategories",
         },
       },
+      { $unwind: "$class" },
     ]);
 
     return result;
@@ -355,6 +364,13 @@ const getAllTempMatchingByGId = async (gId, { search, skip, limit }) => {
   }
 };
 
+const updateGroup = async (id, value) => {
+  try {
+    return await Group.findByIdAndUpdate(id, value);
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
 export default {
   getGroupById,
   getGroupMembers,
@@ -366,4 +382,5 @@ export default {
   checkGroupsExist,
   countGroupGetMatched,
   getAllTempMatchingByGId,
+  updateGroup,
 };

@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 import { Icon } from "@mui/material";
 
 function Pagination({ pageNo, qttPage }) {
+  console.log(pageNo, qttPage - 4 >= pageNo + 1 ? pageNo + 1 : qttPage - 4);
   const dispatch = useDispatch();
   return (
     <MKBox
@@ -22,13 +23,61 @@ function Pagination({ pageNo, qttPage }) {
       <MKPagination item onClick={() => pageNo > 0 && dispatch(setPageNo(pageNo - 1))}>
         <Icon>keyboard_arrow_left</Icon>
       </MKPagination>
-      {Array.from({ length: qttPage }, (_, index) => (
-        <MKPagination key={index}>
-          <MKPagination active={index === pageNo} onClick={() => dispatch(setPageNo(index))} item>
-            {index + 1}
+      {qttPage < 10 ? (
+        Array.from({ length: qttPage }, (_, index) => (
+          <MKPagination key={index}>
+            <MKPagination active={index === pageNo} onClick={() => dispatch(setPageNo(index))} item>
+              {index + 1}
+            </MKPagination>
           </MKPagination>
-        </MKPagination>
-      ))}
+        ))
+      ) : (
+        <>
+          <MKPagination>
+            <MKPagination
+              active={qttPage - 4 >= pageNo}
+              onClick={() =>
+                dispatch(setPageNo(qttPage - 4 >= pageNo + 1 ? pageNo + 1 : qttPage - 4))
+              }
+              item
+            >
+              {qttPage - 3 >= pageNo + 1 ? pageNo + 1 : qttPage - 3}
+            </MKPagination>
+          </MKPagination>
+          <MKPagination>
+            <MKPagination
+              active={qttPage - 3 === pageNo}
+              onClick={() =>
+                dispatch(setPageNo(qttPage - 3 >= pageNo + 2 ? pageNo + 1 : qttPage - 3))
+              }
+              item
+            >
+              {qttPage - 2 >= pageNo + 2 ? pageNo + 2 : qttPage - 2}
+            </MKPagination>
+          </MKPagination>
+          <MKPagination>
+            <MKPagination item>...</MKPagination>
+          </MKPagination>
+          <MKPagination>
+            <MKPagination
+              active={qttPage - 2 === pageNo}
+              onClick={() => dispatch(setPageNo(qttPage - 2))}
+              item
+            >
+              {qttPage - 1}
+            </MKPagination>
+          </MKPagination>
+          <MKPagination>
+            <MKPagination
+              active={qttPage - 1 === pageNo}
+              onClick={() => dispatch(setPageNo(qttPage - 1))}
+              item
+            >
+              {qttPage}
+            </MKPagination>
+          </MKPagination>
+        </>
+      )}
       <MKPagination item onClick={() => qttPage - 1 > pageNo && dispatch(setPageNo(pageNo + 1))}>
         <Icon>keyboard_arrow_right</Icon>
       </MKPagination>

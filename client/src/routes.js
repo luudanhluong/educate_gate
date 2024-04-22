@@ -38,7 +38,7 @@ function Routes() {
     },
   };
   useEffect(() => {
-    dispatch(setLimit(24));
+    dispatch(setLimit(12));
     if (jwt)
       axios
         .get(BASE_URL + "/user/profile", config)

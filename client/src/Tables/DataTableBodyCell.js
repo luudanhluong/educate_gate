@@ -26,13 +26,11 @@ function DataTableBodyCell({ noBorder, align, children }) {
 // Setting default values for the props of DataTableBodyCell
 DataTableBodyCell.defaultProps = {
   noBorder: false,
-  width: "auto",
   align: "left",
 };
 
 // Typechecking props for the DataTableBodyCell
 DataTableBodyCell.propTypes = {
-  width: PropTypes.string,
   children: PropTypes.node.isRequired,
   noBorder: PropTypes.bool,
   align: PropTypes.oneOf(["left", "right", "center"]),

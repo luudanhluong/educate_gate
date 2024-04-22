@@ -6,7 +6,6 @@ import userDAO from "../../repositories/user/index.js";
 const getGroupById = async (req, res, next) => {
   try {
     const { id } = req.params;
-    console.log(id);
     res.send(await groupDAO.getGroupById(id));
   } catch (error) {
     next(error);
@@ -78,38 +77,56 @@ const createRandomGroups = async (req, res) => {
 
 const createGroupsFromExcel = async (req, res, next) => {
   try {
-    const { id: classId } = req.query;
-    const datas = req.body;
+    const { id: classId } = req.params;
+    const { listStudent } = req.body;
+    const groupsExist = await groupDAO.getGroupsByClassId(classId);
+    if (groupsExist.length > 0) return;
+    listStudent?.sort((a, b) => a.GroupNo - b.GroupNo);
+    const groupedStudents = {};
     let project;
     let group;
-    let user;
-    let flag = false;
-    for (const data of datas) {
-      const { Email, RollNumber, MemberCode, ProjectName, FullName, GroupNo } =
-        data;
-      if (GroupNo) {
-        if (ProjectName) {
-          project = await projectDAO.createProject({ name: ProjectName });
-        }
+    listStudent.forEach((student) => {
+      const { GroupNo } = student;
+      if (!groupedStudents[GroupNo]) {
+        groupedStudents[GroupNo] = [];
+      }
+      groupedStudents[GroupNo].push(student);
+    });
+    for (const groupNo in groupedStudents) {
+      if (Object.hasOwn(groupedStudents, groupNo)) {
+        const element = groupedStudents[groupNo];
+        const user = await userDAO.findUser({
+          status: "Active",
+          email: element[0]?.Email,
+        });
+        if (!user) break;
         group = await groupDAO.createGroup({
           classId: classId,
-          projectId: project?._id || "",
-          name: "Nhóm " + GroupNo,
+          name: "Nhóm " + groupNo,
         });
-        if (group)
-          user = await userDAO.updateUser(
-            {
-              email: Email,
-              rollNumber: RollNumber,
-              memberCode: MemberCode,
-              username: FullName,
-            },
-            { groupId: group?._id || "" }
-          );
-        if (user) flag = true;
+        if (group && element.length > 0) {
+          project = await projectDAO.createProject({
+            name: element[0].ProjectName,
+          });
+          if (project) {
+            groupDAO.updateGroup(group?._id, { projectId: project?._id });
+            for (const user of element) {
+              await userDAO.updateUser(
+                {
+                  status: "Active",
+                  email: user?.Email,
+                },
+                {
+                  groupId: group?._id,
+                  isLeader: user?.Leader === 1,
+                }
+              );
+            }
+          }
+        }
       }
     }
-    if (flag) res.send("success");
+    res.send("success");
   } catch (error) {
     next(error);
   }

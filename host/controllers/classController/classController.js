@@ -36,7 +36,6 @@ const deleteClass = async (req, res, next) => {
 const getClass = async (req, res, next) => {
   try {
     const { id } = req.params;
-    console.log(id);
     const result = await classDAO.getClass(id);
     res.send(result);
   } catch (error) {

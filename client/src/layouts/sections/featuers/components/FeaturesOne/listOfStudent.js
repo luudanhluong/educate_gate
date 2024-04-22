@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import {
   setActivePopupCreateGroupFromExcel,
   setActivePopupCreateGroup,
@@ -19,17 +19,17 @@ const ListOfStudent = () => {
   const dispatch = useDispatch();
   const url = useLocation();
   const classId = getParams(3, url.pathname);
+  const { class: classObj } = useSelector((state) => state.class);
   const { active_create_group, active_create_group_excel } = useSelector((state) => state.active);
-  const [showCreateGroupButtons, setShowCreateGroupButtons] = useState(false);
+  const { data: classStudent } = useSelector((state) => state.user.users);
+  const { groups } = useSelector((state) => state.group);
 
   const handleRandomGroup = () => {
     dispatch(setActivePopupCreateGroup(true));
   };
-
   const handleExcelGroup = () => {
     dispatch(setActivePopupCreateGroupFromExcel(true));
   };
-  const classStudent = useSelector((state) => state.user.users);
 
   useEffect(() => {
     if (classId) {
@@ -37,34 +37,56 @@ const ListOfStudent = () => {
     }
   }, [classId, dispatch]);
 
-  useEffect(() => {
-    const allWithoutGroup = classStudent?.data?.every(
-      (student) => student.groupName === "Chưa có nhóm"
-    );
-    setShowCreateGroupButtons(allWithoutGroup);
-  }, [classStudent]);
   const handleExportExcel = () => {
     const workbook = new ExcelJS.Workbook();
-    const worksheet = workbook.addWorksheet("Danh_sach_hoc_sinh");
-    classStudent.forEach((row) => {
+    const worksheet = workbook.addWorksheet("template");
+    const columnNames = [
+      "TeacherName",
+      "TeacherEmail",
+      "ClassName",
+      "Email",
+      "MemberCode",
+      "RollNumber",
+      "FullName",
+      "Gender",
+      "GroupNo",
+      "Leader",
+      "ProjectName",
+    ];
+    worksheet.addRow(columnNames);
+    classStudent?.forEach((row) => {
       const { email, memberCode, rollNumber, username, gender } = row;
-      worksheet.addRow([email, memberCode, rollNumber, username, gender ? "nam" : "nữ"]);
+      worksheet.addRow([
+        classObj?.[0]?.teacherId?.username,
+        classObj?.[0]?.teacherId?.email,
+        classObj?.[0]?.className,
+        email,
+        memberCode,
+        rollNumber,
+        username,
+        gender ? "nam" : "nữ",
+      ]);
     });
-    const fileName = "Danh_sach_hoc_sinh.xlsx";
+    columnNames.forEach((header, index) => {
+      const column = worksheet.getColumn(index + 1);
+      column.eachCell((cell) => {
+        const length = String(cell.value).length;
+        column.width = Math.max(column.width || 0, length + 2);
+      });
+    });
+    const fileName = "template.xlsx";
     workbook.xlsx.writeBuffer().then(function (buffer) {
       saveAs(new Blob([buffer], { type: "application/octet-stream" }), fileName);
     });
   };
   return (
     <>
-      {showCreateGroupButtons && (
-        <>
-          <MKBox px={"14px"} my={1} display="flex" justifyContent="end" gap="1.5rem">
-            <MKButton onClick={handleExportExcel}>Tải file</MKButton>
-            <MKButton onClick={handleRandomGroup}>Tạo Nhóm Ngẫu Nhiên</MKButton>
-            <MKButton onClick={handleExcelGroup}>Tạo Nhóm Bằng Excel</MKButton>
-          </MKBox>
-        </>
+      {groups?.length === 0 && (
+        <MKBox px={"14px"} my={1} display="flex" justifyContent="end" gap="1.5rem">
+          <MKButton onClick={handleExportExcel}>Tải file</MKButton>
+          <MKButton onClick={handleRandomGroup}>Tạo Nhóm Ngẫu Nhiên</MKButton>
+          <MKButton onClick={handleExcelGroup}>Tạo Nhóm Bằng Excel</MKButton>
+        </MKBox>
       )}
       {active_create_group && <CreateGroupModal />}
       {active_create_group_excel && <CreateGroupFromExcelPopup />}

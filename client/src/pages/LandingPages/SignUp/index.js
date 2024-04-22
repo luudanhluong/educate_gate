@@ -33,7 +33,7 @@ import MKBox from "components/MKBox";
 import MKTypography from "components/MKTypography";
 
 // Material Kit 2 React example components
-import DefaultNavbar from "examples/Navbars/DefaultNavbar";
+import DefaultNavbar from "Navbars/DefaultNavbar";
 import SimpleFooter from "examples/Footers/SimpleFooter";
 
 // Material Kit 2 React page layout routes

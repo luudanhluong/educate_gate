@@ -48,7 +48,6 @@ const getUserInSemester = async (req, res, next) => {
 const deleteDmtDetById = async (req, res, next) => {
   try {
     const { id } = req.params;
-    console.log(id);
     const result = await semesterDetails.deleteDmtDetById(id);
     res.send(result);
   } catch (error) {
