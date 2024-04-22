@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 const initialValue = {
   users: {},
+  userProfile: {},
   userRegister: {},
   userLogin: { role: 0 },
   filterRole: 0,
@@ -74,6 +75,9 @@ const storiesSlice = createSlice({
     setUser: (state, action) => {
       state.user = action.payload;
     },
+    setUserProfile: (state, action) => {
+      state.userProfile = action.payload;
+    },
     setDelUser: (state, action) => {
       state.delUser = action.payload;
     },
@@ -97,5 +101,6 @@ export const {
   setRole,
   setUser,
   setDelUser,
+  setUserProfile,
 } = actions;
 export default reducer;

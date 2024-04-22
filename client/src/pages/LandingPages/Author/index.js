@@ -17,11 +17,17 @@ import EditProfile from "./sections/EditProfile";
 import { checkError } from "utilities/auth";
 import { useNavigate } from "react-router-dom";
 import ChangePassword from "./sections/ChangePassword";
+import { useLocation } from "react-router-dom";
+import getParams from "utilities/getParams";
+import { setUserProfile } from "app/slices/userSlice";
 
 function Author() {
   const dispatch = useDispatch();
+  const url = useLocation();
+  const userId = getParams(2, url.pathname);
   const navigate = useNavigate();
   const jwt = localStorage.getItem("jwt");
+
   const config = {
     headers: {
       "Content-Type": "application/json",
@@ -29,16 +35,29 @@ function Author() {
     },
   };
   const { userLogin } = useSelector((state) => state.user);
+  const { userProfile } = useSelector((state) => state.user);
   const { active_popup } = useSelector((state) => state.active);
   const active_change_password = useSelector((state) => state.active.active_change_password);
-
   const { _id: id } = userLogin || {};
+
   useEffect(() => {
     axios
       .get(BASE_URL + "/user/profile", config)
       .then((res) => dispatch(setUserLogin(res.data)))
       .catch((err) => checkError(err, navigate));
   }, [dispatch]);
+  useEffect(() => {
+    axios
+      .get(BASE_URL + `/user/${userId}/profile`, config)
+      .then((res) => {
+        dispatch(setUserProfile(res.data));
+        return axios.get(BASE_URL + `/mentor_category/${userId}`, config);
+      })
+      .then((res) => {
+        dispatch(setMentorCategories(res.data));
+      })
+      .catch((err) => checkError(err, navigate));
+  }, [dispatch, userId, navigate, userProfile]);
   useEffect(() => {
     axios
       .get(BASE_URL + "/category")
@@ -51,6 +70,7 @@ function Author() {
         .then((res) => dispatch(setMentorCategories(res.data)))
         .catch((err) => console.log(err.message));
   }, [dispatch, userLogin]);
+
   return (
     <>
       <DefaultNavbar routes={routes} brand="Education Gate" transparent light sticky />
@@ -85,7 +105,6 @@ function Author() {
           }}
         >
           <Profile />
-          {/* <Posts /> */}
         </Card>
         {/* <Contact /> */}
         {/* <Footer /> */}

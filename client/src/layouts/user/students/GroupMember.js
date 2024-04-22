@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setActivePopup } from "app/slices/activeSlice";
 import MKButton from "components/MKButton";
 import "../../sections/featuers/components/FeaturesOne/studentList.css";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import getParams from "utilities/getParams";
 import MKTypography from "components/MKTypography";
@@ -11,10 +11,15 @@ import MKBox from "components/MKBox";
 
 const GroupMembers = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const url = useLocation();
   const groupId = getParams(2, url.pathname);
   const { group: groupDetails } = useSelector((state) => state.group);
   const { userLogin } = useSelector((state) => state.user);
+  console.log(groupDetails);
+  const handleUserDetailClick = (userId) => {
+    navigate(`/user/${userId}/profile`);
+  };
   return (
     <Box
       sx={{
@@ -125,6 +130,7 @@ const GroupMembers = () => {
           >
             {groupDetails?.members?.map((member) => (
               <ListItem
+                onClick={() => handleUserDetailClick(member?._id)}
                 key={member.username}
                 sx={{
                   "&:not(:last-child)": {
@@ -178,6 +184,7 @@ const GroupMembers = () => {
       <Box marginTop={1} sx={{ width: "30%" }}>
         {groupDetails?.mentor?.length > 0 && (
           <Box
+            onClick={() => handleUserDetailClick(groupDetails?.mentor[0]._id)}
             sx={{
               padding: 3,
               textAlign: "center",

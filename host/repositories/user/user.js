@@ -97,6 +97,14 @@ const findUserById = async (id) => {
           as: "mentor",
         },
       },
+      {
+        $lookup: {
+          from: "classes",
+          localField: "_id",
+          foreignField: "teacherId",
+          as: "classList",
+        },
+      },
     ]);
     return user[0];
   } catch (error) {

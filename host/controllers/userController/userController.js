@@ -42,6 +42,17 @@ const userProfile = async (req, res, next) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+const getUserProfileById = async (req, res) => {
+  const userId = req.params.userId;
+  try {
+    const user = await userDAO.findUserById(userId);
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 const userUpdateProfile = async (req, res, next) => {
   const token = req.headers["authorization"];
   if (!token) return res.status(401).send("Access denied");
@@ -126,4 +137,5 @@ export default {
   pmtUser,
   getUserBySmtId,
   changePassword,
+  getUserProfileById,
 };

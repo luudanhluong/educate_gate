@@ -5,6 +5,8 @@ import { verifyAccessToken } from "../../utilities/jwt.js";
 const user = express.Router();
 
 user.get("/profile", verifyAccessToken, userController.userProfile);
+user.get("/:userId/profile", userController.getUserProfileById);
+
 user.get(
   "/without_semester",
   verifyAccessToken,

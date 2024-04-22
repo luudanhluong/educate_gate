@@ -11,17 +11,25 @@ import { useDispatch, useSelector } from "react-redux";
 import getDate from "utilities/getDate";
 import { setDelUser } from "app/slices/userSlice";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
+import { useNavigate } from "react-router-dom";
 
 export default function data() {
   const { data } = useSelector((state) => state.user.users);
   const { userLogin } = useSelector((state) => state.user);
   const dispatch = useDispatch();
-  const User = ({ image, name, email }) => (
+  const navigate = useNavigate();
+
+  const handleUserDetailClick = (userId) => {
+    navigate(`/user/${userId}/profile`);
+  };
+  console.log(data);
+  const User = ({ _id, image, name, email }) => (
     <MKBox
+      onClick={() => handleUserDetailClick(_id)}
       display="flex"
       alignItems="center"
       lineHeight={1}
-      sx={{ userselect: "none", cursor: "pointer" }}
+      sx={{ userSelect: "none", cursor: "pointer" }}
     >
       <MKAvatar src={image} name={name} size="md" />
       <MKBox ml={1} lineHeight={1}>
@@ -32,6 +40,7 @@ export default function data() {
       </MKBox>
     </MKBox>
   );
+
   const Action = ({ user }) => {
     const handleDelete = () => {
       if (user.status === "InActive") dispatch(setDelUser(user));
@@ -52,6 +61,8 @@ export default function data() {
     user: PropTypes.object.isRequired,
   };
   User.propTypes = {
+    _id: PropTypes.string.isRequired,
+
     image: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     email: PropTypes.string.isRequired,
@@ -60,7 +71,7 @@ export default function data() {
   const rows =
     data?.map((user) => {
       let result = {
-        user: <User image={userImg} name={user.username} email={user.email} />,
+        user: <User _id={user._id} image={userImg} name={user.username} email={user.email} />,
         gender: (
           <MKTypography component="div" variant="caption" color="text" fontWeight="medium">
             {user.gender ? "Nam" : "Nữ"}

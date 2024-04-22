@@ -11,18 +11,39 @@ import { setActivePopup } from "app/slices/activeSlice";
 import getDate from "utilities/getDate";
 import { Icon, Container, Grid } from "@mui/material";
 import { setActivePopupChangePassword } from "app/slices/activeSlice";
+import { useLocation } from "react-router-dom";
 
 function Profile() {
   const dispatch = useDispatch();
-  const { userLogin } = useSelector((state) => state.user);
+  const { userLogin, userProfile } = useSelector((state) => state.user);
+  const url = useLocation();
+  const isPersonalProfile = url.pathname.startsWith("/pages/landing-pages/author");
+  const userData = isPersonalProfile ? userLogin : userProfile;
   const { active_popup } = useSelector((state) => state.active);
   const { active_change_password } = useSelector((state) => state.active);
   const { data: categories } = useSelector((state) => state.category.categories);
   const { data: mentorCategories } = useSelector((state) => state.category.mentorCategories);
-  const { username, phoneNumber, classId, gender, email, Dob, menteeCount, degree } =
-    userLogin || {};
-  const { preName, code, suffName } = classId || {};
+  const {
+    username,
+    phoneNumber,
+    classId,
+    gender,
+    email,
+    Dob,
+    menteeCount,
+    degree,
+    role,
+    classList,
+  } = userData || {};
 
+  let classNamesDisplay;
+  if (role === 2) {
+    classNamesDisplay = classList.map((cl) => cl.className).join(", ");
+  } else {
+    const className = classId && classId.length > 0 ? classId[0].className : "";
+    classNamesDisplay = className;
+  }
+  console.log(userData);
   return (
     <MKBox component="section" py={{ xs: 6, sm: 12 }}>
       <Container>
@@ -72,7 +93,7 @@ function Profile() {
                 )}
               </MKBox>
               <Grid container display={"flex"} flexDirection={"column"} gap={"1rem"} py={2}>
-                {classId && (
+                {role === 2 || role === 4 ? (
                   <MKBox>
                     <MKTypography component="span" variant="body2" fontWeight="bold">
                       Lớp:&nbsp;
@@ -83,12 +104,10 @@ function Profile() {
                       color="text"
                       sx={{ fontWeight: "400" }}
                     >
-                      {preName}
-                      {code}
-                      {suffName ? "-" + suffName : ""}
+                      {classNamesDisplay}
                     </MKTypography>
                   </MKBox>
-                )}
+                ) : null}
                 {email && (
                   <MKBox>
                     <MKTypography component="span" variant="body2" fontWeight="bold">
@@ -147,7 +166,23 @@ function Profile() {
                     </MKTypography>
                   </MKBox>
                 )}
-                {mentorCategories && mentorCategories.length > 0 && (
+
+                {degree && (
+                  <MKBox>
+                    <MKTypography component="span" variant="body2" fontWeight="bold">
+                      Mô tả sự nghiệp:&nbsp;
+                    </MKTypography>
+                    <MKTypography
+                      component="span"
+                      variant="body2"
+                      color="text"
+                      sx={{ fontWeight: "400" }}
+                    >
+                      {degree}
+                    </MKTypography>
+                  </MKBox>
+                )}
+                {role === 3 && mentorCategories && mentorCategories.length > 0 && (
                   <MKBox>
                     <MKTypography component="span" variant="body2" fontWeight="bold">
                       Thể loại:&nbsp;
@@ -165,33 +200,22 @@ function Profile() {
                     </MKTypography>
                   </MKBox>
                 )}
-                {degree && (
-                  <MKBox>
-                    <MKTypography component="span" variant="body2" fontWeight="bold">
-                      Mô tả sự nghiệp:&nbsp;
-                    </MKTypography>
-                    <MKTypography
-                      component="span"
-                      variant="body2"
-                      color="text"
-                      sx={{ fontWeight: "400" }}
-                    >
-                      {degree}
-                    </MKTypography>
-                  </MKBox>
-                )}
               </Grid>
             </Grid>
-            <MKBox sx={{ position: "absolute", bottom: 0, right: 0, display: "flex", gap: "10px" }}>
-              <MKButton onClick={() => dispatch(setActivePopup(!active_popup))}>
-                Chỉnh sửa thông tin cá nhân
-              </MKButton>
-              <MKButton
-                onClick={() => dispatch(setActivePopupChangePassword(!active_change_password))}
+            {isPersonalProfile && (
+              <MKBox
+                sx={{ position: "absolute", bottom: 0, right: 0, display: "flex", gap: "10px" }}
               >
-                Đổi mật khẩu
-              </MKButton>
-            </MKBox>
+                <MKButton onClick={() => dispatch(setActivePopup(!active_popup))}>
+                  Chỉnh sửa thông tin cá nhân
+                </MKButton>
+                <MKButton
+                  onClick={() => dispatch(setActivePopupChangePassword(!active_change_password))}
+                >
+                  Đổi mật khẩu
+                </MKButton>
+              </MKBox>
+            )}
           </Grid>
         </Grid>
       </Container>

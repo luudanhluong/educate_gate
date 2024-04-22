@@ -32,6 +32,7 @@ const ListOfGroups = () => {
   const handleGroupDetailClick = (groupId) => {
     navigate(`/group/${groupId}/members`);
   };
+
   const handleSaveMatched = (gid, uid) => {
     axios
       .post(`${BASE_URL}/matched`, { groupId: gid, mentorId: uid }, config)
