@@ -16,7 +16,6 @@ const GroupMembers = () => {
   const groupId = getParams(2, url.pathname);
   const { group: groupDetails } = useSelector((state) => state.group);
   const { userLogin } = useSelector((state) => state.user);
-  console.log(groupDetails);
   const handleUserDetailClick = (userId) => {
     navigate(`/user/${userId}/profile`);
   };

@@ -55,11 +55,11 @@ const GroupDetail = () => {
   useEffect(() => {
     if (group.project) {
       axios
-        .get(`${BASE_URL}/project/${group.project[0]?._id}`, config)
+        .get(`${BASE_URL}/project/${group.project._id}`, config)
         .then((res) => dispatch(setProject(res.data)))
         .catch((err) => console.log(err.message));
       axios
-        .get(`${BASE_URL}/project_category/${group.project[0]?._id}`, config)
+        .get(`${BASE_URL}/project_category/${group.project._id}`, config)
         .then((res) => dispatch(setProjectCategories(res.data)))
         .catch((err) => console.log(err.message));
     }
