@@ -9,6 +9,7 @@ import categorySlice from "./slices/categorySlice";
 import semesterSlice from "./slices/semesterSlice";
 import projectSlice from "./slices/projectSlice";
 import groupSlice from "./slices/groupSlice";
+import mentorSlice from "./slices/mentorSlice";
 import temporaryMatchingSlice from "./slices/temporaryMatching";
 import utilitiesSlice from "./slices/utilitiesSlice";
 import { applyMiddleware } from "redux";
@@ -27,6 +28,7 @@ const rootReducer = {
   group: groupSlice,
   temporaryMatching: temporaryMatchingSlice,
   utilities: utilitiesSlice,
+  mentor: mentorSlice,
 };
 
 const store = configureStore(

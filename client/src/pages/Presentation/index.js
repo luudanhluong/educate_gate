@@ -3,20 +3,20 @@ import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
 import MKBox from "components/MKBox";
-import MKTypography from "components/MKTypography";
-import MKSocialButton from "components/MKSocialButton";
-import DefaultFooter from "examples/Footers/DefaultFooter";
+// import MKTypography from "components/MKTypography";
+// import MKSocialButton from "components/MKSocialButton";
+// import DefaultFooter from "examples/Footers/DefaultFooter";
 import DefaultNavbar from "Navbars/DefaultNavbar";
 // import FilledInfoCard from "examples/Cards/InfoCards/FilledInfoCard";
-// import Counters from "pages/Presentation/sections/Counters";
+import Counters from "pages/Presentation/sections/Counters";
 // import Information from "pages/Presentation/sections/Information";
 // import DesignBlocks from "pages/Presentation/sections/DesignBlocks";
 // import Pages from "pages/Presentation/sections/Pages";
 // import BuiltByDevelopers from "pages/Presentation/components/BuiltByDevelopers";
 // import Testimonials from "pages/Presentation/sections/Testimonials";
 import routes from "routes";
-import footerRoutes from "footer.routes";
-import bgImage from "assets/images/bg-presentation.jpg";
+// import footerRoutes from "footer.routes";
+import bgImage from "../../assets/images/home_page/background_home.webp";
 import axios from "axios";
 import { BASE_URL } from "utilities/initialValue";
 import { useEffect } from "react";
@@ -24,6 +24,9 @@ import { useDispatch } from "react-redux";
 import { setUserLogin } from "app/slices/userSlice";
 import { checkError } from "utilities/auth";
 import { useNavigate } from "react-router-dom";
+import { setSemesters } from "app/slices/semesterSlice";
+import { setPmtUser } from "app/slices/userSlice";
+import { motion } from "framer-motion";
 
 function Presentation() {
   const dispatch = useDispatch();
@@ -42,48 +45,40 @@ function Presentation() {
       .then((res) => dispatch(setUserLogin(res.data)))
       .catch((err) => checkError(err, navigate));
   }, [dispatch]);
+
+  useEffect(() => {
+    axios
+      .get(`${BASE_URL}/semester`, config)
+      .then((res) => dispatch(setSemesters(res.data)))
+      .catch((err) => console.log(err));
+    axios
+      .get(`${BASE_URL}/user/parameter`, config)
+      .then((res) => dispatch(setPmtUser(res.data)))
+      .catch((err) => console.log(err));
+  }, [dispatch]);
+  const style = `
+  @keyframes rainbowAnimation {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+`;
+
   return (
     <>
+      <style>{style}</style>
       <DefaultNavbar routes={routes} brand="Startup Gate" transparent light />
       <MKBox
         minHeight="75vh"
         width="100%"
         sx={{
           backgroundImage: `url(${bgImage})`,
-          backgroundSize: "cover",
+          backgroundSize: "contain",
           backgroundPosition: "top",
           display: "grid",
           placeItems: "center",
         }}
-      >
-        <Container>
-          <Grid container item xs={12} lg={10} justifyContent="center" mx="auto">
-            <MKTypography
-              variant="h1"
-              color="white"
-              mt={-6}
-              mb={1}
-              sx={({ breakpoints, typography: { size } }) => ({
-                [breakpoints.down("md")]: {
-                  fontSize: size["3xl"],
-                },
-              })}
-            >
-              Education Gate{" "}
-            </MKTypography>
-            <MKTypography
-              variant="body1"
-              color="white"
-              textAlign="center"
-              px={{ xs: 6, lg: 12 }}
-              mt={1}
-            >
-              Nơi truy cập mà người dùng có thể tiếp cận được những người có chuyên môn về các chủ
-              đề mà dự án bạn có hướng dẫn &amp; giúp đỡ bạn đến với thành công.
-            </MKTypography>
-          </Grid>
-        </Container>
-      </MKBox>
+      ></MKBox>
       <Card
         sx={{
           p: 2,
@@ -95,9 +90,9 @@ function Presentation() {
           boxShadow: ({ boxShadows: { xxl } }) => xxl,
         }}
       >
-        {/* <Counters />
-        <Information />
-        <DesignBlocks />
+        <Counters />
+        {/* <DesignBlocks /> */}
+        {/* <Information />
         <Pages />
         <Container sx={{ mt: 6 }}>
           <BuiltByDevelopers />
@@ -150,59 +145,67 @@ function Presentation() {
         <MKBox pt={18} pb={6}>
           <Container>
             <Grid container spacing={3}>
-              <Grid item xs={12} lg={5} ml="auto" sx={{ textAlign: { xs: "center", lg: "left" } }}>
-                <MKTypography variant="h4" fontWeight="bold" mb={0.5}>
-                  Thank you for your support!
-                </MKTypography>
-                <MKTypography variant="body1" color="text">
-                  We deliver the best web products
-                </MKTypography>
+              <Grid item xs={12}>
+                <motion.h1
+                  initial={{ opacity: 0.5, y: -100 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{
+                    delay: 0.3,
+                    duration: 0.8,
+                    ease: "easeInOut",
+                  }}
+                  className="bg-gradient-to-br from-slate-300 to-slate-500 py-4 bg-clip-text text-left text-4xl font-medium tracking-tight text-transparent md:text-7xl"
+                >
+                  Hệ Thống Giáo Dục
+                </motion.h1>
               </Grid>
-              <Grid
-                item
-                xs={12}
-                lg={5}
-                my={{ xs: 5, lg: "auto" }}
-                mr={{ xs: 0, lg: "auto" }}
-                sx={{ textAlign: { xs: "center", lg: "right" } }}
-              >
-                <MKSocialButton
-                  component="a"
-                  href="https://twitter.com/intent/tweet?text=Check%20Material%20Design%20System%20made%20by%20%40CreativeTim%20%23webdesign%20%23designsystem%20%23mui5&amp;url=https%3A%2F%2Fwww.creative-tim.com%2Fproduct%2Fmaterial-kit-react"
-                  target="_blank"
-                  color="twitter"
-                  sx={{ mr: 1 }}
+              <Grid item xs={12} lg={5} sx={{ textAlign: { lg: "left" } }}>
+                <motion.h1
+                  initial={{ opacity: 0.5, x: -100 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{
+                    delay: 0.3,
+                    duration: 0.8,
+                    ease: "easeInOut",
+                  }}
+                  className="py-4 bg-clip-text text-left font-medium tracking-tight text-transparent md:text-7xl"
+                  style={{
+                    background:
+                      "linear-gradient(270deg, rgba(0, 12, 44, 1), rgba(0, 48, 73, 1), rgba(0, 98, 132, 1), rgba(0, 168, 204, 1))",
+                    backgroundSize: "200% 200%",
+                    animation: "rainbowAnimation 3s ease infinite",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    fontSize: "38px",
+                    marginTop: "-28px",
+                  }}
                 >
-                  <i className="fab fa-twitter" />
-                  &nbsp;Tweet
-                </MKSocialButton>
-                <MKSocialButton
-                  component="a"
-                  href="https://www.facebook.com/sharer/sharer.php?u=https://www.creative-tim.com/product/material-kit-react"
-                  target="_blank"
-                  color="facebook"
-                  sx={{ mr: 1 }}
+                  Edu Gate
+                </motion.h1>
+              </Grid>
+              <Grid item xs={12} lg={5} ml="auto" sx={{ textAlign: { lg: "right" } }}>
+                <motion.h1
+                  style={{ fontSize: "22px", marginTop: "-69px" }}
+                  initial={{ opacity: 0.5, x: 100 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{
+                    delay: 0.3,
+                    duration: 0.8,
+                    ease: "easeInOut",
+                  }}
+                  className="bg-gradient-to-br from-slate-300 to-slate-500 py-4 bg-clip-text text-left text-3xl font-medium tracking-tight text-transparent md:text-6xl"
                 >
-                  <i className="fab fa-facebook" />
-                  &nbsp;Share
-                </MKSocialButton>
-                <MKSocialButton
-                  component="a"
-                  href="https://www.pinterest.com/pin/create/button/?url=https://www.creative-tim.com/product/material-kit-react"
-                  target="_blank"
-                  color="pinterest"
-                >
-                  <i className="fab fa-pinterest" />
-                  &nbsp;Pin it
-                </MKSocialButton>
+                  Nơi truy cập mà người dùng có thể tiếp cận được những người có chuyên môn về các
+                  chủ đề mà dự án bạn có hướng dẫn giúp đỡ bạn đến với thành công. <br />
+                </motion.h1>
               </Grid>
             </Grid>
           </Container>
         </MKBox>
       </Card>
-      <MKBox pt={6} px={1} mt={6}>
+      {/* <MKBox pt={6} px={1} mt={6}>
         <DefaultFooter content={footerRoutes} />
-      </MKBox>
+      </MKBox> */}
     </>
   );
 }

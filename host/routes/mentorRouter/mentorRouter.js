@@ -5,9 +5,9 @@ import { verifyAccessToken } from "../../utilities/jwt.js";
 const mentorRouter = express.Router();
 
 mentorRouter.get(
-  "/:groupId",
+  "/mentor_groups",
   verifyAccessToken,
-  mentorController.getMentorsInGroup
+  mentorController.getMentorGroups
 );
 
 export default mentorRouter;

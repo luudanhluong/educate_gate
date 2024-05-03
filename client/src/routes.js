@@ -22,11 +22,14 @@ import GroupsAdmin from "layouts/admin/list-groups";
 import CategoriesAdmin from "layouts/admin/list-categories";
 import { setLimit } from "app/slices/utilitiesSlice";
 import ListGroups from "layouts/sections/featuers/components/FeaturesOne/viewListGroups";
+import Mentor from "layouts/user/mentor";
+import { setMentorGroups } from "app/slices/mentorSlice";
 
 function Routes() {
   const dispatch = useDispatch();
   const { classList } = useSelector((state) => state.class);
   const { userLogin } = useSelector((state) => state.user);
+  const groups = useSelector((state) => state.mentor.mentorGroups);
   const { data: allGroups } = useSelector((state) => state.group.allGroups);
   const { pageNo, limit } = useSelector((state) => state.utilities);
   const skip = pageNo * limit;
@@ -60,6 +63,14 @@ function Routes() {
         .then((res) => dispatch(setAllGroup(res.data)))
         .catch((err) => console.log(err));
   }, [userLogin, dispatch, pageNo, limit]);
+  useEffect(() => {
+    axios
+      .get(`${BASE_URL}/mentor/mentor_groups`, config)
+      .then((response) => {
+        dispatch(setMentorGroups(response.data));
+      })
+      .catch((err) => console.log("Error fetching mentor groups:", err));
+  }, [dispatch]);
   let result = [
     {
       name: "Trang",
@@ -115,6 +126,14 @@ function Routes() {
       dropdown: false,
       route: `/group/${userLogin?.groupId?.[0]?._id}/members`,
       component: <GroupDetail />,
+    });
+  }
+  if (userLogin?.role === 3 && groups?.length > 0) {
+    result.push({
+      name: "Nhóm",
+      dropdown: false,
+      route: `/mentor/groups`,
+      component: <Mentor />,
     });
   }
   if (userLogin?.role === 2 && allGroups?.length > 0) {
