@@ -28,6 +28,7 @@ const initialValue = {
   role: 4,
   user: {},
   delUser: {},
+  groupsMatched: {},
 };
 const storiesSlice = createSlice({
   name: "user",
@@ -81,6 +82,9 @@ const storiesSlice = createSlice({
     setDelUser: (state, action) => {
       state.delUser = action.payload;
     },
+    setGroupsMatched: (state, action) => {
+      state.groupsMatched = action.payload;
+    },
   },
 });
 
@@ -102,5 +106,6 @@ export const {
   setUser,
   setDelUser,
   setUserProfile,
+  setGroupsMatched,
 } = actions;
 export default reducer;

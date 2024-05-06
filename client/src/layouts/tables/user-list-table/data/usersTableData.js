@@ -22,7 +22,6 @@ export default function data() {
   const handleUserDetailClick = (userId) => {
     navigate(`/user/${userId}/profile`);
   };
-  console.log(data);
   const User = ({ _id, image, name, email }) => (
     <MKBox
       onClick={() => handleUserDetailClick(_id)}

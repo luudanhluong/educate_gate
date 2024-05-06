@@ -14,7 +14,7 @@ function Counters() {
         <Grid container item xs={12} lg={9} sx={{ mx: "auto" }}>
           <Grid item xs={12} md={4}>
             <DefaultCounterCard
-              count={teacher}
+              count={teacher ?? 0}
               suffix="+"
               title="Giáo viên"
               description="Số lượng giáo viên trong hệ thống"
@@ -23,7 +23,7 @@ function Counters() {
           <Grid item xs={12} md={4} display="flex">
             <Divider orientation="vertical" sx={{ display: { xs: "none", md: "block" }, mx: 0 }} />
             <DefaultCounterCard
-              count={mentor}
+              count={mentor ?? 0}
               suffix="+"
               title="Hướng dẫn viên"
               description="Số lượng hướng dẫn viên có trong hệ thống"
@@ -32,7 +32,7 @@ function Counters() {
           </Grid>
           <Grid item xs={12} md={4}>
             <DefaultCounterCard
-              count={student}
+              count={student ?? 0}
               suffix="+"
               title="Học sinh"
               description="Số lượng học sinh có trong hệ thống"

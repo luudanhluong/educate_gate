@@ -43,7 +43,6 @@ function Profile() {
     const className = classId && classId.length > 0 ? classId[0].className : "";
     classNamesDisplay = className;
   }
-  console.log(userData);
   return (
     <MKBox component="section" py={{ xs: 6, sm: 12 }}>
       <Container>

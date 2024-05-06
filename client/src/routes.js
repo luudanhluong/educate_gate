@@ -24,6 +24,7 @@ import { setLimit } from "app/slices/utilitiesSlice";
 import ListGroups from "layouts/sections/featuers/components/FeaturesOne/viewListGroups";
 import Mentor from "layouts/user/mentor";
 import { setMentorGroups } from "app/slices/mentorSlice";
+import GroupsMatchedAdmin from "layouts/admin/list-groups-matched";
 
 function Routes() {
   const dispatch = useDispatch();
@@ -180,6 +181,11 @@ function Routes() {
           name: "Danh Sách Các Lĩnh Vực",
           route: "/admin/list-categories",
           component: <CategoriesAdmin />,
+        },
+        {
+          name: "Danh Sách Các Nhóm Đã Ghép Mentor",
+          route: "/admin/list-matcheds",
+          component: <GroupsMatchedAdmin />,
         },
       ],
     });

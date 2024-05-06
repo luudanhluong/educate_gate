@@ -9,6 +9,7 @@ const initialValue = {
   pageNo: 0,
   searchValue: "",
   mentorChoice: {},
+  delMatched: {},
 };
 const storiesSlice = createSlice({
   name: "temporaryMatching",
@@ -26,9 +27,13 @@ const storiesSlice = createSlice({
     setSearchValue: (state, action) => {
       state.searchValue = action.payload;
     },
+    setDelMatched: (state, action) => {
+      state.delMatched = action.payload;
+    },
   },
 });
 
 const { reducer, actions } = storiesSlice;
-export const { setTemporaryMatching, setMentorChoice, setPageNo, setSearchValue } = actions;
+export const { setTemporaryMatching, setMentorChoice, setPageNo, setSearchValue, setDelMatched } =
+  actions;
 export default reducer;

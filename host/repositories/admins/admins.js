@@ -1,5 +1,6 @@
 import Category from "../../models/categoryModel.js";
 import Class from "../../models/classModel.js";
+import Group from "../../models/groupModel.js";
 import User from "../../models/userModel.js";
 // import UserType from "../../models/userTypeModel.js";
 

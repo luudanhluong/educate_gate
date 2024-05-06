@@ -27,6 +27,7 @@ import { useNavigate } from "react-router-dom";
 import { setSemesters } from "app/slices/semesterSlice";
 import { setPmtUser } from "app/slices/userSlice";
 import { motion } from "framer-motion";
+import { setGroupsMatched } from "app/slices/userSlice";
 
 function Presentation() {
   const dispatch = useDispatch();
@@ -45,7 +46,7 @@ function Presentation() {
       .then((res) => dispatch(setUserLogin(res.data)))
       .catch((err) => checkError(err, navigate));
   }, [dispatch]);
-
+  // api user in the system
   useEffect(() => {
     axios
       .get(`${BASE_URL}/semester`, config)
@@ -56,6 +57,14 @@ function Presentation() {
       .then((res) => dispatch(setPmtUser(res.data)))
       .catch((err) => console.log(err));
   }, [dispatch]);
+  // api groups matched
+  useEffect(() => {
+    axios
+      .get(`${BASE_URL}/matched/groups_matched`, config)
+      .then((res) => dispatch(setGroupsMatched(res.data)))
+      .catch((error) => console.log(error));
+  }, [dispatch]);
+
   const style = `
   @keyframes rainbowAnimation {
     0% { background-position: 0% 50%; }

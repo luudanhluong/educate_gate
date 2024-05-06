@@ -10,5 +10,15 @@ matchedRouter.get(
   verifyAccessToken,
   matchedController.addAllMatching
 );
+matchedRouter.get(
+  "/groups_matched",
+  verifyAccessToken,
+  matchedController.getMatchedGroups
+);
+matchedRouter.delete(
+  "/:matchedId",
+  verifyAccessToken,
+  matchedController.deleteMatchedGroup
+);
 
 export default matchedRouter;

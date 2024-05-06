@@ -295,7 +295,7 @@ const ViewGroups = ({ teacherId }) => {
                 </MKButton>
               </MKBox>
               <Typography variant="body2" sx={{ fontSize: "0.8rem" }}>
-                Ten dự án: {g.project?.name}
+                Tên dự án: {g.project?.name}
               </Typography>
               <Typography variant="body2" sx={{ fontSize: "0.8rem" }} className="truncate">
                 Lĩnh vực: {g.projectcategories?.map((p) => p.name).join(", ")}
